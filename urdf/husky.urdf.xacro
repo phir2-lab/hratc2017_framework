@@ -47,17 +47,17 @@ Husky A200 file and modified by the ISR University of Coimbra
     xmlns:xacro="http://ros.org/wiki/xacro" name="husky">
        
     <!-- Included URDF/XACRO Files -->
-    <xacro:include filename="$(find fsr_husky_description)/urdf/husky_parts/materials.urdf.xacro" />
-    <xacro:include filename="$(find fsr_husky_description)/urdf/husky_parts/wheel.urdf.xacro" />
-    <xacro:include filename="$(find fsr_husky_description)/urdf/husky_parts/parts.urdf.xacro" />
-    <xacro:include filename="$(find fsr_husky_description)/urdf/fsr_husky_parts/husky_bridge.urdf.xacro" />
-    <xacro:include filename="$(find fsr_husky_description)/urdf/fsr_husky_parts/sick_lms100.urdf.xacro" />
-    <xacro:include filename="$(find fsr_husky_description)/urdf/fsr_husky_parts/alfa_tube2h.urdf.xacro" />
-    <xacro:include filename="$(find fsr_husky_description)/urdf/fsr_husky_parts/pointgrey_flea3.urdf.xacro" />
-    <xacro:include filename="$(find fsr_husky_description)/urdf/fsr_husky_parts/gps_antenna.urdf.xacro" />
-    <xacro:include filename="$(find fsr_husky_description)/urdf/fsr_husky_parts/ptu_d46.urdf.xacro" />
-    <xacro:include filename="$(find fsr_husky_description)/urdf/fsr_husky_parts/mti.urdf.xacro" />
-    <xacro:include filename="$(find fsr_husky_description)/urdf/arm/fsr_husky_arm.urdf.xacro" />
+    <xacro:include filename="$(find hratc2014_simulator)/urdf/husky_parts/materials.urdf.xacro" />
+    <xacro:include filename="$(find hratc2014_simulator)/urdf/husky_parts/wheel.urdf.xacro" />
+    <xacro:include filename="$(find hratc2014_simulator)/urdf/husky_parts/parts.urdf.xacro" />
+    <xacro:include filename="$(find hratc2014_simulator)/urdf/fsr_husky_parts/husky_bridge.urdf.xacro" />
+    <xacro:include filename="$(find hratc2014_simulator)/urdf/fsr_husky_parts/sick_lms100.urdf.xacro" />
+    <xacro:include filename="$(find hratc2014_simulator)/urdf/fsr_husky_parts/alfa_tube2h.urdf.xacro" />
+    <xacro:include filename="$(find hratc2014_simulator)/urdf/fsr_husky_parts/pointgrey_flea3.urdf.xacro" />
+    <xacro:include filename="$(find hratc2014_simulator)/urdf/fsr_husky_parts/gps_antenna.urdf.xacro" />
+    <xacro:include filename="$(find hratc2014_simulator)/urdf/fsr_husky_parts/ptu_d46.urdf.xacro" />
+    <xacro:include filename="$(find hratc2014_simulator)/urdf/fsr_husky_parts/mti.urdf.xacro" />
+    <xacro:include filename="$(find hratc2014_simulator)/urdf/arm/fsr_husky_arm.urdf.xacro" />
 
     <!-- PROPERTY LIST -->
     <!--All units in m-kg-s-radians unit system -->
@@ -129,7 +129,7 @@ Husky A200 file and modified by the ISR University of Coimbra
         <visual>
             <origin xyz="0 0 0" rpy="0 0 0" />
             <geometry>
-		<mesh filename="package://fsr_husky_description/models/husky_parts/base_link.stl" />
+		<mesh filename="package://hratc2014_simulator/models/husky_parts/base_link.stl" />
             </geometry>
             <material name="Black" />
         </visual>

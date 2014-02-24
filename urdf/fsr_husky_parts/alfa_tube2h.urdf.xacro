@@ -33,7 +33,7 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 	<!-- Alfa Tube 2H-->
 
-	<xacro:include filename="$(find fsr_husky_description)/urdf/fsr_husky_parts/common.xacro" />
+	<xacro:include filename="$(find hratc2014_simulator)/urdf/fsr_husky_parts/common.xacro" />
 
 	<xacro:property name="alfa_length" value="0.132" />
 	<xacro:property name="alfa_radius" value="0.019" />
