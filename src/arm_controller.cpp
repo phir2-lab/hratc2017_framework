@@ -69,7 +69,7 @@ int main(int argc, char **argv)
     lower_pub_ptr = &lower_pub;
     mirror_pub_ptr = &mirror_pub;
 
-    ros::Delay(3.0).sleep();
+    ros::Duration(3.0).sleep();
 
     std_msgs::Float64 msg;
     msg.data = 0.0;
