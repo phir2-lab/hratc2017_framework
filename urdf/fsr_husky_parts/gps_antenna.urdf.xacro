@@ -1,0 +1,98 @@
+<?xml version="1.0"?>
+<!--
+Copyright (c) 2013, Goncalo Cabrita, ISR University of Coimbra
+All rights reserved.
+
+Redistribution and use in source and binary forms, with or without
+modification, are permitted provided that the following conditions are met:
+    * Redistributions of source code must retain the above copyright
+      notice, this list of conditions and the following disclaimer.
+    * Redistributions in binary form must reproduce the above copyright
+      notice, this list of conditions and the following disclaimer in the
+      documentation and/or other materials provided with the distribution.
+    * Neither the name of Clearpath Robotics nor the
+      names of its contributors may be used to endorse or promote products
+      derived from this software without specific prior written permission.
+
+THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND
+ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
+WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
+DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDERS BE LIABLE FOR ANY
+DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES
+(INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;
+LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND
+ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
+(INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
+SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+-->
+
+<robot xmlns:sensor="http://playerstage.sourceforge.net/gazebo/xmlschema/#sensor"
+	xmlns:controller="http://playerstage.sourceforge.net/gazebo/xmlschema/#controller"
+	xmlns:interface="http://playerstage.sourceforge.net/gazebo/xmlschema/#interface"
+	xmlns:xacro="http://ros.org/wiki/xacro" name="gps_antenna">
+
+	<!-- GPS Antenna -->
+
+	<xacro:include filename="$(find fsr_husky_description)/urdf/fsr_husky_parts/common.xacro" />
+
+	<xacro:property name="alfa_length" value="0.132" />
+	<xacro:property name="alfa_radius" value="0.019" />
+	<xacro:property name="antenna_length" value="0.45" />
+	<xacro:property name="antenna_radius" value="0.008" />
+
+	<xacro:macro name="gps_antenna" params="parent x y z rx ry rz"> 
+  		<link name="gps_antenna">
+    			<inertial>
+      				<origin xyz="0.035 1.27350000005198E-07 0.084899" rpy="0 0 0" />
+      				<mass value="0.28321" />
+      				<inertia
+        				ixx="0.000632544028273332"
+        				ixy="-4.4923388876054E-20"
+        				ixz="1.07422508310795E-20"
+        				iyy="1.26609361466704E-09"
+        				iyz="-0.000632544028277925"
+        				izz="-1.26609361462022E-09" />
+    			</inertial>
+    			<visual>
+      				<origin xyz="-0.035 0 0" rpy="1.5708 0 0" />
+      				<geometry>
+					<mesh filename="package://fsr_husky_description/models/fsr_husky_parts/gps_antenna.stl" />
+      				</geometry>
+      				<material name="White">
+        				<color rgba="1 1 1 1"/>
+      				</material>
+    			</visual>
+    			<collision>
+      				<origin xyz="-0.035 0 0" rpy="1.5708 0 0" />
+      				<geometry>
+					<mesh filename="package://fsr_husky_description/models/fsr_husky_parts/gps_antenna.stl" />
+     			 	</geometry>
+    			</collision>
+  		</link>
+		
+		<joint name="gps_anetnna_joint" type="fixed">
+			<parent link="${parent}"/>
+			<child link="gps_antenna"/>
+			<origin xyz="${x} ${y} ${z}" rpy="${rx} ${ry} ${rz}" /> 
+		</joint>
+		
+		<gazebo reference="gps_antenna">
+        		<material>Gazebo/White</material>
+        		<turnGravityOff>false</turnGravityOff>
+		</gazebo>
+		
+		<gazebo>
+			<plugin name="gazebo_ros_gps" filename="libhector_gazebo_ros_gps.so">
+			  <updateRate>4.0</updateRate>
+			  <bodyName>gps_antenna</bodyName>
+			  <topicName>fix</topicName>
+			  <velocityTopicName>fix_velocity</velocityTopicName>
+			  <drift>1.0 1.0 1.0</drift>
+			  <gaussianNoise>0.01 0.01 0.01</gaussianNoise>
+			  <velocityDrift>0 0 0</velocityDrift>
+			  <velocityGaussianNoise>0.05 0.05 0.05</velocityGaussianNoise>
+			</plugin>
+    		</gazebo>
+		
+	</xacro:macro>
+</robot>

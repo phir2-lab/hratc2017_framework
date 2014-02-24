@@ -1,0 +1,74 @@
+<!--
+Copyright (c) 2014, Goncalo Cabrita, ISR University of Coimbra
+All rights reserved.
+
+Redistribution and use in source and binary forms, with or without
+modification, are permitted provided that the following conditions are met:
+    * Redistributions of source code must retain the above copyright
+      notice, this list of conditions and the following disclaimer.
+    * Redistributions in binary form must reproduce the above copyright
+      notice, this list of conditions and the following disclaimer in the
+      documentation and/or other materials provided with the distribution.
+    * Neither the name of Clearpath Robotics nor the
+      names of its contributors may be used to endorse or promote products
+      derived from this software without specific prior written permission.
+
+THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND
+ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
+WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
+DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDERS BE LIABLE FOR ANY
+DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES
+(INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;
+LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND
+ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
+(INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
+SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+-->
+
+<launch>
+
+    <!-- Spawn the Husky robot -->
+    <include file="$(find hratc2014_simulator)/launch/husky.launch"/>
+    <!-- Open the Gazebo world -->
+    <include file="$(find gazebo_ros)/launch/empty_world.launch"/>
+    
+    
+    <!-- Load the controllers for the pan and tilt unit -->
+    <rosparam file="$(find hratc2014_simulator)/controllers/ptu_d46_control.yaml" command="load"/>
+
+    <node name="ptu_d46_controller_spawner" pkg="controller_manager" type="spawner" respawn="false"
+      output="screen" ns="/ptu_d46" args="pan_position_controller tilt_position_controller joint_state_controller"/>
+
+    <node name="ptu_d46_state_publisher" pkg="robot_state_publisher" type="robot_state_publisher"
+      respawn="false" output="screen">
+      <remap from="/joint_states" to="/ptu_d46/joint_states" />
+    </node>
+    
+    
+    <!-- Load the controllers for the arm -->
+    <rosparam file="$(find hratc2014_simulator)/controllers/arm_control.yaml" command="load"/>
+
+    <node name="arm_controller_spawner" pkg="controller_manager" type="spawner" respawn="false"
+      output="screen" ns="/arm" args="upper_lift_controller lower_lift_controller mirror_lift_controller sweep_controller joint_state_controller"/>
+
+    <node name="arm_state_publisher" pkg="robot_state_publisher" type="robot_state_publisher"
+      respawn="false" output="screen">
+      <remap from="/joint_states" to="/arm/joint_states" />
+    </node>
+    
+    <node pkg="hratc2014_simulator" type="arm_controller" name="arm_controller"/>
+    
+    
+    <!-- EKF for localization -->
+    <node pkg="robot_pose_ekf" type="robot_pose_ekf" name="robot_pose_ekf">
+      <rosparam>
+        freq: 10.0
+        sensor_timeout: 1.0
+        publish_tf: true
+        odom_used: true
+        vo_used: false
+        output_frame: odom
+      </rosparam>
+    </node>
+  
+</launch>

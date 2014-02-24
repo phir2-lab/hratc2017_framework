@@ -1,0 +1,77 @@
+<?xml version="1.0"?>
+<!--
+Copyright (c) 2013, Goncalo Cabrita, ISR University of Coimbra
+All rights reserved.
+
+Redistribution and use in source and binary forms, with or without
+modification, are permitted provided that the following conditions are met:
+    * Redistributions of source code must retain the above copyright
+      notice, this list of conditions and the following disclaimer.
+    * Redistributions in binary form must reproduce the above copyright
+      notice, this list of conditions and the following disclaimer in the
+      documentation and/or other materials provided with the distribution.
+    * Neither the name of Clearpath Robotics nor the
+      names of its contributors may be used to endorse or promote products
+      derived from this software without specific prior written permission.
+
+THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND
+ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
+WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
+DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDERS BE LIABLE FOR ANY
+DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES
+(INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;
+LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND
+ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
+(INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
+SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+-->
+
+<robot xmlns:sensor="http://playerstage.sourceforge.net/gazebo/xmlschema/#sensor"
+	xmlns:controller="http://playerstage.sourceforge.net/gazebo/xmlschema/#controller"
+	xmlns:interface="http://playerstage.sourceforge.net/gazebo/xmlschema/#interface"
+	xmlns:xacro="http://ros.org/wiki/xacro" name="husky_bridge">
+	
+	<!-- Bridge -->
+
+	<xacro:property name="bridge_height" value="0.303" />
+
+	<xacro:macro name="husky_bridge" params="prefix parent x y z rx ry rz"> 
+		<link name="${prefix}_husky_bridge">
+			<inertial>
+      				<origin xyz="1.3205E-08 -0.12511 0.1844" rpy="0 0 0" />
+     				 <mass value="0.41909" />
+      				<inertia
+       					ixx="0.0062892349956719"
+       				 	ixy="4.83251153522436E-09"
+        				ixz="-1.00592277086129E-07"
+        				iyy="-1.18429869738388E-05"
+        				iyz="-0.0188452216523176"
+        				izz="1.18429869738408E-05" />
+    			</inertial>
+			<visual>
+      				<origin xyz="-0.12511 0 ${-bridge_height}" rpy="1.5708 0 1.5708" />
+      				<geometry>
+					<mesh filename="package://fsr_husky_description/models/fsr_husky_parts/bridge.stl" />
+      				</geometry>
+      				<material name="Gray" />
+    			</visual>
+			<collision>
+      				<origin xyz="-0.12511 0 ${-bridge_height}" rpy="1.5708 0 1.5708" />
+      				<geometry>
+					<mesh filename="package://fsr_husky_description/models/fsr_husky_parts/bridge.stl" />
+      				</geometry>
+    			</collision>
+		</link>
+		<gazebo reference="${prefix}_husky_bridge">
+	        	<material>Gazebo/Grey</material>
+	        	<turnGravityOff>false</turnGravityOff>
+    		</gazebo>
+
+		<joint name="joint_${prefix}_husky_bridge" type="fixed">
+			<parent link="${parent}"/>
+			<child link="${prefix}_husky_bridge"/>
+			<origin xyz="${x} ${y} ${z+bridge_height}" rpy="${rx} ${ry} ${rz}" /> 
+		</joint>
+   
+  	</xacro:macro>
+</robot>
