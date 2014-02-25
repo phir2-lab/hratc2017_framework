@@ -27,11 +27,11 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 <launch>
 
+    <!-- Open the Gazebo world -->
+    <!-- <include file="$(find gazebo_ros)/launch/empty_world.launch"/> -->
+    <include file="$(find hratc2014_simulator)/launch/outdoors.launch"/>
     <!-- Spawn the Husky robot -->
     <include file="$(find hratc2014_simulator)/launch/husky.launch"/>
-    <!-- Open the Gazebo world -->
-    <include file="$(find gazebo_ros)/launch/empty_world.launch"/>
-    
     
     <!-- Load the controllers for the pan and tilt unit -->
     <rosparam file="$(find hratc2014_simulator)/controllers/ptu_d46_control.yaml" command="load"/>
