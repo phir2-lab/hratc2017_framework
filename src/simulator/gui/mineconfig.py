@@ -39,9 +39,10 @@ class MineDetectionConfig(QtGui.QDialog, Ui_ConfigDialog):
 
     def okClicked(self):
         config = self.packConfig()
-        config.save()
-        self.updateConfig.emit(config)
-        self.close()
+        if config != None:
+            config.save()
+            self.updateConfig.emit(config)
+            self.close()
 
     
     def packConfig(self):
@@ -59,12 +60,24 @@ class MineDetectionConfig(QtGui.QDialog, Ui_ConfigDialog):
         else:
             config.numMines = self.TWMinesPos.rowCount()
             config.mines = []
+            invalids = []
             for i in range(config.numMines):
                 try:
                     config.mines.append([float(self.TWMinesPos.item(i,0).text()), float(self.TWMinesPos.item(i,1).text())])
                 except:
-                    pass #Dar a mensagem de erro na cara do usuário!
+                    invalids.append(i)
 
+            if invalids != []:
+                errorWindow = QtGui.QMessageBox(self)
+                msg = "\nThe follow fixed mines positions have a invalid position:\n\n"
+                for index in invalids:
+                    msg += "\t{0} - {1} {2}\n".format(index+1,
+                        self.TWMinesPos.item(index,0).text(),
+                        self.TWMinesPos.item(index,1).text())
+                msg += "\n\n"
+                errorWindow.setText(QtCore.QString(msg))
+                errorWindow.show()
+                return
         config.minDistDetection = self.spinBoxMinDistDetection.value()/100.
         config.maxDistExplosion = self.spinBoxMaxDistExplosion.value()/100.
 
