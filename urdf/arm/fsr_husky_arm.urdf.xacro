@@ -53,7 +53,7 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
         rpy="0 0 0" />
       <geometry>
         <mesh
-          filename="package://hratc2014_simulator/models/arm/base_arm_link.STL" />
+          filename="package://hratc2014_framework/models/arm/base_arm_link.STL" />
       </geometry>
       <material
         name="Gray">
@@ -67,7 +67,7 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
         rpy="0 0 0" />
       <geometry>
         <mesh
-          filename="package://hratc2014_simulator/models/arm/base_arm_link.STL" />
+          filename="package://hratc2014_framework/models/arm/base_arm_link.STL" />
       </geometry>
     </collision>
   </link>
@@ -104,7 +104,7 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
         rpy="0 0 0" />
       <geometry>
         <mesh
-          filename="package://hratc2014_simulator/models/arm/arm_axel.STL" />
+          filename="package://hratc2014_framework/models/arm/arm_axel.STL" />
       </geometry>
       <material
         name="Gray">
@@ -118,7 +118,7 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
         rpy="0 0 0" />
       <geometry>
         <mesh
-          filename="package://hratc2014_simulator/models/arm/arm_axel.STL" />
+          filename="package://hratc2014_framework/models/arm/arm_axel.STL" />
       </geometry>
     </collision>
   </link>
@@ -168,7 +168,7 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
         rpy="0 0 0" />
       <geometry>
         <mesh
-          filename="package://hratc2014_simulator/models/arm/upper_arm.STL" />
+          filename="package://hratc2014_framework/models/arm/upper_arm.STL" />
       </geometry>
       <material
         name="DarkGray">
@@ -182,7 +182,7 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
         rpy="0 0 0" />
       <geometry>
         <mesh
-          filename="package://hratc2014_simulator/models/arm/upper_arm.STL" />
+          filename="package://hratc2014_framework/models/arm/upper_arm.STL" />
       </geometry>
     </collision>
   </link>
@@ -232,7 +232,7 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
         rpy="0 0 0" />
       <geometry>
         <mesh
-          filename="package://hratc2014_simulator/models/arm/metal_detector_arm.STL" />
+          filename="package://hratc2014_framework/models/arm/metal_detector_arm.STL" />
       </geometry>
       <material
         name="DarkGray">
@@ -246,7 +246,7 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
         rpy="0 0 0" />
       <geometry>
         <mesh
-          filename="package://hratc2014_simulator/models/arm/metal_detector_arm.STL" />
+          filename="package://hratc2014_framework/models/arm/metal_detector_arm.STL" />
       </geometry>
     </collision>
   </link>
@@ -299,7 +299,7 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
         rpy="0 0 0" />
       <geometry>
         <mesh
-          filename="package://hratc2014_simulator/models/arm/metal_detector_antenna.STL" />
+          filename="package://hratc2014_framework/models/arm/metal_detector_antenna.STL" />
       </geometry>
       <material
         name="ArmyGreen">
@@ -313,7 +313,7 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
         rpy="0 0 0" />
       <geometry>
         <mesh
-          filename="package://hratc2014_simulator/models/arm/metal_detector_antenna.STL" />
+          filename="package://hratc2014_framework/models/arm/metal_detector_antenna.STL" />
       </geometry>
     </collision>
   </link>
@@ -346,7 +346,7 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
   </link>
   
   <joint name="left_coil_joint" type="fixed">
-      <origin xyz="0 0 15" rpy="0 0 0" />
+      <origin xyz="0 0.18 0" rpy="0 0 0" />
       <parent link="metal_detector_antenna"/>
       <child link="left_coil" />
   </joint>
@@ -368,7 +368,7 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
   
   <link name="right_coil">
       <visual>
-          <origin xyz="0 0 -15" rpy="0 0 0" />
+          <origin xyz="0 0 0" rpy="0 0 0" />
           <geometry>
               <box size="0.001 0.001 0.001" />
           </geometry>
@@ -376,7 +376,7 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
   </link>
   
   <joint name="right_coil_joint" type="fixed">
-      <origin xyz="0 0 15" rpy="0 0 0" />
+      <origin xyz="0 -0.18 0" rpy="0 0 0" />
       <parent link="metal_detector_antenna"/>
       <child link="right_coil" />
   </joint>
@@ -403,7 +403,7 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
         rpy="0 0 0" />
       <geometry>
         <mesh
-          filename="package://hratc2014_simulator/models/arm/lower_arm.STL" />
+          filename="package://hratc2014_framework/models/arm/lower_arm.STL" />
       </geometry>
       <material
         name="DarkGray">
@@ -417,7 +417,7 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
         rpy="0 0 0" />
       <geometry>
         <mesh
-          filename="package://hratc2014_simulator/models/arm/lower_arm.STL" />
+          filename="package://hratc2014_framework/models/arm/lower_arm.STL" />
       </geometry>
     </collision>
   </link>

@@ -27,7 +27,7 @@ arm:
   # Publish all joint states -----------------------------------
   joint_state_controller:
     type: joint_state_controller/JointStateController
-    publish_rate: 50  
+    publish_rate: 100
   
   # Position Controllers ---------------------------------------
   upper_lift_controller:

@@ -51,14 +51,14 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 			<visual>
       				<origin xyz="-0.12511 0 ${-bridge_height}" rpy="1.5708 0 1.5708" />
       				<geometry>
-					<mesh filename="package://hratc2014_simulator/models/fsr_husky_parts/bridge.stl" />
+					<mesh filename="package://hratc2014_framework/models/fsr_husky_parts/bridge.stl" />
       				</geometry>
       				<material name="Gray" />
     			</visual>
 			<collision>
       				<origin xyz="-0.12511 0 ${-bridge_height}" rpy="1.5708 0 1.5708" />
       				<geometry>
-					<mesh filename="package://hratc2014_simulator/models/fsr_husky_parts/bridge.stl" />
+					<mesh filename="package://hratc2014_framework/models/fsr_husky_parts/bridge.stl" />
       				</geometry>
     			</collision>
 		</link>

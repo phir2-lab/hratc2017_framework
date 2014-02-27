@@ -29,12 +29,12 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
     <!-- Open the Gazebo world -->
     <!-- <include file="$(find gazebo_ros)/launch/empty_world.launch"/> -->
-    <include file="$(find hratc2014_simulator)/launch/world.launch"/>
+    <include file="$(find hratc2014_framework)/launch/world.launch"/>
     <!-- Spawn the Husky robot -->
-    <include file="$(find hratc2014_simulator)/launch/husky.launch"/>
+    <include file="$(find hratc2014_framework)/launch/husky.launch"/>
     
     <!-- Load the controllers for the pan and tilt unit -->
-    <rosparam file="$(find hratc2014_simulator)/controllers/ptu_d46_control.yaml" command="load"/>
+    <rosparam file="$(find hratc2014_framework)/controllers/ptu_d46_control.yaml" command="load"/>
 
     <node name="ptu_d46_controller_spawner" pkg="controller_manager" type="spawner" respawn="false"
       output="screen" ns="/ptu_d46" args="pan_position_controller tilt_position_controller joint_state_controller"/>
@@ -46,7 +46,7 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
     
     
     <!-- Load the controllers for the arm -->
-    <rosparam file="$(find hratc2014_simulator)/controllers/arm_control.yaml" command="load"/>
+    <rosparam file="$(find hratc2014_framework)/controllers/arm_control.yaml" command="load"/>
 
     <node name="arm_controller_spawner" pkg="controller_manager" type="spawner" respawn="false"
       output="screen" ns="/arm" args="upper_lift_controller lower_lift_controller mirror_lift_controller sweep_controller joint_state_controller"/>
@@ -56,7 +56,7 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
       <remap from="/joint_states" to="/arm/joint_states" />
     </node>
     
-    <node pkg="hratc2014_simulator" type="arm_controller" name="arm_controller" output="screen"/>
+    <node pkg="hratc2014_framework" type="arm_controller" name="arm_controller" output="screen"/>
     
     
     <!-- EKF for localization -->

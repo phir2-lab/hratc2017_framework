@@ -143,7 +143,7 @@ int main(int argc, char **argv)
     ros::Rate r(50.0);
     while(ros::ok())
     {
-        ROS_INFO("state %lf goal %lf", state, goal);
+        //ROS_INFO("state %lf goal %lf", state, goal);
         if(sweep && fabs(state - goal) <= 0.01)
         {
             std_msgs::Float64 command;

@@ -1,9 +1,9 @@
 <?xml version="1.0"?>
 <package>
   
-  <name>hratc2014_simulator</name>
+  <name>hratc2014_framework</name>
   <version>0.0.0</version>
-  <description>The hratc2014_simulator package.</description>
+  <description>The hratc2014_framework package.</description>
 
   <maintainer email="goncabrita@gmail.com">Gonçalo Cabrita</maintainer>
 
@@ -27,6 +27,9 @@
   <run_depend>control_msgs</run_depend>
   <run_depend>husky_gazebo_plugins</run_depend>
   <run_depend>gazebo_ros_control</run_depend>
+  <run_depend>rospy</run_depend>
+  <run_depend>tf</run_depend>
+  <run_depend>metal_detector_messages</run_depend>
   
   <export>
     <gazebo_ros gazebo_media_path="${prefix}"/>
