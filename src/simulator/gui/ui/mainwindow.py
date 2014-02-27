@@ -2,7 +2,7 @@
 
 # Form implementation generated from reading ui file 'mainwindow.ui'
 #
-# Created: Thu Feb 27 16:23:24 2014
+# Created: Thu Feb 27 18:20:26 2014
 #      by: PyQt4 UI code generator 4.9.1
 #
 # WARNING! All changes made in this file will be lost!
@@ -73,7 +73,7 @@ class Ui_MainWindow(object):
         self.horizontalLayout.addItem(spacerItem2)
         self.startStopPB = QtGui.QPushButton(self.centralwidget)
         icon = QtGui.QIcon()
-        icon.addPixmap(QtGui.QPixmap(_fromUtf8("start.png")), QtGui.QIcon.Normal, QtGui.QIcon.Off)
+        icon.addPixmap(QtGui.QPixmap(_fromUtf8("../../../../../../../.designer/backup/start.png")), QtGui.QIcon.Normal, QtGui.QIcon.Off)
         self.startStopPB.setIcon(icon)
         self.startStopPB.setObjectName(_fromUtf8("startStopPB"))
         self.horizontalLayout.addWidget(self.startStopPB)
@@ -181,6 +181,26 @@ class Ui_MainWindow(object):
         self.actionCoveredArea.setCheckable(True)
         self.actionCoveredArea.setChecked(True)
         self.actionCoveredArea.setObjectName(_fromUtf8("actionCoveredArea"))
+        self.actionChannel_1 = QtGui.QAction(MainWindow)
+        self.actionChannel_1.setCheckable(True)
+        self.actionChannel_1.setChecked(True)
+        self.actionChannel_1.setObjectName(_fromUtf8("actionChannel_1"))
+        self.actionChannel_2 = QtGui.QAction(MainWindow)
+        self.actionChannel_2.setCheckable(True)
+        self.actionChannel_2.setObjectName(_fromUtf8("actionChannel_2"))
+        self.actionChannel_3 = QtGui.QAction(MainWindow)
+        self.actionChannel_3.setCheckable(True)
+        self.actionChannel_3.setObjectName(_fromUtf8("actionChannel_3"))
+        self.actionCoil_1 = QtGui.QAction(MainWindow)
+        self.actionCoil_1.setCheckable(True)
+        self.actionCoil_1.setObjectName(_fromUtf8("actionCoil_1"))
+        self.actionCoil_2 = QtGui.QAction(MainWindow)
+        self.actionCoil_2.setCheckable(True)
+        self.actionCoil_2.setChecked(True)
+        self.actionCoil_2.setObjectName(_fromUtf8("actionCoil_2"))
+        self.actionCoil_3 = QtGui.QAction(MainWindow)
+        self.actionCoil_3.setCheckable(True)
+        self.actionCoil_3.setObjectName(_fromUtf8("actionCoil_3"))
         self.menuFile.addAction(self.actionConfiguration)
         self.menuFile.addSeparator()
         self.menuFile.addAction(self.actionExit)
@@ -194,11 +214,26 @@ class Ui_MainWindow(object):
         self.menuVisualization.addAction(self.actionCoveredArea)
         self.menuVisualization.addSeparator()
         self.menuVisualization.addAction(self.actionCoilsSignal)
+        self.menuVisualization.addSeparator()
+        self.menuVisualization.addAction(self.actionCoil_1)
+        self.menuVisualization.addAction(self.actionCoil_2)
+        self.menuVisualization.addAction(self.actionCoil_3)
+        self.menuVisualization.addSeparator()
+        self.menuVisualization.addAction(self.actionChannel_1)
+        self.menuVisualization.addAction(self.actionChannel_2)
+        self.menuVisualization.addAction(self.actionChannel_3)
         self.menubar.addAction(self.menuFile.menuAction())
         self.menubar.addAction(self.menuVisualization.menuAction())
 
         self.retranslateUi(MainWindow)
         QtCore.QObject.connect(self.actionExit, QtCore.SIGNAL(_fromUtf8("triggered()")), MainWindow.close)
+        QtCore.QObject.connect(self.actionCoveredArea, QtCore.SIGNAL(_fromUtf8("toggled(bool)")), self.actionCoilsSignal.setEnabled)
+        QtCore.QObject.connect(self.actionCoilsSignal, QtCore.SIGNAL(_fromUtf8("toggled(bool)")), self.actionChannel_1.setEnabled)
+        QtCore.QObject.connect(self.actionCoilsSignal, QtCore.SIGNAL(_fromUtf8("toggled(bool)")), self.actionChannel_2.setEnabled)
+        QtCore.QObject.connect(self.actionCoilsSignal, QtCore.SIGNAL(_fromUtf8("toggled(bool)")), self.actionChannel_3.setEnabled)
+        QtCore.QObject.connect(self.actionCoilsSignal, QtCore.SIGNAL(_fromUtf8("toggled(bool)")), self.actionCoil_1.setEnabled)
+        QtCore.QObject.connect(self.actionCoilsSignal, QtCore.SIGNAL(_fromUtf8("toggled(bool)")), self.actionCoil_2.setEnabled)
+        QtCore.QObject.connect(self.actionCoilsSignal, QtCore.SIGNAL(_fromUtf8("toggled(bool)")), self.actionCoil_3.setEnabled)
         QtCore.QMetaObject.connectSlotsByName(MainWindow)
 
     def retranslateUi(self, MainWindow):
@@ -233,4 +268,16 @@ class Ui_MainWindow(object):
         self.actionRobotPath.setText(QtGui.QApplication.translate("MainWindow", "Robot\'s path", None, QtGui.QApplication.UnicodeUTF8))
         self.actionRobotPath.setShortcut(QtGui.QApplication.translate("MainWindow", "F7", None, QtGui.QApplication.UnicodeUTF8))
         self.actionCoveredArea.setText(QtGui.QApplication.translate("MainWindow", "Covered area", None, QtGui.QApplication.UnicodeUTF8))
+        self.actionChannel_1.setText(QtGui.QApplication.translate("MainWindow", "Channel 1", None, QtGui.QApplication.UnicodeUTF8))
+        self.actionChannel_1.setShortcut(QtGui.QApplication.translate("MainWindow", "Ctrl+1", None, QtGui.QApplication.UnicodeUTF8))
+        self.actionChannel_2.setText(QtGui.QApplication.translate("MainWindow", "Channel 2", None, QtGui.QApplication.UnicodeUTF8))
+        self.actionChannel_2.setShortcut(QtGui.QApplication.translate("MainWindow", "Ctrl+2", None, QtGui.QApplication.UnicodeUTF8))
+        self.actionChannel_3.setText(QtGui.QApplication.translate("MainWindow", "Channel 3", None, QtGui.QApplication.UnicodeUTF8))
+        self.actionChannel_3.setShortcut(QtGui.QApplication.translate("MainWindow", "Ctrl+3", None, QtGui.QApplication.UnicodeUTF8))
+        self.actionCoil_1.setText(QtGui.QApplication.translate("MainWindow", "Coil 1", None, QtGui.QApplication.UnicodeUTF8))
+        self.actionCoil_1.setShortcut(QtGui.QApplication.translate("MainWindow", "Alt+1", None, QtGui.QApplication.UnicodeUTF8))
+        self.actionCoil_2.setText(QtGui.QApplication.translate("MainWindow", "Coil 2", None, QtGui.QApplication.UnicodeUTF8))
+        self.actionCoil_2.setShortcut(QtGui.QApplication.translate("MainWindow", "Alt+2", None, QtGui.QApplication.UnicodeUTF8))
+        self.actionCoil_3.setText(QtGui.QApplication.translate("MainWindow", "Coil 3", None, QtGui.QApplication.UnicodeUTF8))
+        self.actionCoil_3.setShortcut(QtGui.QApplication.translate("MainWindow", "Alt+3", None, QtGui.QApplication.UnicodeUTF8))
 

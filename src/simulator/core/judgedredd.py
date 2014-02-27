@@ -51,7 +51,7 @@ class JudgeDredd(QtCore.QThread):
     receivedMineWrongPos = QtCore.pyqtSignal(list)
     receivedMineExplodedPos = QtCore.pyqtSignal(list)
     emitCoilSignal = QtCore.pyqtSignal(Coil)
-    emitMap = QtCore.pyqtSignal(np.ndarray)
+    emitMap = QtCore.pyqtSignal(list)
 
 
     def __init__(self, parent, config):
@@ -100,7 +100,7 @@ class JudgeDredd(QtCore.QThread):
         mWidth, mHeight = self.width/self.cellXSize,self.height/self.cellYSize
         self.map = np.ones((mWidth, mHeight))*220
 
-        self.emitMap.emit(self.map)
+        self.emitMap.emit([self.mineMap, self.map])
         self.receivedMineWrongPos.emit(self.minesWrong)
         self.receivedMinePos.emit(self.minesDetected)
         self.receivedMineExplodedPos.emit(self.minesExploded)
@@ -183,15 +183,8 @@ class JudgeDredd(QtCore.QThread):
                 if x+radius <= self.map.shape[1] and x-radius >=0 and y+radius <= self.map.shape[0] and y-radius >= 0:
                     for x,y in coils:
                         self.map[y-radius:y+radius,x-radius:x+radius][mask] = 183
-                    textureMap = self.mineMap[1,:,:]
-                    textureMap -= textureMap.min()
-                    textureMap /= textureMap.max()
-                    textureMap *= 255
-                    textureMap = textureMap.astype(uint8)
-                    textureMap[0,0] = 0
-                    textureMap[self.map != 183] = 220
 
-                    self.emitMap.emit(textureMap)
+                    self.emitMap.emit([self.mineMap,self.map])
 
                 topics = [self.pubMineDetection_left, self.pubMineDetection_middle, self.pubMineDetection_right]
                 for co in range(3):

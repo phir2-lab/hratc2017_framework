@@ -135,6 +135,17 @@ class MineWindow(QtGui.QMainWindow, Ui_MainWindow):
         self.connect( self.gltimer, QtCore.SIGNAL("timeout()"), self.glwidget.updateGL)
 
         self.connect( self.startStopPB, QtCore.SIGNAL("clicked()"), self.startCompetitorDialog)
+        self.connect( self.actionCoveredArea, QtCore.SIGNAL("toggled(bool)"),   self.uncheckCoilsSignal)
+
+        self.connect( self.actionCoilsSignal, QtCore.SIGNAL("toggled(bool)"),   self.uncheckChannels)
+        self.connect( self.actionChannel_1, QtCore.SIGNAL("toggled(bool)"),   self.uncheckChannels)
+        self.connect( self.actionChannel_2, QtCore.SIGNAL("toggled(bool)"),   self.uncheckChannels)
+        self.connect( self.actionChannel_3, QtCore.SIGNAL("toggled(bool)"),   self.uncheckChannels)
+
+        self.connect( self.actionCoilsSignal, QtCore.SIGNAL("toggled(bool)"),   self.uncheckCoils)
+        self.connect( self.actionCoil_1, QtCore.SIGNAL("toggled(bool)"),   self.uncheckCoils)
+        self.connect( self.actionCoil_2, QtCore.SIGNAL("toggled(bool)"),   self.uncheckCoils)
+        self.connect( self.actionCoil_3, QtCore.SIGNAL("toggled(bool)"),   self.uncheckCoils)
 
         self.newCompetitorDialog = NewCompetitorDialog(self)
         self.connect(self.newCompetitorDialog, QtCore.SIGNAL("newCompetitor(QString)"), self.startCompetitor)
@@ -149,6 +160,39 @@ class MineWindow(QtGui.QMainWindow, Ui_MainWindow):
 
     def stop(self):
         self.gltimer.stop()
+
+
+    def uncheckCoilsSignal(self,check):
+        if not check:
+            self.actionCoilsSignal.setChecked(False)
+
+
+    def uncheckChannels(self,check):
+        sender = self.sender()
+        if check or sender==self.actionCoilsSignal:
+            if self.actionChannel_1 != sender:
+                self.actionChannel_1.setChecked(False)
+            if self.actionChannel_2 != sender:
+                self.actionChannel_2.setChecked(False)
+            if self.actionChannel_3 != sender:
+                self.actionChannel_3.setChecked(False)
+        if self.actionCoilsSignal.isChecked():
+            if not self.actionChannel_1.isChecked() and not self.actionChannel_2.isChecked() and not self.actionChannel_3.isChecked():
+                    self.actionChannel_1.setChecked(True)
+
+
+    def uncheckCoils(self,check):
+        sender = self.sender()
+        if check or sender==self.actionCoilsSignal:
+            if self.actionCoil_1 != sender:
+                self.actionCoil_1.setChecked(False)
+            if self.actionCoil_2 != sender:
+                self.actionCoil_2.setChecked(False)
+            if self.actionCoil_3 != sender:
+                self.actionCoil_3.setChecked(False)
+        if self.actionCoilsSignal.isChecked():
+            if not self.actionCoil_1.isChecked() and not self.actionCoil_2.isChecked() and not self.actionCoil_3.isChecked():
+                    self.actionCoil_2.setChecked(True)
 
 
     def mouseMoveEvent(self,event):
@@ -293,11 +337,34 @@ class MineWindow(QtGui.QMainWindow, Ui_MainWindow):
 
 
     def updateMap(self,Map):
-        if Map.dtype != np.uint8:
-            Map[Map > 255] = 255
-            Map[Map < 0  ] = 0
-            Map = Map.astype(np.uint8)
-        self.Map = Map
+        mineMap, coveredArea = Map
+        if self.actionCoilsSignal.isChecked():
+            index = 0
+            if self.actionChannel_1.isChecked():
+                index = 0
+            if self.actionChannel_2.isChecked():
+                index = 1
+            if self.actionChannel_3.isChecked():
+                index = 2
+            if self.actionCoil_2.isChecked():
+                index += 3
+            if self.actionCoil_3.isChecked():
+                index += 6
+            textureMap = mineMap[index,:,:]
+            textureMap -= textureMap.min()
+            textureMap /= textureMap.max()
+            textureMap *= 255
+            textureMap = textureMap.astype(np.uint8)
+            textureMap[0,0] = 0
+            textureMap[coveredArea != 183] = 220
+            self.Map = textureMap
+        else:
+            self.Map = coveredArea
+
+        if self.Map.dtype != np.uint8:
+            self.Map[textureMap > 255] = 255
+            self.Map[textureMap < 0  ] = 0
+            self.Map = self.Map.astype(np.uint8)
 
 
     def updateTimeLabel(self):
