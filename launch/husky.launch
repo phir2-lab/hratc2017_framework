@@ -32,7 +32,7 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
     <param name="robot_description" command="$(find xacro)/xacro.py '$(find hratc2014_simulator)/urdf/husky.urdf.xacro'" />
 
     <!-- Spawn robot in gazebo -->
-    <node name="spawn_husky_model" pkg="gazebo_ros" type="spawn_model" args="-x 0 -y 0 -z 0.6 -unpause -urdf -param robot_description -model mobile_base"/>
+    <node name="spawn_husky_model" pkg="gazebo_ros" type="spawn_model" args="-x 0 -y 0 -z 1.2 -unpause -urdf -param robot_description -model mobile_base"/>
 
     <node pkg="robot_state_publisher" type="robot_state_publisher" name="robot_state_publisher">
         <param name="publish_frequency" type="double" value="30.0" />

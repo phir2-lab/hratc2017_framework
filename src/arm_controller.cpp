@@ -37,10 +37,48 @@
 
 #include <ros/ros.h>
 #include <std_msgs/Float64.h>
+#include <std_msgs/Bool.h>
+#include <control_msgs/JointControllerState.h>
 
+ros::Publisher * state_pub_ptr;
+
+ros::Publisher * sweep_pub_ptr;
 ros::Publisher * upper_pub_ptr;
 ros::Publisher * lower_pub_ptr;
 ros::Publisher * mirror_pub_ptr;
+
+double state;
+double goal;
+bool sweep;
+
+double min;
+double max;
+
+void sweepStateCallback(const control_msgs::JointControllerState::ConstPtr& msg)
+{
+    state = msg->process_value;
+}
+
+void stateCallback(const control_msgs::JointControllerState::ConstPtr& msg)
+{
+    control_msgs::JointControllerState joint_state;
+
+    joint_state.header = msg->header;
+    joint_state.set_point = msg->set_point;
+    joint_state.process_value = msg->process_value;
+    joint_state.process_value_dot = msg->process_value_dot;
+    joint_state.error = msg->error;
+    joint_state.time_step = msg->time_step;
+    joint_state.command = msg->command;
+    joint_state.p = msg->p;
+    joint_state.i = msg->i;
+    joint_state.d = msg->d;
+    joint_state.i_clamp = msg->i_clamp;
+
+    state_pub_ptr->publish(joint_state);
+
+    state = msg->process_value;
+}
 
 void commandCallback(const std_msgs::Float64::ConstPtr& msg)
 {
@@ -54,20 +92,44 @@ void commandCallback(const std_msgs::Float64::ConstPtr& msg)
     mirror_pub_ptr->publish(command);
 }
 
+void sweepCallback(const std_msgs::Bool::ConstPtr& msg)
+{
+    sweep = msg->data;
+
+    std_msgs::Float64 command;
+    command.data = goal = min;
+    sweep_pub_ptr->publish(command);
+}
+
 int main(int argc, char **argv)
 {
     ros::init(argc, argv, "arm_controller");
     ros::NodeHandle n;
 
+    double min = -0.8;
+    double max = 0.8;
+
+    ros::Subscriber sweep_state_sub = n.subscribe("/arm/sweep_controller/state", 1, sweepStateCallback);
+
+    ros::Subscriber state_sub = n.subscribe("/arm/upper_lift_controller/state", 1, stateCallback);
+    ros::Publisher state_pub = n.advertise<control_msgs::JointControllerState>("/arm/lift_controller/state", 1);
+
+    state_pub_ptr = &state_pub;
+
     ros::Subscriber command_sub = n.subscribe("/arm/lift_controller/command", 1, commandCallback);
     
+    ros::Publisher sweep_pub = n.advertise<std_msgs::Float64>("/arm/sweep_controller/command", 1);
     ros::Publisher upper_pub = n.advertise<std_msgs::Float64>("/arm/upper_lift_controller/command", 1);
     ros::Publisher lower_pub = n.advertise<std_msgs::Float64>("/arm/lower_lift_controller/command", 1);
     ros::Publisher mirror_pub = n.advertise<std_msgs::Float64>("/arm/mirror_lift_controller/command", 1);
     
+    sweep_pub_ptr = &sweep_pub;
     upper_pub_ptr = &upper_pub;
     lower_pub_ptr = &lower_pub;
     mirror_pub_ptr = &mirror_pub;
+
+    sweep = false;
+    ros::Subscriber sweep_sub = n.subscribe("/arm/sweep", 1, sweepCallback);
 
     ros::Duration(3.0).sleep();
 
@@ -77,8 +139,21 @@ int main(int argc, char **argv)
     upper_pub.publish(msg);
     lower_pub.publish(msg);
     mirror_pub.publish(msg);
-    
-    ros::spin();
+
+    ros::Rate r(50.0);
+    while(ros::ok())
+    {
+        ROS_INFO("state %lf goal %lf", state, goal);
+        if(sweep && fabs(state - goal) <= 0.01)
+        {
+            std_msgs::Float64 command;
+            command.data = goal = (goal == min) ? max : min;
+            sweep_pub.publish(command);
+        }
+
+        ros::spinOnce();
+        r.sleep();
+    }
 
     return 0;
 }

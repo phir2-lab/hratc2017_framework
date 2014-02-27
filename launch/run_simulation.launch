@@ -29,7 +29,7 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
     <!-- Open the Gazebo world -->
     <!-- <include file="$(find gazebo_ros)/launch/empty_world.launch"/> -->
-    <include file="$(find hratc2014_simulator)/launch/outdoors.launch"/>
+    <include file="$(find hratc2014_simulator)/launch/world.launch"/>
     <!-- Spawn the Husky robot -->
     <include file="$(find hratc2014_simulator)/launch/husky.launch"/>
     
@@ -56,7 +56,7 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
       <remap from="/joint_states" to="/arm/joint_states" />
     </node>
     
-    <node pkg="hratc2014_simulator" type="arm_controller" name="arm_controller"/>
+    <node pkg="hratc2014_simulator" type="arm_controller" name="arm_controller" output="screen"/>
     
     
     <!-- EKF for localization -->
