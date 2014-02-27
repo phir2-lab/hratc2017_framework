@@ -7,7 +7,6 @@ from PyQt4.QtOpenGL import *
 from PyQt4 import QtGui, QtCore
 from ConfigParser import ConfigParser
 from ui.mainwindow import Ui_MainWindow
-from mine_detection.msg._Coil import Coil
 from numpy import deg2rad, rad2deg, arange
 from newcompetitor import NewCompetitorDialog
 from math import ceil, floor, atan2, degrees, radians, sqrt, cos, sin, pi
