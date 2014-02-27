@@ -1,0 +1,12 @@
+##############################################################################
+#
+# Source installation for the HRATC2014 framework
+#
+##############################################################################
+
+- git:
+    uri: https://github.com/goncabrita/hratc2014_framework.git
+    local-name: hratc2014_framework
+    version: master
+
+
