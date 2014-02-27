@@ -33,61 +33,6 @@ def GLCircle(center, raio=0.15, angleStep = .5):
     glTranslatef(-x, -y, 0.)
 
 
-class GLCoilsPlot(QGLWidget):
-
-    maximum = 100.
-    minimum = -100.
-    def __init__(self, parent = None):
-        self.parent = parent
-        super(GLCoilsPlot, self).__init__(QGLFormat(QGL.SampleBuffers), parent)
-
-        self.center = [0,0]
-        self.width, self.height = 0., 0.
-
-
-    def paintGL(self):
-        self.viewUpdate()
-
-        glMatrixMode(GL_MODELVIEW)
-        glLoadIdentity()
-        glClear(GL_COLOR_BUFFER_BIT)
-
-        coils = self.parent.window().coils
-        if coils != [] and self.parent.window().competitorName != None:
-            glColor3f(.07,.3,1.)
-            glBegin(GL_LINE_STRIP)
-            i = 0
-            scaleX, scaleY = self.width/25., self.height/float(self.maximum-self.minimum)
-            for coil in coils:
-                glVertex3f(i*scaleX,coil.channel[0]*scaleY,0.)
-                i += 1
-            glEnd()
-
-
-    def resizeGL(self, w, h):
-        self.width, self.height = w, h
-        self.updateGL()
-
-
-    def initializeGL(self):
-        glClearColor(0.86, 0.86, 0.86, 1.0)
-        glClear(GL_COLOR_BUFFER_BIT)
-
-
-    def paintEvent(self,event):
-        pass
-
-
-    def viewUpdate(self):
-        w, h = self.width, self.height
-
-        glMatrixMode(GL_PROJECTION)
-        glLoadIdentity()
-        glOrtho(0, w, 0, h, -50.0, 50.0)
-        glViewport(0, 0, w, h)
-
-
-
 class GLWidget(QGLWidget):
 
 
@@ -177,7 +122,6 @@ class MineWindow(QtGui.QMainWindow, Ui_MainWindow):
 
         #Adds GLWidget
         self.glwidget = GLWidget(self.mapwidget)
-        self.glcoilsplot = GLCoilsPlot(self.coilsPlot)
 
         self.updateConfig(config)
 
@@ -189,7 +133,6 @@ class MineWindow(QtGui.QMainWindow, Ui_MainWindow):
         self.gltimer = QtCore.QTimer(self)
         self.gltimer.setInterval(33)
         self.connect( self.gltimer, QtCore.SIGNAL("timeout()"), self.glwidget.updateGL)
-        self.connect( self.gltimer, QtCore.SIGNAL("timeout()"), self.glcoilsplot.updateGL)
 
         self.connect( self.startStopPB, QtCore.SIGNAL("clicked()"), self.startCompetitorDialog)
 
@@ -235,7 +178,6 @@ class MineWindow(QtGui.QMainWindow, Ui_MainWindow):
     def resizeEvent(self,event):
         super(MineWindow,self).resizeEvent(event)
         self.glwidget.resize(self.mapwidget.width(),self.mapwidget.height())
-        self.glcoilsplot.resize(self.coilsPlot.width(),self.coilsPlot.height())
 
 
     def startCompetitorDialog(self):
@@ -320,9 +262,6 @@ class MineWindow(QtGui.QMainWindow, Ui_MainWindow):
     def updateRobotPos(self,path):
         self.path = path
 
-
-    def updateMaxMinCoil(self,maxMin):
-        self.glcoilsplot.maximum, self.glcoilsplot.minimum = maxMin
 
 
     def addMinePos(self,minesDetected):

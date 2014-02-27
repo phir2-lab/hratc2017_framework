@@ -50,7 +50,6 @@ class MineDetection(QtGui.QMainWindow):
         self.connect( self.judge, QtCore.SIGNAL("receivedMineExplodedPos(PyQt_PyObject)"),
                                                                         self.mineWindow.addMineExplodedPos)
         self.connect( self.judge, QtCore.SIGNAL("emitCoilSignal(PyQt_PyObject)"), self.mineWindow.addCoils)
-        self.connect( self.judge, QtCore.SIGNAL("maxMinCoils(PyQt_PyObject)"), self.mineWindow.updateMaxMinCoil)
 
         self.connect( self.judge, QtCore.SIGNAL("emitMap(PyQt_PyObject)"), self.mineWindow.updateMap)
         self.connect( self.mineWindow, QtCore.SIGNAL("resetScore()"), self.judge.resetScore)

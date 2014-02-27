@@ -14,7 +14,7 @@
    <bool>true</bool>
   </property>
   <property name="windowTitle">
-   <string>HRATC 2014 Simulator</string>
+   <string>HRATC 2014 Framework</string>
   </property>
   <widget class="QWidget" name="centralwidget">
    <property name="mouseTracking">
@@ -44,7 +44,7 @@
          </font>
         </property>
         <property name="text">
-         <string>Mines detected:</string>
+         <string>True detection:</string>
         </property>
        </widget>
       </item>
@@ -120,7 +120,7 @@
          </font>
         </property>
         <property name="text">
-         <string>Wrong mines detected:</string>
+         <string>False detection:</string>
         </property>
        </widget>
       </item>
@@ -311,33 +311,6 @@
          </property>
         </spacer>
        </item>
-       <item>
-        <layout class="QHBoxLayout" name="horizontalLayout_2">
-         <item>
-          <widget class="QWidget" name="coilsPlot" native="true">
-           <property name="minimumSize">
-            <size>
-             <width>200</width>
-             <height>100</height>
-            </size>
-           </property>
-          </widget>
-         </item>
-         <item>
-          <spacer name="horizontalSpacer_7">
-           <property name="orientation">
-            <enum>Qt::Horizontal</enum>
-           </property>
-           <property name="sizeHint" stdset="0">
-            <size>
-             <width>40</width>
-             <height>20</height>
-            </size>
-           </property>
-          </spacer>
-         </item>
-        </layout>
-       </item>
       </layout>
      </widget>
     </item>
@@ -524,22 +497,6 @@
     <hint type="destinationlabel">
      <x>509</x>
      <y>299</y>
-    </hint>
-   </hints>
-  </connection>
-  <connection>
-   <sender>actionCoilsSignal</sender>
-   <signal>toggled(bool)</signal>
-   <receiver>coilsPlot</receiver>
-   <slot>setVisible(bool)</slot>
-   <hints>
-    <hint type="sourcelabel">
-     <x>-1</x>
-     <y>-1</y>
-    </hint>
-    <hint type="destinationlabel">
-     <x>118</x>
-     <y>508</y>
     </hint>
    </hints>
   </connection>

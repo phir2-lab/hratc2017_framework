@@ -50,7 +50,6 @@ class JudgeDredd(QtCore.QThread):
     receivedMinePos = QtCore.pyqtSignal(dict)
     receivedMineWrongPos = QtCore.pyqtSignal(list)
     receivedMineExplodedPos = QtCore.pyqtSignal(list)
-    maxMinCoils = QtCore.pyqtSignal(list)
     emitCoilSignal = QtCore.pyqtSignal(Coil)
     emitMap = QtCore.pyqtSignal(np.ndarray)
 
@@ -90,7 +89,6 @@ class JudgeDredd(QtCore.QThread):
 #        self.mineMap = MineMapGenerator(mines, mWidth, mHeight)
         self.mineMap, self.zeroChannel = config.mineMap, config.zeroChannel
 
-        self.maxMinCoils.emit([self.mineMap.max(),self.mineMap.min()])
         self.resetScore()
 
 
