@@ -335,6 +335,51 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
     <axis
       xyz="0 0 0" />
   </joint>
+  
+  <link name="left_coil">
+      <visual>
+          <origin xyz="0 0 0" rpy="0 0 0" />
+          <geometry>
+              <box size="0.001 0.001 0.001" />
+          </geometry>
+      </visual>
+  </link>
+  
+  <joint name="left_coil_joint" type="fixed">
+      <origin xyz="0 0 15" rpy="0 0 0" />
+      <parent link="metal_detector_antenna"/>
+      <child link="left_coil" />
+  </joint>
+  
+  <link name="middle_coil">
+      <visual>
+          <origin xyz="0 0 0" rpy="0 0 0" />
+          <geometry>
+              <box size="0.001 0.001 0.001" />
+          </geometry>
+      </visual>
+  </link>
+  
+  <joint name="middle_coil_joint" type="fixed">
+      <origin xyz="0 0 0" rpy="0 0 0" />
+      <parent link="metal_detector_antenna"/>
+      <child link="middle_coil" />
+  </joint>
+  
+  <link name="right_coil">
+      <visual>
+          <origin xyz="0 0 -15" rpy="0 0 0" />
+          <geometry>
+              <box size="0.001 0.001 0.001" />
+          </geometry>
+      </visual>
+  </link>
+  
+  <joint name="right_coil_joint" type="fixed">
+      <origin xyz="0 0 15" rpy="0 0 0" />
+      <parent link="metal_detector_antenna"/>
+      <child link="right_coil" />
+  </joint>
 
   <link
     name="lower_arm">
