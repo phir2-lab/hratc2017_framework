@@ -9,4 +9,10 @@
     local-name: hratc2014_framework
     version: master
 
+- git:
+    uri: https://github.com/goncabrita/metal_detector_msgs.git
+    local-name: metal_detector_msgs
+    version: master
+
+
 
