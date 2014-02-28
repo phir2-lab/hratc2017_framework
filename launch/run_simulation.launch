@@ -32,8 +32,6 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
     <include file="$(find hratc2014_framework)/launch/world.launch"/>
     <!-- Spawn the Husky robot -->
     <include file="$(find hratc2014_framework)/launch/husky.launch"/>
-    <!-- Spawn the Client -->
-    <include file="$(find hratc2014_framework)/launch/client.launch"/>
     
     <!-- Load the controllers for the pan and tilt unit -->
     <rosparam file="$(find hratc2014_framework)/controllers/ptu_d46_control.yaml" command="load"/>
