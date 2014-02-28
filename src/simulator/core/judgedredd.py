@@ -52,7 +52,7 @@ class JudgeDredd(QtCore.QThread):
     receivedMinePos = QtCore.pyqtSignal(dict)
     receivedMineWrongPos = QtCore.pyqtSignal(list)
     receivedMineExplodedPos = QtCore.pyqtSignal(list)
-    emitCoilSignal = QtCore.pyqtSignal(Coil)
+    emitCoilSignal = QtCore.pyqtSignal(list)
     emitMap = QtCore.pyqtSignal(list)
 
 
@@ -176,9 +176,25 @@ class JudgeDredd(QtCore.QThread):
             y1,x1 = np.ogrid[-radius:radius, -radius: radius]
             mask = x1**2+y1**2 <= radius**2
 
+            topics = [self.pubMineDetection_left, self.pubMineDetection_middle, self.pubMineDetection_right]
+            co = 0
+
+            signals = []
             for x,y in coils:
                 if x+radius <= self.map.shape[1] and x-radius >=0 and y+radius <= self.map.shape[0] and y-radius >= 0:
                     self.map[y-radius:y+radius,x-radius:x+radius][mask] = 183
+
+                coil = Coil()
+                for ch in range(3):
+                    coil.channel.append(self.mineMap[3*co+ch,y,x] + random.random()*100)
+                    coil.zero.append(self.zeroChannel[3*co+ch])
+
+                if topics[co] != None:
+                    topics[co].publish(coil)
+                signals.append(coil)
+                co += 1
+
+            self.emitCoilSignal.emit(signals)
 
             self.emitMap.emit([self.mineMap,self.map,coilsPose])
 
@@ -190,19 +206,6 @@ class JudgeDredd(QtCore.QThread):
                 pose.position.x, pose.position.y = robotX, robotY
                 pose.orientation.x, pose.orientation.y, pose.orientation.z, pose.orientation.w = quaternion_from_euler(0.,0.,yaw)
                 self.pubPose.publish(pose)
-
-
-                topics = [self.pubMineDetection_left, self.pubMineDetection_middle, self.pubMineDetection_right]
-                for co in range(3):
-                    coil = Coil()
-                    for ch in range(3):
-                        coil.channel.append(self.mineMap[3*co+ch,y,x] + random.random()*100)
-                        coil.zero.append(self.zeroChannel[3*co+ch])
-
-                    if topics[co] != None:
-                        topics[co].publish(coil)
-
-                self.emitCoilSignal.emit(coil)
 
             wheels = [[robotX+.272*cos(yaw)+.2725*sin(yaw), robotY-.272*sin(yaw)+.2725*cos(yaw)],
                         [robotX-.272*cos(yaw)+.2725*sin(yaw), robotY+.272*sin(yaw)+.2725*cos(yaw)],

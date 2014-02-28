@@ -109,12 +109,13 @@ class MineWindow(QtGui.QMainWindow, Ui_MainWindow):
     minesWrong = []
     minesDetected = {}
     minesExploded = []
-    coils = []
+    coils = None
     competitorName = None
     Map = None
 
     openConfig = QtCore.pyqtSignal()
     resetScore = QtCore.pyqtSignal()
+
 
     def __init__(self,parent,config):
         QtGui.QMainWindow.__init__(self)
@@ -198,13 +199,7 @@ class MineWindow(QtGui.QMainWindow, Ui_MainWindow):
 
     def mouseMoveEvent(self,event):
         super(MineWindow,self).mouseMoveEvent(event)
-        msg = ""
-        if self.glwidget.mousePos != None:
-            x, y = self.glwidget.mousePos
-            msg = "x: {}\ty: {}\t".format(x,y)
-        if self.coils != []:
-            msg = "{}Channels: {}\tZeros: {}".format(msg,self.coils[-1].channel,self.coils[-1].zero)
-        self.statusbar.showMessage(msg)
+        self.updateStatus()
 
 
     def updateStartStop(self,status):
@@ -267,7 +262,7 @@ class MineWindow(QtGui.QMainWindow, Ui_MainWindow):
 
         self.updateStartStop("Stop")
         self.resetScore.emit()
-        self.coils = []
+        self.coils = None
         self.start = time()
 
         self.timer.start()
@@ -285,8 +280,7 @@ class MineWindow(QtGui.QMainWindow, Ui_MainWindow):
         self.minesWrong = []
         self.minesDetected = {}
         self.minesExploded = []
-        self.coils = []
-
+        self.coils = None
 
 
     def keyPressEvent(self, event):
@@ -308,7 +302,6 @@ class MineWindow(QtGui.QMainWindow, Ui_MainWindow):
         self.path = path
 
 
-
     def addMinePos(self,minesDetected):
         self.minesDetected = minesDetected
         self.updateScoreboard()
@@ -325,15 +318,24 @@ class MineWindow(QtGui.QMainWindow, Ui_MainWindow):
 
 
     def addCoils(self,coil):
-        self.coils.append(coil)
-        self.coils = self.coils[-25:]
+        index = 0
+        if self.actionCoil_2.isChecked():
+            index = 1
+        if self.actionCoil_3.isChecked():
+            index = 2
+        self.coils = coil[index]
+        self.updateStatus()
 
+
+    def updateStatus(self):
         msg = ""
         if self.glwidget.mousePos != None:
             x, y = self.glwidget.mousePos
             msg = "x: {}\ty: {}\t".format(x,y)
-        if self.coils != []:
-            msg = "{}Channels: {}\tZeros: {}".format(msg,self.coils[-1].channel,self.coils[-1].zero)
+        if self.coils != None:
+            c1, c2, c3 = self.coils.channel
+            z1, z2, z3 = self.coils.zero
+            msg = "{}Channels: [{1:.2f}, {2:.2f}, {3:.2f}]\tZeros: [{4:.2f}, {5:.2f}, {6:.2f}]".format(msg, c1, c2, c3, z1, z2, z3)
         self.statusbar.showMessage(msg)
 
 
@@ -472,7 +474,6 @@ class MineWindow(QtGui.QMainWindow, Ui_MainWindow):
         glRotatef(th-90,0.,0.,1.)
 
 
-
         #robot base (and contour)
         glColor3f(.0, .0, .0)
         glBegin(GL_POLYGON)
@@ -513,6 +514,8 @@ class MineWindow(QtGui.QMainWindow, Ui_MainWindow):
             glTranslatef(-x, -y, 0.)
 
         glRotatef(-th+90,0.,0.,1.)
+
+
         #arm
         glColor3f(0., 0., 0.)
         glBegin(GL_LINES)
