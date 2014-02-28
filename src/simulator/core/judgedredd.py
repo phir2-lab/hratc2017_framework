@@ -176,11 +176,11 @@ class JudgeDredd(QtCore.QThread):
             y1,x1 = np.ogrid[-radius:radius, -radius: radius]
             mask = x1**2+y1**2 <= radius**2
 
-            if x+radius <= self.map.shape[1] and x-radius >=0 and y+radius <= self.map.shape[0] and y-radius >= 0:
-                for x,y in coils:
+            for x,y in coils:
+                if x+radius <= self.map.shape[1] and x-radius >=0 and y+radius <= self.map.shape[0] and y-radius >= 0:
                     self.map[y-radius:y+radius,x-radius:x+radius][mask] = 183
 
-                self.emitMap.emit([self.mineMap,self.map,coilsPose])
+            self.emitMap.emit([self.mineMap,self.map,coilsPose])
 
         if lastPose == None or distance(lastPose,newPose) > 0.1 or not -radRange < abs(yaw-lastPose[2]) < radRange:
             self.path.append(newPose)
