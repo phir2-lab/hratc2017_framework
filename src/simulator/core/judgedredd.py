@@ -217,9 +217,9 @@ class JudgeDredd(QtCore.QThread):
 
         rospy.Subscriber("/HRATC_FW/set_mine", Pose, self.receiveMinePosition)
     	self.pubPose = rospy.Publisher('/HRATC_FW/pose', Pose)
-        self.pubMineDetection_left = rospy.Publisher('/HRATC_FW/mineDetection_left', Coil)
-        self.pubMineDetection_middle = rospy.Publisher('/HRATC_FW/mineDetection_middle', Coil)
-        self.pubMineDetection_right = rospy.Publisher('/HRATC_FW/mineDetection_right', Coil)
+        self.pubMineDetection_left = rospy.Publisher('/coil_l', Coil)
+        self.pubMineDetection_middle = rospy.Publisher('/coil_m', Coil)
+        self.pubMineDetection_right = rospy.Publisher('/coil_r', Coil)
         
         # Added a tf listener to check the position of the coils
         self.listener = tf.TransformListener()
