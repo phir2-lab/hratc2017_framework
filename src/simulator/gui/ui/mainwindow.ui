@@ -388,7 +388,7 @@
     <bool>true</bool>
    </property>
    <property name="text">
-    <string>Wrong mines detected</string>
+    <string>False Detection</string>
    </property>
    <property name="shortcut">
     <string>F3</string>
@@ -402,7 +402,7 @@
     <bool>true</bool>
    </property>
    <property name="text">
-    <string>Mines detected</string>
+    <string>True Detection</string>
    </property>
    <property name="shortcut">
     <string>F2</string>
@@ -416,7 +416,7 @@
     <bool>true</bool>
    </property>
    <property name="text">
-    <string>Exploded mines</string>
+    <string>Exploded Mines</string>
    </property>
    <property name="shortcut">
     <string>F4</string>
@@ -430,7 +430,7 @@
     <bool>true</bool>
    </property>
    <property name="text">
-    <string>True mines</string>
+    <string>True Mines</string>
    </property>
    <property name="shortcut">
     <string>F5</string>
@@ -461,7 +461,7 @@
     <string>Coil's signal</string>
    </property>
    <property name="shortcut">
-    <string>F8, Ctrl+S</string>
+    <string>F9</string>
    </property>
   </action>
   <action name="actionRobotPath">
@@ -487,6 +487,9 @@
    </property>
    <property name="text">
     <string>Covered area</string>
+   </property>
+   <property name="shortcut">
+    <string>F8</string>
    </property>
   </action>
   <action name="actionChannel_1">

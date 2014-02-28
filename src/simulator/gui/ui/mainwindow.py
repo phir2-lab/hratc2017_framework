@@ -2,7 +2,7 @@
 
 # Form implementation generated from reading ui file 'mainwindow.ui'
 #
-# Created: Thu Feb 27 18:20:26 2014
+# Created: Fri Feb 28 14:44:53 2014
 #      by: PyQt4 UI code generator 4.9.1
 #
 # WARNING! All changes made in this file will be lost!
@@ -253,21 +253,22 @@ class Ui_MainWindow(object):
         self.actionConfiguration.setShortcut(QtGui.QApplication.translate("MainWindow", "C", None, QtGui.QApplication.UnicodeUTF8))
         self.actionExit.setText(QtGui.QApplication.translate("MainWindow", "Exit", None, QtGui.QApplication.UnicodeUTF8))
         self.actionExit.setShortcut(QtGui.QApplication.translate("MainWindow", "Esc", None, QtGui.QApplication.UnicodeUTF8))
-        self.actionWrongMinesDetected.setText(QtGui.QApplication.translate("MainWindow", "Wrong mines detected", None, QtGui.QApplication.UnicodeUTF8))
+        self.actionWrongMinesDetected.setText(QtGui.QApplication.translate("MainWindow", "False Detection", None, QtGui.QApplication.UnicodeUTF8))
         self.actionWrongMinesDetected.setShortcut(QtGui.QApplication.translate("MainWindow", "F3", None, QtGui.QApplication.UnicodeUTF8))
-        self.actionMinesDetected.setText(QtGui.QApplication.translate("MainWindow", "Mines detected", None, QtGui.QApplication.UnicodeUTF8))
+        self.actionMinesDetected.setText(QtGui.QApplication.translate("MainWindow", "True Detection", None, QtGui.QApplication.UnicodeUTF8))
         self.actionMinesDetected.setShortcut(QtGui.QApplication.translate("MainWindow", "F2", None, QtGui.QApplication.UnicodeUTF8))
-        self.actionExplodedMines.setText(QtGui.QApplication.translate("MainWindow", "Exploded mines", None, QtGui.QApplication.UnicodeUTF8))
+        self.actionExplodedMines.setText(QtGui.QApplication.translate("MainWindow", "Exploded Mines", None, QtGui.QApplication.UnicodeUTF8))
         self.actionExplodedMines.setShortcut(QtGui.QApplication.translate("MainWindow", "F4", None, QtGui.QApplication.UnicodeUTF8))
-        self.actionTrueMines.setText(QtGui.QApplication.translate("MainWindow", "True mines", None, QtGui.QApplication.UnicodeUTF8))
+        self.actionTrueMines.setText(QtGui.QApplication.translate("MainWindow", "True Mines", None, QtGui.QApplication.UnicodeUTF8))
         self.actionTrueMines.setShortcut(QtGui.QApplication.translate("MainWindow", "F5", None, QtGui.QApplication.UnicodeUTF8))
         self.actionRobot.setText(QtGui.QApplication.translate("MainWindow", "Robot", None, QtGui.QApplication.UnicodeUTF8))
         self.actionRobot.setShortcut(QtGui.QApplication.translate("MainWindow", "F6", None, QtGui.QApplication.UnicodeUTF8))
         self.actionCoilsSignal.setText(QtGui.QApplication.translate("MainWindow", "Coil\'s signal", None, QtGui.QApplication.UnicodeUTF8))
-        self.actionCoilsSignal.setShortcut(QtGui.QApplication.translate("MainWindow", "F8, Ctrl+S", None, QtGui.QApplication.UnicodeUTF8))
+        self.actionCoilsSignal.setShortcut(QtGui.QApplication.translate("MainWindow", "F9", None, QtGui.QApplication.UnicodeUTF8))
         self.actionRobotPath.setText(QtGui.QApplication.translate("MainWindow", "Robot\'s path", None, QtGui.QApplication.UnicodeUTF8))
         self.actionRobotPath.setShortcut(QtGui.QApplication.translate("MainWindow", "F7", None, QtGui.QApplication.UnicodeUTF8))
         self.actionCoveredArea.setText(QtGui.QApplication.translate("MainWindow", "Covered area", None, QtGui.QApplication.UnicodeUTF8))
+        self.actionCoveredArea.setShortcut(QtGui.QApplication.translate("MainWindow", "F8", None, QtGui.QApplication.UnicodeUTF8))
         self.actionChannel_1.setText(QtGui.QApplication.translate("MainWindow", "Channel 1", None, QtGui.QApplication.UnicodeUTF8))
         self.actionChannel_1.setShortcut(QtGui.QApplication.translate("MainWindow", "Ctrl+1", None, QtGui.QApplication.UnicodeUTF8))
         self.actionChannel_2.setText(QtGui.QApplication.translate("MainWindow", "Channel 2", None, QtGui.QApplication.UnicodeUTF8))

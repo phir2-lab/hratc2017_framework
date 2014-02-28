@@ -88,7 +88,6 @@ class JudgeDredd(QtCore.QThread):
         self.minDistDetection = config.minDistDetection
         self.maxDistExplosion = config.maxDistExplosion
 
-#        self.mineMap = MineMapGenerator(mines, mWidth, mHeight)
         self.mineMap, self.zeroChannel = config.mineMap, config.zeroChannel
 
         self.resetScore()

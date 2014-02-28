@@ -14,16 +14,6 @@ class MineDetectionConfig(QtGui.QDialog, Ui_ConfigDialog):
 
         self.setupUi(self)
 
-        self.spinWidthSubdiv.valueChanged.connect(self.updateCells)
-        self.spinHeightSubdiv.valueChanged.connect(self.updateCells)
-        self.spinMapWidth.valueChanged.connect(self.updateCells)
-        self.spinMapHeight.valueChanged.connect(self.updateCells)
-
-        self.updateCells(1)
-
-        self.doubleSpinCellWidth.valueChanged.connect(self.updateMap)
-        self.doubleSpinCellHeight.valueChanged.connect(self.updateMap)
-
         self.addBtn.clicked.connect(self.addTWMinesRow)
         self.minusBtn.clicked.connect(self.minusTWMinesRow)
 
@@ -49,10 +39,6 @@ class MineDetectionConfig(QtGui.QDialog, Ui_ConfigDialog):
         config = Config()
         config.mapWidth = self.spinMapWidth.value()
         config.mapHeight = self.spinMapHeight.value()
-        config.numCellsX = self.spinWidthSubdiv.value()
-        config.numCellsY = self.spinHeightSubdiv.value()
-        config.cellWidth  = float(config.mapWidth)/float(config.numCellsX)
-        config.cellHeight = float(config.mapHeight)/float(config.numCellsY)
 
         config.randomMines = self.radioButtonRandomMines.isChecked()
         if config.randomMines:
@@ -87,11 +73,6 @@ class MineDetectionConfig(QtGui.QDialog, Ui_ConfigDialog):
     def unpackConfig(self,config):
         self.spinMapWidth.setValue(config.mapWidth)
         self.spinMapHeight.setValue(config.mapHeight)
-        self.spinWidthSubdiv.setValue(config.numCellsX)
-        self.spinHeightSubdiv.setValue(config.numCellsY)
-        self.doubleSpinCellWidth.setValue(config.cellWidth)
-        self.doubleSpinCellHeight.setValue(config.cellHeight)
-        self.labelNumCell.setText(str(config.numCellsX*config.numCellsY));
 
         self.spinMineNumber.setValue(config.numMines)
 
@@ -108,34 +89,6 @@ class MineDetectionConfig(QtGui.QDialog, Ui_ConfigDialog):
                 item = QtGui.QTableWidgetItem()
                 item.setText(QtCore.QString(str(config.mines[i][1])))
                 self.TWMinesPos.setItem(i,1,item)
-
-
-    def updateCells(self,value):
-        mapWidth = self.spinMapWidth.value()
-        mapHeight = self.spinMapHeight.value()
-        numCellsX = self.spinWidthSubdiv.value()
-        numCellsY = self.spinHeightSubdiv.value()
-        numCells = numCellsX * numCellsY
-        cellWidth  = float(mapWidth)/float(numCellsX)
-        cellHeight = float(mapHeight)/float(numCellsY)
-
-        self.doubleSpinCellWidth.setValue(cellWidth);
-        self.doubleSpinCellHeight.setValue(cellHeight);
-        self.labelNumCell.setText(str(numCells));
-
-
-    def updateMap(self,value):
-        mapWidth = self.spinMapWidth.value()
-        mapHeight = self.spinMapHeight.value()
-        cellWidth = self.doubleSpinCellWidth.value()
-        cellHeight = self.doubleSpinCellHeight.value()
-        numCellsX  = float(mapWidth)/float(cellWidth)
-        numCellsY = float(mapHeight)/float(cellHeight)
-        numCells = int(numCellsX * numCellsY)
-
-        self.spinWidthSubdiv.setValue(numCellsX);
-        self.spinHeightSubdiv.setValue(numCellsY);
-        self.labelNumCell.setText(str(numCells));
 
 
     def addTWMinesRow(self):
