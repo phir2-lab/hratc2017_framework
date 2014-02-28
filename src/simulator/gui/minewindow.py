@@ -104,6 +104,7 @@ class MineWindow(QtGui.QMainWindow, Ui_MainWindow):
 
     config = None
     path = [[0., 0., 0.]]
+    coilsPose = [[-.18,1],[0,1],[.18,1]]
     mines = []
     minesWrong = []
     minesDetected = {}
@@ -337,7 +338,9 @@ class MineWindow(QtGui.QMainWindow, Ui_MainWindow):
 
 
     def updateMap(self,Map):
-        mineMap, coveredArea = Map
+        mineMap, coveredArea,coilsPose = Map
+        if coilsPose != []:
+            self.coilsPose = coilsPose
         if self.actionCoilsSignal.isChecked():
             index = 0
             if self.actionChannel_1.isChecked():
@@ -462,7 +465,6 @@ class MineWindow(QtGui.QMainWindow, Ui_MainWindow):
 
 
     def drawRobot(self):
-	#print self.path
         x, y, th = self.path[-1]
         th = rad2deg(th)
 
@@ -510,27 +512,21 @@ class MineWindow(QtGui.QMainWindow, Ui_MainWindow):
 
             glTranslatef(-x, -y, 0.)
 
+        glRotatef(-th+90,0.,0.,1.)
         #arm
-        glTranslatef(0, .2, 0.)
         glColor3f(0., 0., 0.)
         glBegin(GL_LINES)
 
+        x,y = self.coilsPose[1]
         glVertex3f(0., 0., 0.)
-        glVertex3f(0., .8, 0)
+        glVertex3f(x, y, 0)
 
         glEnd()
-        glTranslatef(0, -.2, 0.)
 
         #sensor
-        glTranslatef(0, 1., 0.)
+        for c in self.coilsPose:
+            GLCircle(c,0.1)
 
-        GLCircle((0., .0),0.1)
-        GLCircle((-0.18, .0),0.1)
-        GLCircle((0.18, .0),0.1)
-
-        glTranslatef(0, -1., 0.)
-
-        glRotatef(-th+90,0.,0.,1.)
         glTranslatef(-x, -y, 0.)
 
 

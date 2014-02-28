@@ -41,6 +41,8 @@ class CmdVel(QtCore.QThread):
 
 class JudgeDredd(QtCore.QThread):
     path = []
+    lastCoilPose = None
+    listener = None
     mines = []
     minesDetected = {}
     minesWrong = []
@@ -94,13 +96,14 @@ class JudgeDredd(QtCore.QThread):
 
     def resetScore(self):
         self.path = []
+        self.lastCoilPose = None
         self.minesWrong = []
         self.minesDetected = {}
         self.minesExploded = []
         mWidth, mHeight = self.width/self.cellXSize,self.height/self.cellYSize
         self.map = np.ones((mWidth, mHeight))*220
 
-        self.emitMap.emit([self.mineMap, self.map])
+        self.emitMap.emit([self.mineMap, self.map,[]])
         self.receivedMineWrongPos.emit(self.minesWrong)
         self.receivedMinePos.emit(self.minesDetected)
         self.receivedMineExplodedPos.emit(self.minesExploded)
@@ -128,33 +131,58 @@ class JudgeDredd(QtCore.QThread):
 
     def updateRobotPose(self,newPose):
         robotX, robotY, yaw = newPose
-        lastPose = None
-        if len(self.path)>0:
-            lastPose = self.path[-1]
+        if self.listener == None:
+            return
 
         # Lookup for the coils using tf
         try:
             (trans,rot) = self.listener.lookupTransform('base_footprint', 'left_coil', rospy.Time(0))
         except (tf.LookupException, tf.ConnectivityException, tf.ExtrapolationException):
             return
-        leftCoilX = trans[0]
-        leftCoilY = trans[1]
+        leftCoilX = trans[0]*cos(yaw) - trans[1]*sin(yaw)
+        leftCoilY = trans[0]*sin(yaw) + trans[1]*cos(yaw)
 
         try:
-          (trans,rot) = self.listener.lookupTransform('base_footprint', 'middle_coil', rospy.Time(0))
+            (trans,rot) = self.listener.lookupTransform('base_footprint', 'middle_coil', rospy.Time(0))
         except (tf.LookupException, tf.ConnectivityException, tf.ExtrapolationException):
           return
-        middleCoilX = trans[0]
-        middleCoilY = trans[1]
+        middleCoilX = trans[0]*cos(yaw) - trans[1]*sin(yaw)
+        middleCoilY = trans[0]*sin(yaw) + trans[1]*cos(yaw)
 
         try:
             (trans,rot) = self.listener.lookupTransform('base_footprint', 'right_coil', rospy.Time(0))
         except (tf.LookupException, tf.ConnectivityException, tf.ExtrapolationException):
             return
-        rightCoilX = trans[0]
-        rightCoilY = trans[1]
+        rightCoilX = trans[0]*cos(yaw) - trans[1]*sin(yaw)
+        rightCoilY = trans[0]*sin(yaw) + trans[1]*cos(yaw)
 
+        actualCoilPose = [middleCoilX, middleCoilY]
+        x,y = robotX,robotY
+        lastPose = None
+        if len(self.path)>0:
+            lastPose = self.path[-1]
         radRange = deg2rad(10)
+
+        if self.lastCoilPose == None or distance(self.lastCoilPose,actualCoilPose) > self.cellXSize*2 or (lastPose != None and (distance(lastPose,newPose) > 0.1 or not -radRange < abs(yaw-lastPose[2]) < radRange)):
+            self.lastCoilPose = actualCoilPose
+            y, x = ( int((self.height/2 - y)/self.cellYSize), int((self.width/2 + x)/self.cellXSize) )
+
+            coils = [[x+middleCoilX/self.cellXSize,y-middleCoilY/self.cellXSize]]
+            coils.append([x+leftCoilX/self.cellXSize,y-leftCoilY/self.cellXSize])
+            coils.append([x+rightCoilX/self.cellXSize,y-rightCoilY/self.cellXSize])
+
+            coilsPose = [[leftCoilX,leftCoilY],[middleCoilX,middleCoilY],[rightCoilX,rightCoilY]]
+            sensorArea = round(.18/self.cellXSize)
+            radius = sensorArea #meters
+            y1,x1 = np.ogrid[-radius:radius, -radius: radius]
+            mask = x1**2+y1**2 <= radius**2
+
+            if x+radius <= self.map.shape[1] and x-radius >=0 and y+radius <= self.map.shape[0] and y-radius >= 0:
+                for x,y in coils:
+                    self.map[y-radius:y+radius,x-radius:x+radius][mask] = 183
+
+                self.emitMap.emit([self.mineMap,self.map,coilsPose])
+
         if lastPose == None or distance(lastPose,newPose) > 0.1 or not -radRange < abs(yaw-lastPose[2]) < radRange:
             self.path.append(newPose)
             self.receivedRobotPos.emit(self.path)
@@ -164,27 +192,6 @@ class JudgeDredd(QtCore.QThread):
                 pose.orientation.x, pose.orientation.y, pose.orientation.z, pose.orientation.w = quaternion_from_euler(0.,0.,yaw)
                 self.pubPose.publish(pose)
 
-                #x, y = robotX+1*cos(yaw),robotY+1*sin(yaw)
-                #y, x = ( int((self.height/2 - y)/self.cellYSize), int((self.width/2 + x)/self.cellXSize) )
-
-                #coils = [[x,y]]
-                #coils.append([x+.18/self.cellXSize*cos(-yaw+deg2rad(90)), y+.18/self.cellXSize*sin(-yaw+deg2rad(90))])
-                #coils.append([x-.18/self.cellXSize*cos(-yaw+deg2rad(90)), y-.18/self.cellXSize*sin(-yaw+deg2rad(90))])
-                x,y = robotX+middleCoilX,robotY+middleCoilY
-                coils = [[robotX+middleCoilX,robotY+middleCoilY]]
-                coils.append([robotX+leftCoilX,robotY+leftCoilY])
-                coils.append([robotX+rightCoilX,robotY+rightCoilY])
-                #print "Coils: ", coils
-
-                sensorArea = round(.18/self.cellXSize)
-                radius = sensorArea #meters
-                y1,x1 = np.ogrid[-radius:radius, -radius: radius]
-                mask = x1**2+y1**2 <= radius**2
-                if x+radius <= self.map.shape[1] and x-radius >=0 and y+radius <= self.map.shape[0] and y-radius >= 0:
-                    for x,y in coils:
-                        self.map[y-radius:y+radius,x-radius:x+radius][mask] = 183
-
-                    self.emitMap.emit([self.mineMap,self.map])
 
                 topics = [self.pubMineDetection_left, self.pubMineDetection_middle, self.pubMineDetection_right]
                 for co in range(3):
@@ -214,7 +221,7 @@ class JudgeDredd(QtCore.QThread):
 
             q = [data.orientation.x, data.orientation.y, data.orientation.z, data.orientation.w]
             roll, pitch, yaw =  euler_from_quaternion(q)
-            mine = [data.position.x + 1.*cos(yaw), data.position.y + 1.*sin(yaw)]
+            mine = [data.position.x, data.position.y]
             m = tuple(min(self.mines,key=lambda m: distance(m,mine)))
 
             if distance(m,mine) < self.minDistDetection:
