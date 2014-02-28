@@ -7,9 +7,9 @@ from PyQt4.QtOpenGL import *
 from PyQt4 import QtGui, QtCore
 from ConfigParser import ConfigParser
 from ui.mainwindow import Ui_MainWindow
-from mine_detection.msg._Coil import Coil
 from numpy import deg2rad, rad2deg, arange
 from newcompetitor import NewCompetitorDialog
+from credits import Credits
 from math import ceil, floor, atan2, degrees, radians, sqrt, cos, sin, pi
 
 try:
@@ -32,61 +32,6 @@ def GLCircle(center, raio=0.15, angleStep = .5):
     x, y = center
     x, y = float(x), float(y)
     glTranslatef(-x, -y, 0.)
-
-
-class GLCoilsPlot(QGLWidget):
-
-    maximum = 100.
-    minimum = -100.
-    def __init__(self, parent = None):
-        self.parent = parent
-        super(GLCoilsPlot, self).__init__(QGLFormat(QGL.SampleBuffers), parent)
-
-        self.center = [0,0]
-        self.width, self.height = 0., 0.
-
-
-    def paintGL(self):
-        self.viewUpdate()
-
-        glMatrixMode(GL_MODELVIEW)
-        glLoadIdentity()
-        glClear(GL_COLOR_BUFFER_BIT)
-
-        coils = self.parent.window().coils
-        if coils != [] and self.parent.window().competitorName != None:
-            glColor3f(.07,.3,1.)
-            glBegin(GL_LINE_STRIP)
-            i = 0
-            scaleX, scaleY = self.width/25., self.height/float(self.maximum-self.minimum)
-            for coil in coils:
-                glVertex3f(i*scaleX,coil.channel[0]*scaleY,0.)
-                i += 1
-            glEnd()
-
-
-    def resizeGL(self, w, h):
-        self.width, self.height = w, h
-        self.updateGL()
-
-
-    def initializeGL(self):
-        glClearColor(0.86, 0.86, 0.86, 1.0)
-        glClear(GL_COLOR_BUFFER_BIT)
-
-
-    def paintEvent(self,event):
-        pass
-
-
-    def viewUpdate(self):
-        w, h = self.width, self.height
-
-        glMatrixMode(GL_PROJECTION)
-        glLoadIdentity()
-        glOrtho(0, w, 0, h, -50.0, 50.0)
-        glViewport(0, 0, w, h)
-
 
 
 class GLWidget(QGLWidget):
@@ -160,16 +105,18 @@ class MineWindow(QtGui.QMainWindow, Ui_MainWindow):
 
     config = None
     path = [[0., 0., 0.]]
+    coilsPose = [[-.18,1],[0,1],[.18,1]]
     mines = []
     minesWrong = []
     minesDetected = {}
     minesExploded = []
-    coils = []
+    coils = None
     competitorName = None
     Map = None
 
     openConfig = QtCore.pyqtSignal()
     resetScore = QtCore.pyqtSignal()
+
 
     def __init__(self,parent,config):
         QtGui.QMainWindow.__init__(self)
@@ -178,7 +125,6 @@ class MineWindow(QtGui.QMainWindow, Ui_MainWindow):
 
         #Adds GLWidget
         self.glwidget = GLWidget(self.mapwidget)
-        self.glcoilsplot = GLCoilsPlot(self.coilsPlot)
 
         self.updateConfig(config)
 
@@ -190,15 +136,27 @@ class MineWindow(QtGui.QMainWindow, Ui_MainWindow):
         self.gltimer = QtCore.QTimer(self)
         self.gltimer.setInterval(33)
         self.connect( self.gltimer, QtCore.SIGNAL("timeout()"), self.glwidget.updateGL)
-        self.connect( self.gltimer, QtCore.SIGNAL("timeout()"), self.glcoilsplot.updateGL)
 
         self.connect( self.startStopPB, QtCore.SIGNAL("clicked()"), self.startCompetitorDialog)
+        self.connect( self.actionCoveredArea, QtCore.SIGNAL("toggled(bool)"),   self.uncheckCoilsSignal)
+
+        self.connect( self.actionCoilsSignal, QtCore.SIGNAL("toggled(bool)"),   self.uncheckChannels)
+        self.connect( self.actionChannel_1, QtCore.SIGNAL("toggled(bool)"),   self.uncheckChannels)
+        self.connect( self.actionChannel_2, QtCore.SIGNAL("toggled(bool)"),   self.uncheckChannels)
+        self.connect( self.actionChannel_3, QtCore.SIGNAL("toggled(bool)"),   self.uncheckChannels)
+
+        self.connect( self.actionCoilsSignal, QtCore.SIGNAL("toggled(bool)"),   self.uncheckCoils)
+        self.connect( self.actionCoil_1, QtCore.SIGNAL("toggled(bool)"),   self.uncheckCoils)
+        self.connect( self.actionCoil_2, QtCore.SIGNAL("toggled(bool)"),   self.uncheckCoils)
+        self.connect( self.actionCoil_3, QtCore.SIGNAL("toggled(bool)"),   self.uncheckCoils)
 
         self.newCompetitorDialog = NewCompetitorDialog(self)
         self.connect(self.newCompetitorDialog, QtCore.SIGNAL("newCompetitor(QString)"), self.startCompetitor)
     
         self.updateStartStop("Start")
         self.gltimer.start()
+
+        self.connect(self.actionCredit, QtCore.SIGNAL("triggered()"), self.showCredits)
 
 
     def __del__(self):
@@ -209,15 +167,47 @@ class MineWindow(QtGui.QMainWindow, Ui_MainWindow):
         self.gltimer.stop()
 
 
+    def showCredits(self):
+        credits = Credits(self)
+        credits.show()
+
+
+    def uncheckCoilsSignal(self,check):
+        if not check:
+            self.actionCoilsSignal.setChecked(False)
+
+
+    def uncheckChannels(self,check):
+        sender = self.sender()
+        if check or sender==self.actionCoilsSignal:
+            if self.actionChannel_1 != sender:
+                self.actionChannel_1.setChecked(False)
+            if self.actionChannel_2 != sender:
+                self.actionChannel_2.setChecked(False)
+            if self.actionChannel_3 != sender:
+                self.actionChannel_3.setChecked(False)
+        if self.actionCoilsSignal.isChecked():
+            if not self.actionChannel_1.isChecked() and not self.actionChannel_2.isChecked() and not self.actionChannel_3.isChecked():
+                    self.actionChannel_1.setChecked(True)
+
+
+    def uncheckCoils(self,check):
+        sender = self.sender()
+        if check or sender==self.actionCoilsSignal:
+            if self.actionCoil_1 != sender:
+                self.actionCoil_1.setChecked(False)
+            if self.actionCoil_2 != sender:
+                self.actionCoil_2.setChecked(False)
+            if self.actionCoil_3 != sender:
+                self.actionCoil_3.setChecked(False)
+        if self.actionCoilsSignal.isChecked():
+            if not self.actionCoil_1.isChecked() and not self.actionCoil_2.isChecked() and not self.actionCoil_3.isChecked():
+                    self.actionCoil_2.setChecked(True)
+
+
     def mouseMoveEvent(self,event):
         super(MineWindow,self).mouseMoveEvent(event)
-        msg = ""
-        if self.glwidget.mousePos != None:
-            x, y = self.glwidget.mousePos
-            msg = "x: {}\ty: {}\t".format(x,y)
-        if self.coils != []:
-            msg = "{}Channels: {}\tZeros: {}".format(msg,self.coils[-1].channel,self.coils[-1].zero)
-        self.statusbar.showMessage(msg)
+        self.updateStatus()
 
 
     def updateStartStop(self,status):
@@ -236,7 +226,6 @@ class MineWindow(QtGui.QMainWindow, Ui_MainWindow):
     def resizeEvent(self,event):
         super(MineWindow,self).resizeEvent(event)
         self.glwidget.resize(self.mapwidget.width(),self.mapwidget.height())
-        self.glcoilsplot.resize(self.coilsPlot.width(),self.coilsPlot.height())
 
 
     def startCompetitorDialog(self):
@@ -281,7 +270,7 @@ class MineWindow(QtGui.QMainWindow, Ui_MainWindow):
 
         self.updateStartStop("Stop")
         self.resetScore.emit()
-        self.coils = []
+        self.coils = None
         self.start = time()
 
         self.timer.start()
@@ -299,8 +288,7 @@ class MineWindow(QtGui.QMainWindow, Ui_MainWindow):
         self.minesWrong = []
         self.minesDetected = {}
         self.minesExploded = []
-        self.coils = []
-
+        self.coils = None
 
 
     def keyPressEvent(self, event):
@@ -322,10 +310,6 @@ class MineWindow(QtGui.QMainWindow, Ui_MainWindow):
         self.path = path
 
 
-    def updateMaxMinCoil(self,maxMin):
-        self.glcoilsplot.maximum, self.glcoilsplot.minimum = maxMin
-
-
     def addMinePos(self,minesDetected):
         self.minesDetected = minesDetected
         self.updateScoreboard()
@@ -342,24 +326,59 @@ class MineWindow(QtGui.QMainWindow, Ui_MainWindow):
 
 
     def addCoils(self,coil):
-        self.coils.append(coil)
-        self.coils = self.coils[-25:]
+        index = 0
+        if self.actionCoil_2.isChecked():
+            index = 1
+        if self.actionCoil_3.isChecked():
+            index = 2
+        self.coils = coil[index]
+        self.updateStatus()
 
+
+    def updateStatus(self):
         msg = ""
         if self.glwidget.mousePos != None:
             x, y = self.glwidget.mousePos
             msg = "x: {}\ty: {}\t".format(x,y)
-        if self.coils != []:
-            msg = "{}Channels: {}\tZeros: {}".format(msg,self.coils[-1].channel,self.coils[-1].zero)
+        if self.coils != None:
+            c1, c2, c3 = self.coils.channel
+            z1, z2, z3 = self.coils.zero
+            msg = "{0}Channels: [{1:.2f}, {2:.2f}, {3:.2f}]\tZeros: [{4:.2f}, {5:.2f}, {6:.2f}]".format(msg, c1, c2, c3, z1, z2, z3)
         self.statusbar.showMessage(msg)
 
 
     def updateMap(self,Map):
-        if Map.dtype != np.uint8:
-            Map[Map > 255] = 255
-            Map[Map < 0  ] = 0
-            Map = Map.astype(np.uint8)
-        self.Map = Map
+        mineMap, coveredArea, coilsPose = Map
+        if coilsPose != []:
+            self.coilsPose = coilsPose
+
+        if self.actionCoilsSignal.isChecked():
+            index = 0
+            if self.actionChannel_1.isChecked():
+                index = 0
+            if self.actionChannel_2.isChecked():
+                index = 1
+            if self.actionChannel_3.isChecked():
+                index = 2
+            if self.actionCoil_2.isChecked():
+                index += 3
+            if self.actionCoil_3.isChecked():
+                index += 6
+            textureMap = mineMap[index,:,:]
+            textureMap -= textureMap.min()
+            textureMap /= textureMap.max()
+            textureMap *= 255
+            textureMap = textureMap.astype(np.uint8)
+            textureMap[0,0] = 0
+            textureMap[coveredArea != 183] = 220
+            self.Map = textureMap
+        else:
+            self.Map = coveredArea
+
+        if self.Map.dtype != np.uint8:
+            self.Map[self.Map > 255] = 255
+            self.Map[self.Map < 0  ] = 0
+            self.Map = self.Map.astype(np.uint8)
 
 
     def updateTimeLabel(self):
@@ -457,13 +476,13 @@ class MineWindow(QtGui.QMainWindow, Ui_MainWindow):
 
 
     def drawRobot(self):
-	#print self.path
+        if len(self.path) == 0:
+            return
         x, y, th = self.path[-1]
         th = rad2deg(th)
 
         glTranslatef(x, y, 0.)
         glRotatef(th-90,0.,0.,1.)
-
 
 
         #robot base (and contour)
@@ -505,27 +524,23 @@ class MineWindow(QtGui.QMainWindow, Ui_MainWindow):
 
             glTranslatef(-x, -y, 0.)
 
+        glRotatef(-th+90,0.,0.,1.)
+
+
         #arm
-        glTranslatef(0, .2, 0.)
         glColor3f(0., 0., 0.)
         glBegin(GL_LINES)
 
+        x,y = self.coilsPose[1]
         glVertex3f(0., 0., 0.)
-        glVertex3f(0., .8, 0)
+        glVertex3f(x, y, 0)
 
         glEnd()
-        glTranslatef(0, -.2, 0.)
 
         #sensor
-        glTranslatef(0, 1., 0.)
+        for c in self.coilsPose:
+            GLCircle(c,0.1)
 
-        GLCircle((0., .0),0.1)
-        GLCircle((-0.18, .0),0.1)
-        GLCircle((0.18, .0),0.1)
-
-        glTranslatef(0, -1., 0.)
-
-        glRotatef(-th+90,0.,0.,1.)
         glTranslatef(-x, -y, 0.)
 
 

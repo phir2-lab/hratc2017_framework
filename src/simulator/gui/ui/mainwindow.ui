@@ -14,7 +14,7 @@
    <bool>true</bool>
   </property>
   <property name="windowTitle">
-   <string>HRATC 2014 Simulator</string>
+   <string>HRATC 2014 Framework</string>
   </property>
   <widget class="QWidget" name="centralwidget">
    <property name="mouseTracking">
@@ -44,7 +44,7 @@
          </font>
         </property>
         <property name="text">
-         <string>Mines detected:</string>
+         <string>True detection:</string>
         </property>
        </widget>
       </item>
@@ -120,7 +120,7 @@
          </font>
         </property>
         <property name="text">
-         <string>Wrong mines detected:</string>
+         <string>False detection:</string>
         </property>
        </widget>
       </item>
@@ -158,7 +158,7 @@
         </property>
         <property name="icon">
          <iconset>
-          <normaloff>start.png</normaloff>start.png</iconset>
+          <normaloff>../../../../../../../.designer/backup/start.png</normaloff>../../../../../../../.designer/backup/start.png</iconset>
         </property>
        </widget>
       </item>
@@ -311,33 +311,6 @@
          </property>
         </spacer>
        </item>
-       <item>
-        <layout class="QHBoxLayout" name="horizontalLayout_2">
-         <item>
-          <widget class="QWidget" name="coilsPlot" native="true">
-           <property name="minimumSize">
-            <size>
-             <width>200</width>
-             <height>100</height>
-            </size>
-           </property>
-          </widget>
-         </item>
-         <item>
-          <spacer name="horizontalSpacer_7">
-           <property name="orientation">
-            <enum>Qt::Horizontal</enum>
-           </property>
-           <property name="sizeHint" stdset="0">
-            <size>
-             <width>40</width>
-             <height>20</height>
-            </size>
-           </property>
-          </spacer>
-         </item>
-        </layout>
-       </item>
       </layout>
      </widget>
     </item>
@@ -374,9 +347,24 @@
     <addaction name="actionCoveredArea"/>
     <addaction name="separator"/>
     <addaction name="actionCoilsSignal"/>
+    <addaction name="separator"/>
+    <addaction name="actionCoil_1"/>
+    <addaction name="actionCoil_2"/>
+    <addaction name="actionCoil_3"/>
+    <addaction name="separator"/>
+    <addaction name="actionChannel_1"/>
+    <addaction name="actionChannel_2"/>
+    <addaction name="actionChannel_3"/>
+   </widget>
+   <widget class="QMenu" name="menuAbout">
+    <property name="title">
+     <string>About</string>
+    </property>
+    <addaction name="actionCredit"/>
    </widget>
    <addaction name="menuFile"/>
    <addaction name="menuVisualization"/>
+   <addaction name="menuAbout"/>
   </widget>
   <widget class="QStatusBar" name="statusbar">
    <property name="mouseTracking">
@@ -407,7 +395,7 @@
     <bool>true</bool>
    </property>
    <property name="text">
-    <string>Wrong mines detected</string>
+    <string>False Detection</string>
    </property>
    <property name="shortcut">
     <string>F3</string>
@@ -421,7 +409,7 @@
     <bool>true</bool>
    </property>
    <property name="text">
-    <string>Mines detected</string>
+    <string>True Detection</string>
    </property>
    <property name="shortcut">
     <string>F2</string>
@@ -435,7 +423,7 @@
     <bool>true</bool>
    </property>
    <property name="text">
-    <string>Exploded mines</string>
+    <string>Exploded Mines</string>
    </property>
    <property name="shortcut">
     <string>F4</string>
@@ -449,7 +437,7 @@
     <bool>true</bool>
    </property>
    <property name="text">
-    <string>True mines</string>
+    <string>True Mines</string>
    </property>
    <property name="shortcut">
     <string>F5</string>
@@ -480,7 +468,7 @@
     <string>Coil's signal</string>
    </property>
    <property name="shortcut">
-    <string>F8, Ctrl+S</string>
+    <string>F9</string>
    </property>
   </action>
   <action name="actionRobotPath">
@@ -507,6 +495,96 @@
    <property name="text">
     <string>Covered area</string>
    </property>
+   <property name="shortcut">
+    <string>F8</string>
+   </property>
+  </action>
+  <action name="actionChannel_1">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="checked">
+    <bool>true</bool>
+   </property>
+   <property name="text">
+    <string>Channel 1</string>
+   </property>
+   <property name="shortcut">
+    <string>Ctrl+1</string>
+   </property>
+  </action>
+  <action name="actionChannel_2">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="text">
+    <string>Channel 2</string>
+   </property>
+   <property name="shortcut">
+    <string>Ctrl+2</string>
+   </property>
+  </action>
+  <action name="actionChannel_3">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="text">
+    <string>Channel 3</string>
+   </property>
+   <property name="shortcut">
+    <string>Ctrl+3</string>
+   </property>
+  </action>
+  <action name="actionCoil_1">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="text">
+    <string>Coil 1</string>
+   </property>
+   <property name="shortcut">
+    <string>Alt+1</string>
+   </property>
+  </action>
+  <action name="actionCoil_2">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="checked">
+    <bool>true</bool>
+   </property>
+   <property name="text">
+    <string>Coil 2</string>
+   </property>
+   <property name="shortcut">
+    <string>Alt+2</string>
+   </property>
+  </action>
+  <action name="actionCoil_3">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="text">
+    <string>Coil 3</string>
+   </property>
+   <property name="shortcut">
+    <string>Alt+3</string>
+   </property>
+  </action>
+  <action name="actionCredits">
+   <property name="text">
+    <string>Credits</string>
+   </property>
+  </action>
+  <action name="actionCredits_2">
+   <property name="text">
+    <string>Credits</string>
+   </property>
+  </action>
+  <action name="actionCredit">
+   <property name="text">
+    <string>Credits</string>
+   </property>
   </action>
  </widget>
  <resources/>
@@ -528,18 +606,114 @@
    </hints>
   </connection>
   <connection>
-   <sender>actionCoilsSignal</sender>
+   <sender>actionCoveredArea</sender>
    <signal>toggled(bool)</signal>
-   <receiver>coilsPlot</receiver>
-   <slot>setVisible(bool)</slot>
+   <receiver>actionCoilsSignal</receiver>
+   <slot>setEnabled(bool)</slot>
    <hints>
     <hint type="sourcelabel">
      <x>-1</x>
      <y>-1</y>
     </hint>
     <hint type="destinationlabel">
-     <x>118</x>
-     <y>508</y>
+     <x>-1</x>
+     <y>-1</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>actionCoilsSignal</sender>
+   <signal>toggled(bool)</signal>
+   <receiver>actionChannel_1</receiver>
+   <slot>setEnabled(bool)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>-1</x>
+     <y>-1</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>-1</x>
+     <y>-1</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>actionCoilsSignal</sender>
+   <signal>toggled(bool)</signal>
+   <receiver>actionChannel_2</receiver>
+   <slot>setEnabled(bool)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>-1</x>
+     <y>-1</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>-1</x>
+     <y>-1</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>actionCoilsSignal</sender>
+   <signal>toggled(bool)</signal>
+   <receiver>actionChannel_3</receiver>
+   <slot>setEnabled(bool)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>-1</x>
+     <y>-1</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>-1</x>
+     <y>-1</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>actionCoilsSignal</sender>
+   <signal>toggled(bool)</signal>
+   <receiver>actionCoil_1</receiver>
+   <slot>setEnabled(bool)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>-1</x>
+     <y>-1</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>-1</x>
+     <y>-1</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>actionCoilsSignal</sender>
+   <signal>toggled(bool)</signal>
+   <receiver>actionCoil_2</receiver>
+   <slot>setEnabled(bool)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>-1</x>
+     <y>-1</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>-1</x>
+     <y>-1</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>actionCoilsSignal</sender>
+   <signal>toggled(bool)</signal>
+   <receiver>actionCoil_3</receiver>
+   <slot>setEnabled(bool)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>-1</x>
+     <y>-1</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>-1</x>
+     <y>-1</y>
     </hint>
    </hints>
   </connection>

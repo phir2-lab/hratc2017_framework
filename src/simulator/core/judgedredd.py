@@ -12,35 +12,11 @@ from time import sleep
 def distance(pt1,pt2):
     return sqrt(pow(pt2[0]-pt1[0],2) + pow(pt2[1]-pt1[1],2))
 
-class CmdVel(QtCore.QThread):
-
-    updateRobotPos = QtCore.pyqtSignal(list)
-
-    def __init__(self, parent, startPoint = [0,0,0], cmdVel = Twist(), fps=30.):
-        QtCore.QThread.__init__(self)
-        self.cmdVel = cmdVel
-        self.fps = fps
-        self.lastPoint = startPoint
-        self.parent = parent
-        #self.pubVel = rospy.Publisher("/husky/cmd_vel", Twist)
-
-
-    def stop(self):
-        self.running = False
-        self.wait()
-
-
-    def run(self):
-
-        self.running = True
-
-        while self.running:
-            #self.pubVel.publish(self.cmdVel)
-            sleep(1./self.fps)
-
 
 class JudgeDredd(QtCore.QThread):
     path = []
+    lastCoilPose = None
+    listener = None
     mines = []
     minesDetected = {}
     minesWrong = []
@@ -50,9 +26,8 @@ class JudgeDredd(QtCore.QThread):
     receivedMinePos = QtCore.pyqtSignal(dict)
     receivedMineWrongPos = QtCore.pyqtSignal(list)
     receivedMineExplodedPos = QtCore.pyqtSignal(list)
-    maxMinCoils = QtCore.pyqtSignal(list)
-    emitCoilSignal = QtCore.pyqtSignal(Coil)
-    emitMap = QtCore.pyqtSignal(np.ndarray)
+    emitCoilSignal = QtCore.pyqtSignal(list)
+    emitMap = QtCore.pyqtSignal(list)
 
 
     def __init__(self, parent, config):
@@ -61,9 +36,6 @@ class JudgeDredd(QtCore.QThread):
         self.parent = parent
         self.updateConfig(config)
         self.pubMineDetection_left = self.pubMineDetection_middle = self.pubMineDetection_right = self.pubPose = None
-        self.cmdVel = CmdVel(self)
-
-        self.connect(self.cmdVel, QtCore.SIGNAL("updateRobotPos(PyQt_PyObject)"), self.updateRobotPose)
 
 
     def __del__(self):
@@ -71,7 +43,6 @@ class JudgeDredd(QtCore.QThread):
 
 
     def stop(self):
-        self.cmdVel.stop()
         rospy.signal_shutdown("Shutdown HRATC Framework")
         self.wait()
 
@@ -87,30 +58,25 @@ class JudgeDredd(QtCore.QThread):
         self.minDistDetection = config.minDistDetection
         self.maxDistExplosion = config.maxDistExplosion
 
-#        self.mineMap = MineMapGenerator(mines, mWidth, mHeight)
         self.mineMap, self.zeroChannel = config.mineMap, config.zeroChannel
 
-        self.maxMinCoils.emit([self.mineMap.max(),self.mineMap.min()])
         self.resetScore()
 
 
     def resetScore(self):
         self.path = []
+        self.lastCoilPose = None
         self.minesWrong = []
         self.minesDetected = {}
         self.minesExploded = []
         mWidth, mHeight = self.width/self.cellXSize,self.height/self.cellYSize
         self.map = np.ones((mWidth, mHeight))*220
 
-        self.emitMap.emit(self.map)
+        self.emitMap.emit([self.mineMap, self.map,[]])
         self.receivedMineWrongPos.emit(self.minesWrong)
         self.receivedMinePos.emit(self.minesDetected)
         self.receivedMineExplodedPos.emit(self.minesExploded)
         self.receivedRobotPos.emit(self.path)
-
-
-    def receiveCmdVel(self,data):
-        self.cmdVel.cmdVel = data
 
 
     def receiveSimulationPose(self, data):
@@ -130,33 +96,74 @@ class JudgeDredd(QtCore.QThread):
 
     def updateRobotPose(self,newPose):
         robotX, robotY, yaw = newPose
-        lastPose = None
-        if len(self.path)>0:
-            lastPose = self.path[-1]
+        if self.listener == None:
+            return
 
         # Lookup for the coils using tf
         try:
             (trans,rot) = self.listener.lookupTransform('base_footprint', 'left_coil', rospy.Time(0))
         except (tf.LookupException, tf.ConnectivityException, tf.ExtrapolationException):
             return
-        leftCoilX = trans[0]
-        leftCoilY = trans[1]
+        leftCoilX = trans[0]*cos(yaw) - trans[1]*sin(yaw)
+        leftCoilY = trans[0]*sin(yaw) + trans[1]*cos(yaw)
 
         try:
-          (trans,rot) = self.listener.lookupTransform('base_footprint', 'middle_coil', rospy.Time(0))
+            (trans,rot) = self.listener.lookupTransform('base_footprint', 'middle_coil', rospy.Time(0))
         except (tf.LookupException, tf.ConnectivityException, tf.ExtrapolationException):
           return
-        middleCoilX = trans[0]
-        middleCoilY = trans[1]
+        middleCoilX = trans[0]*cos(yaw) - trans[1]*sin(yaw)
+        middleCoilY = trans[0]*sin(yaw) + trans[1]*cos(yaw)
 
         try:
             (trans,rot) = self.listener.lookupTransform('base_footprint', 'right_coil', rospy.Time(0))
         except (tf.LookupException, tf.ConnectivityException, tf.ExtrapolationException):
             return
-        rightCoilX = trans[0]
-        rightCoilY = trans[1]
+        rightCoilX = trans[0]*cos(yaw) - trans[1]*sin(yaw)
+        rightCoilY = trans[0]*sin(yaw) + trans[1]*cos(yaw)
 
+        actualCoilPose = [middleCoilX, middleCoilY]
+        x,y = robotX,robotY
+        lastPose = None
+        if len(self.path)>0:
+            lastPose = self.path[-1]
         radRange = deg2rad(10)
+
+        if self.lastCoilPose == None or distance(self.lastCoilPose,actualCoilPose) > self.cellXSize*2 or (lastPose != None and (distance(lastPose,newPose) > 0.1 or not -radRange < abs(yaw-lastPose[2]) < radRange)):
+            self.lastCoilPose = actualCoilPose
+            y, x = ( int((self.height/2 - y)/self.cellYSize), int((self.width/2 + x)/self.cellXSize) )
+
+            coils = [[x+middleCoilX/self.cellXSize,y-middleCoilY/self.cellXSize]]
+            coils.append([x+leftCoilX/self.cellXSize,y-leftCoilY/self.cellXSize])
+            coils.append([x+rightCoilX/self.cellXSize,y-rightCoilY/self.cellXSize])
+
+            coilsPose = [[leftCoilX,leftCoilY],[middleCoilX,middleCoilY],[rightCoilX,rightCoilY]]
+            sensorArea = round(.18/self.cellXSize)
+            radius = sensorArea #meters
+            y1,x1 = np.ogrid[-radius:radius, -radius: radius]
+            mask = x1**2+y1**2 <= radius**2
+
+            topics = [self.pubMineDetection_left, self.pubMineDetection_middle, self.pubMineDetection_right]
+            co = 0
+
+            signals = []
+            for x,y in coils:
+                if x+radius <= self.map.shape[1] and x-radius >=0 and y+radius <= self.map.shape[0] and y-radius >= 0:
+                    self.map[y-radius:y+radius,x-radius:x+radius][mask] = 183
+
+                coil = Coil()
+                for ch in range(3):
+                    coil.channel.append(self.mineMap[3*co+ch,y,x] + random.random()*100)
+                    coil.zero.append(self.zeroChannel[3*co+ch])
+
+                if topics[co] != None:
+                    topics[co].publish(coil)
+                signals.append(coil)
+                co += 1
+
+            self.emitCoilSignal.emit(signals)
+
+            self.emitMap.emit([self.mineMap,self.map,coilsPose])
+
         if lastPose == None or distance(lastPose,newPose) > 0.1 or not -radRange < abs(yaw-lastPose[2]) < radRange:
             self.path.append(newPose)
             self.receivedRobotPos.emit(self.path)
@@ -165,47 +172,6 @@ class JudgeDredd(QtCore.QThread):
                 pose.position.x, pose.position.y = robotX, robotY
                 pose.orientation.x, pose.orientation.y, pose.orientation.z, pose.orientation.w = quaternion_from_euler(0.,0.,yaw)
                 self.pubPose.publish(pose)
-
-                #x, y = robotX+1*cos(yaw),robotY+1*sin(yaw)
-                #y, x = ( int((self.height/2 - y)/self.cellYSize), int((self.width/2 + x)/self.cellXSize) )
-
-                #coils = [[x,y]]
-                #coils.append([x+.18/self.cellXSize*cos(-yaw+deg2rad(90)), y+.18/self.cellXSize*sin(-yaw+deg2rad(90))])
-                #coils.append([x-.18/self.cellXSize*cos(-yaw+deg2rad(90)), y-.18/self.cellXSize*sin(-yaw+deg2rad(90))])
-                x,y = robotX+middleCoilX,robotY+middleCoilY
-                coils = [[robotX+middleCoilX,robotY+middleCoilY]]
-                coils.append([robotX+leftCoilX,robotY+leftCoilY])
-                coils.append([robotX+rightCoilX,robotY+rightCoilY])
-                #print "Coils: ", coils
-
-                sensorArea = round(.18/self.cellXSize)
-                radius = sensorArea #meters
-                y1,x1 = np.ogrid[-radius:radius, -radius: radius]
-                mask = x1**2+y1**2 <= radius**2
-                if x+radius <= self.map.shape[1] and x-radius >=0 and y+radius <= self.map.shape[0] and y-radius >= 0:
-                    for x,y in coils:
-                        self.map[y-radius:y+radius,x-radius:x+radius][mask] = 183
-                    textureMap = self.mineMap[1,:,:]
-                    textureMap -= textureMap.min()
-                    textureMap /= textureMap.max()
-                    textureMap *= 255
-                    textureMap = textureMap.astype(uint8)
-                    textureMap[0,0] = 0
-                    textureMap[self.map != 183] = 220
-
-                    self.emitMap.emit(textureMap)
-
-                topics = [self.pubMineDetection_left, self.pubMineDetection_middle, self.pubMineDetection_right]
-                for co in range(3):
-                    coil = Coil()
-                    for ch in range(3):
-                        coil.channel.append(self.mineMap[3*co+ch,y,x] + random.random()*100)
-                        coil.zero.append(self.zeroChannel[3*co+ch])
-
-                    if topics[co] != None:
-                        topics[co].publish(coil)
-
-                self.emitCoilSignal.emit(coil)
 
             wheels = [[robotX+.272*cos(yaw)+.2725*sin(yaw), robotY-.272*sin(yaw)+.2725*cos(yaw)],
                         [robotX-.272*cos(yaw)+.2725*sin(yaw), robotY+.272*sin(yaw)+.2725*cos(yaw)],
@@ -223,7 +189,7 @@ class JudgeDredd(QtCore.QThread):
 
             q = [data.orientation.x, data.orientation.y, data.orientation.z, data.orientation.w]
             roll, pitch, yaw =  euler_from_quaternion(q)
-            mine = [data.position.x + 1.*cos(yaw), data.position.y + 1.*sin(yaw)]
+            mine = [data.position.x, data.position.y]
             m = tuple(min(self.mines,key=lambda m: distance(m,mine)))
 
             if distance(m,mine) < self.minDistDetection:
@@ -249,17 +215,14 @@ class JudgeDredd(QtCore.QThread):
         else:
             pass #Ver como pegar a posição real pelo sistema de landmarks
 
-        rospy.Subscriber("/husky/cmd_vel_const", Twist, self.receiveCmdVel)
         rospy.Subscriber("/HRATC_FW/set_mine", Pose, self.receiveMinePosition)
     	self.pubPose = rospy.Publisher('/HRATC_FW/pose', Pose)
-        self.pubMineDetection_left = rospy.Publisher('/HRATC_FW/mineDetection_left', Coil)
-        self.pubMineDetection_middle = rospy.Publisher('/HRATC_FW/mineDetection_middle', Coil)
-        self.pubMineDetection_right = rospy.Publisher('/HRATC_FW/mineDetection_right', Coil)
+        self.pubMineDetection_left = rospy.Publisher('/coil_l', Coil)
+        self.pubMineDetection_middle = rospy.Publisher('/coil_m', Coil)
+        self.pubMineDetection_right = rospy.Publisher('/coil_r', Coil)
         
         # Added a tf listener to check the position of the coils
         self.listener = tf.TransformListener()
-
-        self.cmdVel.start()
 
         rospy.spin()
 
