@@ -6,10 +6,18 @@
   <description>The hratc2014_framework package.</description>
 
   <maintainer email="goncabrita@gmail.com">Gonçalo Cabrita</maintainer>
+  <maintainer email="florabranchi@gmail.com">Flora Franzon Branchi</maintainer>
+  <maintainer email="rqmaffei@gmail.com">Renan de Queiros Maffei</maintainer>
+  <maintainer email="vitor_mj@yahoo.com">Vitor Augusto Machado Jorge</maintainer>
+  <maintainer email="guilhermefrancosi@gmail.com">Guilherme Schvarcz Franco</maintainer>
 
   <license>BSD</license>
   <url type="website">http://www.isr.uc.pt/~embedded/events/HRATC2014</url>
   <author email="goncabrita@gmail.com">Gonçalo Cabrita</author>
+  <author email="florabranchi@gmail.com">Flora Franzon Branchi</author>
+  <author email="rqmaffei@gmail.com">Renan de Queiros Maffei</author>
+  <author email="vitor_mj@yahoo.com">Vitor Augusto Machado Jorge</author>
+  <author email="guilhermefrancosi@gmail.com">Guilherme Schvarcz Franco</author>
 
   <buildtool_depend>catkin</buildtool_depend>
   <build_depend>roscpp</build_depend>
