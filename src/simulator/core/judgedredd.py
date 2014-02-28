@@ -12,32 +12,6 @@ from time import sleep
 def distance(pt1,pt2):
     return sqrt(pow(pt2[0]-pt1[0],2) + pow(pt2[1]-pt1[1],2))
 
-class CmdVel(QtCore.QThread):
-
-    updateRobotPos = QtCore.pyqtSignal(list)
-
-    def __init__(self, parent, startPoint = [0,0,0], cmdVel = Twist(), fps=30.):
-        QtCore.QThread.__init__(self)
-        self.cmdVel = cmdVel
-        self.fps = fps
-        self.lastPoint = startPoint
-        self.parent = parent
-        #self.pubVel = rospy.Publisher("/husky/cmd_vel", Twist)
-
-
-    def stop(self):
-        self.running = False
-        self.wait()
-
-
-    def run(self):
-
-        self.running = True
-
-        while self.running:
-            #self.pubVel.publish(self.cmdVel)
-            sleep(1./self.fps)
-
 
 class JudgeDredd(QtCore.QThread):
     path = []
@@ -62,9 +36,6 @@ class JudgeDredd(QtCore.QThread):
         self.parent = parent
         self.updateConfig(config)
         self.pubMineDetection_left = self.pubMineDetection_middle = self.pubMineDetection_right = self.pubPose = None
-        self.cmdVel = CmdVel(self)
-
-        self.connect(self.cmdVel, QtCore.SIGNAL("updateRobotPos(PyQt_PyObject)"), self.updateRobotPose)
 
 
     def __del__(self):
@@ -72,7 +43,6 @@ class JudgeDredd(QtCore.QThread):
 
 
     def stop(self):
-        self.cmdVel.stop()
         rospy.signal_shutdown("Shutdown HRATC Framework")
         self.wait()
 
@@ -107,10 +77,6 @@ class JudgeDredd(QtCore.QThread):
         self.receivedMinePos.emit(self.minesDetected)
         self.receivedMineExplodedPos.emit(self.minesExploded)
         self.receivedRobotPos.emit(self.path)
-
-
-    def receiveCmdVel(self,data):
-        self.cmdVel.cmdVel = data
 
 
     def receiveSimulationPose(self, data):
@@ -249,7 +215,6 @@ class JudgeDredd(QtCore.QThread):
         else:
             pass #Ver como pegar a posição real pelo sistema de landmarks
 
-        rospy.Subscriber("/husky/cmd_vel_const", Twist, self.receiveCmdVel)
         rospy.Subscriber("/HRATC_FW/set_mine", Pose, self.receiveMinePosition)
     	self.pubPose = rospy.Publisher('/HRATC_FW/pose', Pose)
         self.pubMineDetection_left = rospy.Publisher('/HRATC_FW/mineDetection_left', Coil)
@@ -258,8 +223,6 @@ class JudgeDredd(QtCore.QThread):
         
         # Added a tf listener to check the position of the coils
         self.listener = tf.TransformListener()
-
-        self.cmdVel.start()
 
         rospy.spin()
 
