@@ -35,7 +35,7 @@ class JudgeDredd(QtCore.QThread):
         self.config = config
         self.parent = parent
         self.updateConfig(config)
-        self.pubMineDetection_left = self.pubMineDetection_middle = self.pubMineDetection_right = self.pubPose = None
+        self.pubMineDetection = self.pubPose = None
 
 
     def __del__(self):
@@ -142,7 +142,6 @@ class JudgeDredd(QtCore.QThread):
             y1,x1 = np.ogrid[-radius:radius, -radius: radius]
             mask = x1**2+y1**2 <= radius**2
 
-            topics = [self.pubMineDetection_left, self.pubMineDetection_middle, self.pubMineDetection_right]
             co = 0
 
             signals = []
@@ -151,12 +150,12 @@ class JudgeDredd(QtCore.QThread):
                     self.map[y-radius:y+radius,x-radius:x+radius][mask] = 183
 
                 coil = Coil()
+                coil.header.frame_id = "metal_detector_{}_coil".format(["left","middle","right"][co])
                 for ch in range(3):
                     coil.channel.append(self.mineMap[3*co+ch,y,x] + random.random()*100)
                     coil.zero.append(self.zeroChannel[3*co+ch])
 
-                if topics[co] != None:
-                    topics[co].publish(coil)
+                self.pubMineDetection.publish(coil)
                 signals.append(coil)
                 co += 1
 
@@ -217,9 +216,7 @@ class JudgeDredd(QtCore.QThread):
 
         rospy.Subscriber("/HRATC_FW/set_mine", Pose, self.receiveMinePosition)
     	self.pubPose = rospy.Publisher('/HRATC_FW/pose', Pose)
-        self.pubMineDetection_left = rospy.Publisher('/coil_l', Coil)
-        self.pubMineDetection_middle = rospy.Publisher('/coil_m', Coil)
-        self.pubMineDetection_right = rospy.Publisher('/coil_r', Coil)
+        self.pubMineDetection = rospy.Publisher('/coils', Coil)
         
         # Added a tf listener to check the position of the coils
         self.listener = tf.TransformListener()
