@@ -340,9 +340,10 @@ class MineWindow(QtGui.QMainWindow, Ui_MainWindow):
 
 
     def updateMap(self,Map):
-        mineMap, coveredArea,coilsPose = Map
+        mineMap, coveredArea, coilsPose = Map
         if coilsPose != []:
             self.coilsPose = coilsPose
+
         if self.actionCoilsSignal.isChecked():
             index = 0
             if self.actionChannel_1.isChecked():
@@ -367,8 +368,8 @@ class MineWindow(QtGui.QMainWindow, Ui_MainWindow):
             self.Map = coveredArea
 
         if self.Map.dtype != np.uint8:
-            self.Map[textureMap > 255] = 255
-            self.Map[textureMap < 0  ] = 0
+            self.Map[self.Map > 255] = 255
+            self.Map[self.Map < 0  ] = 0
             self.Map = self.Map.astype(np.uint8)
 
 
@@ -467,6 +468,8 @@ class MineWindow(QtGui.QMainWindow, Ui_MainWindow):
 
 
     def drawRobot(self):
+        if len(self.path) == 0:
+            return
         x, y, th = self.path[-1]
         th = rad2deg(th)
 
