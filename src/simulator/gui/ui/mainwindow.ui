@@ -356,8 +356,15 @@
     <addaction name="actionChannel_2"/>
     <addaction name="actionChannel_3"/>
    </widget>
+   <widget class="QMenu" name="menuAbout">
+    <property name="title">
+     <string>About</string>
+    </property>
+    <addaction name="actionCredit"/>
+   </widget>
    <addaction name="menuFile"/>
    <addaction name="menuVisualization"/>
+   <addaction name="menuAbout"/>
   </widget>
   <widget class="QStatusBar" name="statusbar">
    <property name="mouseTracking">
@@ -562,6 +569,21 @@
    </property>
    <property name="shortcut">
     <string>Alt+3</string>
+   </property>
+  </action>
+  <action name="actionCredits">
+   <property name="text">
+    <string>Credits</string>
+   </property>
+  </action>
+  <action name="actionCredits_2">
+   <property name="text">
+    <string>Credits</string>
+   </property>
+  </action>
+  <action name="actionCredit">
+   <property name="text">
+    <string>Credits</string>
    </property>
   </action>
  </widget>

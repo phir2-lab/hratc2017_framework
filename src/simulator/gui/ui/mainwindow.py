@@ -2,7 +2,7 @@
 
 # Form implementation generated from reading ui file 'mainwindow.ui'
 #
-# Created: Fri Feb 28 14:44:53 2014
+# Created: Fri Feb 28 17:30:33 2014
 #      by: PyQt4 UI code generator 4.9.1
 #
 # WARNING! All changes made in this file will be lost!
@@ -140,6 +140,8 @@ class Ui_MainWindow(object):
         self.menuFile.setObjectName(_fromUtf8("menuFile"))
         self.menuVisualization = QtGui.QMenu(self.menubar)
         self.menuVisualization.setObjectName(_fromUtf8("menuVisualization"))
+        self.menuAbout = QtGui.QMenu(self.menubar)
+        self.menuAbout.setObjectName(_fromUtf8("menuAbout"))
         MainWindow.setMenuBar(self.menubar)
         self.statusbar = QtGui.QStatusBar(MainWindow)
         self.statusbar.setMouseTracking(True)
@@ -201,6 +203,12 @@ class Ui_MainWindow(object):
         self.actionCoil_3 = QtGui.QAction(MainWindow)
         self.actionCoil_3.setCheckable(True)
         self.actionCoil_3.setObjectName(_fromUtf8("actionCoil_3"))
+        self.actionCredits = QtGui.QAction(MainWindow)
+        self.actionCredits.setObjectName(_fromUtf8("actionCredits"))
+        self.actionCredits_2 = QtGui.QAction(MainWindow)
+        self.actionCredits_2.setObjectName(_fromUtf8("actionCredits_2"))
+        self.actionCredit = QtGui.QAction(MainWindow)
+        self.actionCredit.setObjectName(_fromUtf8("actionCredit"))
         self.menuFile.addAction(self.actionConfiguration)
         self.menuFile.addSeparator()
         self.menuFile.addAction(self.actionExit)
@@ -222,8 +230,10 @@ class Ui_MainWindow(object):
         self.menuVisualization.addAction(self.actionChannel_1)
         self.menuVisualization.addAction(self.actionChannel_2)
         self.menuVisualization.addAction(self.actionChannel_3)
+        self.menuAbout.addAction(self.actionCredit)
         self.menubar.addAction(self.menuFile.menuAction())
         self.menubar.addAction(self.menuVisualization.menuAction())
+        self.menubar.addAction(self.menuAbout.menuAction())
 
         self.retranslateUi(MainWindow)
         QtCore.QObject.connect(self.actionExit, QtCore.SIGNAL(_fromUtf8("triggered()")), MainWindow.close)
@@ -249,6 +259,7 @@ class Ui_MainWindow(object):
         self.timeLB.setText(QtGui.QApplication.translate("MainWindow", "00:00", None, QtGui.QApplication.UnicodeUTF8))
         self.menuFile.setTitle(QtGui.QApplication.translate("MainWindow", "File", None, QtGui.QApplication.UnicodeUTF8))
         self.menuVisualization.setTitle(QtGui.QApplication.translate("MainWindow", "View", None, QtGui.QApplication.UnicodeUTF8))
+        self.menuAbout.setTitle(QtGui.QApplication.translate("MainWindow", "About", None, QtGui.QApplication.UnicodeUTF8))
         self.actionConfiguration.setText(QtGui.QApplication.translate("MainWindow", "Configuration", None, QtGui.QApplication.UnicodeUTF8))
         self.actionConfiguration.setShortcut(QtGui.QApplication.translate("MainWindow", "C", None, QtGui.QApplication.UnicodeUTF8))
         self.actionExit.setText(QtGui.QApplication.translate("MainWindow", "Exit", None, QtGui.QApplication.UnicodeUTF8))
@@ -281,4 +292,7 @@ class Ui_MainWindow(object):
         self.actionCoil_2.setShortcut(QtGui.QApplication.translate("MainWindow", "Alt+2", None, QtGui.QApplication.UnicodeUTF8))
         self.actionCoil_3.setText(QtGui.QApplication.translate("MainWindow", "Coil 3", None, QtGui.QApplication.UnicodeUTF8))
         self.actionCoil_3.setShortcut(QtGui.QApplication.translate("MainWindow", "Alt+3", None, QtGui.QApplication.UnicodeUTF8))
+        self.actionCredits.setText(QtGui.QApplication.translate("MainWindow", "Credits", None, QtGui.QApplication.UnicodeUTF8))
+        self.actionCredits_2.setText(QtGui.QApplication.translate("MainWindow", "Credits", None, QtGui.QApplication.UnicodeUTF8))
+        self.actionCredit.setText(QtGui.QApplication.translate("MainWindow", "Credits", None, QtGui.QApplication.UnicodeUTF8))
 

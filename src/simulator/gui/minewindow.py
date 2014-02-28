@@ -9,6 +9,7 @@ from ConfigParser import ConfigParser
 from ui.mainwindow import Ui_MainWindow
 from numpy import deg2rad, rad2deg, arange
 from newcompetitor import NewCompetitorDialog
+from credits import Credits
 from math import ceil, floor, atan2, degrees, radians, sqrt, cos, sin, pi
 
 try:
@@ -155,6 +156,8 @@ class MineWindow(QtGui.QMainWindow, Ui_MainWindow):
         self.updateStartStop("Start")
         self.gltimer.start()
 
+        self.connect(self.actionCredit, QtCore.SIGNAL("triggered()"), self.showCredits)
+
 
     def __del__(self):
         self.stop()
@@ -162,6 +165,11 @@ class MineWindow(QtGui.QMainWindow, Ui_MainWindow):
 
     def stop(self):
         self.gltimer.stop()
+
+
+    def showCredits(self):
+        credits = Credits(self)
+        credits.show()
 
 
     def uncheckCoilsSignal(self,check):

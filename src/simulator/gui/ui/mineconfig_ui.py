@@ -2,7 +2,7 @@
 
 # Form implementation generated from reading ui file 'mineconfig_ui.ui'
 #
-# Created: Fri Feb 28 14:45:09 2014
+# Created: Fri Feb 28 17:12:56 2014
 #      by: PyQt4 UI code generator 4.9.1
 #
 # WARNING! All changes made in this file will be lost!
