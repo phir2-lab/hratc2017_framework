@@ -70,5 +70,9 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
         output_frame: odom
       </rosparam>
     </node>
+    
+    
+    <!-- HRATC2014 Client -->
+    <node pkg="hratc2014_framework" type="simulator.py" name="simulator" output="screen" />
   
 </launch>
