@@ -5,17 +5,17 @@
 ##############################################################################
 
 - git:
-    uri: https://github.com/goncabrita/hratc2014_framework.git
+    uri: https://github.com/ras-sight/hratc2014_framework
     local-name: hratc2014_framework
     version: master
 
 - git:
-    uri: https://github.com/goncabrita/metal_detector_msgs.git
+    uri: https://github.com/ras-sight/metal_detector_msgs.git
     local-name: metal_detector_msgs
     version: master
 
 - git:
-    uri: https://goncabrita@bitbucket.org/vitor_mj/hratc2014_entry_template.git
+    uri: https://github.com/ras-sight/hratc2014_entry_template.git
     local-name:  hratc2014_entry_template
     version: master
 
