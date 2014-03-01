@@ -132,8 +132,8 @@ class JudgeDredd(QtCore.QThread):
             self.lastCoilPose = actualCoilPose
             y, x = ( int((self.height/2 - y)/self.cellYSize), int((self.width/2 + x)/self.cellXSize) )
 
-            coils = [[x+middleCoilX/self.cellXSize,y-middleCoilY/self.cellXSize]]
-            coils.append([x+leftCoilX/self.cellXSize,y-leftCoilY/self.cellXSize])
+            coils = [[x+leftCoilX/self.cellXSize,y-leftCoilY/self.cellXSize]]
+            coils.append([x+middleCoilX/self.cellXSize,y-middleCoilY/self.cellXSize])
             coils.append([x+rightCoilX/self.cellXSize,y-rightCoilY/self.cellXSize])
 
             coilsPose = [[leftCoilX,leftCoilY],[middleCoilX,middleCoilY],[rightCoilX,rightCoilY]]
@@ -151,9 +151,10 @@ class JudgeDredd(QtCore.QThread):
 
                 coil = Coil()
                 coil.header.frame_id = "metal_detector_{}_coil".format(["left","middle","right"][co])
-                for ch in range(3):
-                    coil.channel.append(self.mineMap[3*co+ch,y,x] + random.random()*100)
-                    coil.zero.append(self.zeroChannel[3*co+ch])
+                if x <= self.mineMap.shape[2] and x >=0 and y <= self.mineMap.shape[1] and y >= 0:
+                    for ch in range(3):
+                        coil.channel.append(self.mineMap[3*co+ch,y,x] + random.random()*100)
+                        coil.zero.append(self.zeroChannel[3*co+ch])
 
                 self.pubMineDetection.publish(coil)
                 signals.append(coil)

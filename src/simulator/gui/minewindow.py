@@ -340,7 +340,7 @@ class MineWindow(QtGui.QMainWindow, Ui_MainWindow):
         if self.glwidget.mousePos != None:
             x, y = self.glwidget.mousePos
             msg = "x: {}\ty: {}\t".format(x,y)
-        if self.coils != None:
+        if self.coils != None and self.coils != []:
             c1, c2, c3 = self.coils.channel
             z1, z2, z3 = self.coils.zero
             msg = "{0}Channels: [{1:.2f}, {2:.2f}, {3:.2f}]\tZeros: [{4:.2f}, {5:.2f}, {6:.2f}]".format(msg, c1, c2, c3, z1, z2, z3)
