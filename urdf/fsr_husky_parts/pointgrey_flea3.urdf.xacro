@@ -124,7 +124,7 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 		<joint name="joint_${prefix}_camera" type="fixed">
 			<parent link="${prefix}_camera_standoff"/>
 			<child link="${prefix}_camera"/>
-			<origin xyz="0 0 ${standoff_length/2+flea_size/2}" rpy="${camera_r} ${1.5708+camera_p} ${camera_y}" /> 
+			<origin xyz="0 0 ${standoff_length/2+flea_size/2}" rpy="${camera_r} ${camera_p} ${camera_y}" /> 
 		</joint>
 
 		<!-- Camera Lense -->
@@ -134,7 +134,7 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
       				<geometry>
         				<cylinder length="${lense_length}" radius="${lense_radius}"/>
       				</geometry>
-				<origin rpy="0 0 0" xyz="0 0 0"/>
+				<origin rpy="0 1.57 0" xyz="0 0 -0.035"/>
       				<material name="Black"/>
     			</visual>
     			<collision>

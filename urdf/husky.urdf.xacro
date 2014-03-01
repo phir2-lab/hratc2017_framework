@@ -211,8 +211,8 @@ Husky A200 file and modified by the ISR University of Coimbra
     <mti parent="back_husky_bridge" x="0" y="0" z="0.0" rx="0" ry="0" rz="0" />
 
     <!-- CAMERA macros -->
-    <pointgrey_flea3 prefix="left" parent="front_husky_bridge" base_offset="-0.13" camera_offset="-0.05" camera_r="0" camera_p="0" camera_y="0" />
-    <pointgrey_flea3 prefix="right" parent="front_husky_bridge" base_offset="0.13" camera_offset="0.05" camera_r="0" camera_p="0" camera_y="0" />
+    <pointgrey_flea3 prefix="right" parent="front_husky_bridge" base_offset="-0.13" camera_offset="-0.05" camera_r="0" camera_p="0" camera_y="0" />
+    <pointgrey_flea3 prefix="left" parent="front_husky_bridge" base_offset="0.13" camera_offset="0.05" camera_r="0" camera_p="0" camera_y="0" />
 
     <!-- PTU-D46 macro -->
     <ptu_d46 parent="front_husky_bridge" x="0" y="-0.025" z="0" rx="0" ry="0" rz="1.5708" />
