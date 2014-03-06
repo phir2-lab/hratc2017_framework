@@ -228,5 +228,11 @@ Husky A200 file and modified by the ISR University of Coimbra
 
     <!-- FSR Husky De-mining Arm -->
     <fsr_husky_arm parent="base_link" x="0.120" y="-0.15" z="${base_z_size}" rx="0" ry="0" rz="0" />
-        
+    
+    <gazebo>
+      <plugin name="gazebo_ros_control" filename="libgazebo_ros_control.so">
+	<!--<robotNamespace>/husky</robotNamespace>-->
+      </plugin>
+    </gazebo>
+  
 </robot>

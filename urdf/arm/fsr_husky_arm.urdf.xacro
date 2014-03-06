@@ -484,11 +484,11 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
     </actuator>
   </transmission>
   
-  <gazebo>
+  <!--<gazebo>
     <plugin name="gazebo_ros_control" filename="libgazebo_ros_control.so">
       <robotNamespace>/arm</robotNamespace>
     </plugin>
-  </gazebo>
+  </gazebo>-->
   
 </xacro:macro>
 </robot>

@@ -23,26 +23,72 @@
 # (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
 # SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
-arm:
+#husky:
   # Publish all joint states -----------------------------------
   joint_state_controller:
     type: joint_state_controller/JointStateController
     publish_rate: 100
   
-  # Position Controllers ---------------------------------------
-  upper_lift_controller:
-    type: effort_controllers/JointPositionController
-    joint: upper_arm_joint
-    pid: {p: 100.0, i: 0.01, d: 10.0}
-  lower_lift_controller:
-    type: effort_controllers/JointPositionController
-    joint: lower_arm_joint
-    pid: {p: 100.0, i: 0.01, d: 10.0}
-  mirror_lift_controller:
-    type: effort_controllers/JointPositionController
-    joint: metal_detector_arm_joint
-    pid: {p: 100.0, i: 0.01, d: 10.0}
-  sweep_controller:
-    type: effort_controllers/JointPositionController
-    joint: arm_axel_joint
-    pid: {p: 100.0, i: 0.01, d: 10.0}
+  # Arm Controller ---------------------------------------------
+  arm_controller:
+    type: effort_controllers/JointTrajectoryController
+    joints:
+      - upper_arm_joint
+      - lower_arm_joint
+      - metal_detector_arm_joint
+      - arm_axel_joint
+    gains:
+      upper_arm_joint:
+        p: 100.0
+        i: 0.01
+        d: 10.0
+      lower_arm_joint:
+        p: 100.0
+        i: 0.01
+        d: 10.0
+      metal_detector_arm_joint:
+        p: 100.0
+        i: 0.01
+        d: 10.0
+      arm_axel_joint:
+        p: 100.0
+        i: 0.01
+        d: 10.0
+    joint_trajectory_node:
+      joints:
+        - upper_arm_joint
+        - lower_arm_joint
+        - metal_detector_arm_joint
+        - arm_axel_joint
+      constraints:
+        goal_time: 10.0
+        ptu_d46_pan_joint:
+          goal: 0.05
+        ptu_d46_tilt_joint:
+          goal: 0.05
+  
+  # Pan and Tilt Controller -----------------------------------
+  ptu_d46_controller:
+    type: effort_controllers/JointTrajectoryController
+    joints:
+      - ptu_d46_pan_joint
+      - ptu_d46_tilt_joint
+    gains:
+      ptu_d46_pan_joint:
+        p: 100.0
+        i: 0.01
+        d: 10.0
+      ptu_d46_tilt_joint:
+        p: 100.0
+        i: 0.01
+        d: 10.0
+    joint_trajectory_node:
+      joints:
+        - ptu_d46_pan_joint
+        - ptu_d46_tilt_joint
+      constraints:
+        goal_time: 10.0
+        ptu_d46_pan_joint:
+          goal: 0.05
+        ptu_d46_tilt_joint:
+          goal: 0.05

@@ -33,30 +33,16 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
     <!-- Spawn the Husky robot -->
     <include file="$(find hratc2014_framework)/launch/husky.launch"/>
     
-    <!-- Load the controllers for the pan and tilt unit -->
-    <rosparam file="$(find hratc2014_framework)/controllers/ptu_d46_control.yaml" command="load"/>
+    <!-- Load the controllers -->
+    <rosparam file="$(find hratc2014_framework)/controllers/controllers.yaml" command="load"/>
 
-    <node name="ptu_d46_controller_spawner" pkg="controller_manager" type="spawner" respawn="false"
-      output="screen" ns="/ptu_d46" args="pan_position_controller tilt_position_controller joint_state_controller"/>
+    <node name="controller_spawner" pkg="controller_manager" type="spawner" respawn="false"
+      output="screen" args="joint_state_controller arm_controller ptu_d46_controller"/>
 
-    <node name="ptu_d46_state_publisher" pkg="robot_state_publisher" type="robot_state_publisher"
+    <node name="robot_state_publisher" pkg="robot_state_publisher" type="robot_state_publisher"
       respawn="false" output="screen">
-      <remap from="/joint_states" to="/ptu_d46/joint_states" />
+      <!--<remap from="/joint_states" to="/husky/joint_states" />-->
     </node>
-    
-    
-    <!-- Load the controllers for the arm -->
-    <rosparam file="$(find hratc2014_framework)/controllers/arm_control.yaml" command="load"/>
-
-    <node name="arm_controller_spawner" pkg="controller_manager" type="spawner" respawn="false"
-      output="screen" ns="/arm" args="upper_lift_controller lower_lift_controller mirror_lift_controller sweep_controller joint_state_controller"/>
-
-    <node name="arm_state_publisher" pkg="robot_state_publisher" type="robot_state_publisher"
-      respawn="false" output="screen">
-      <remap from="/joint_states" to="/arm/joint_states" />
-    </node>
-    
-    <node pkg="hratc2014_framework" type="arm_controller" name="arm_controller" output="screen"/>
     
     
     <!-- EKF for localization -->

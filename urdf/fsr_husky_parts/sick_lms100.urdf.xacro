@@ -66,10 +66,10 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 		<gazebo reference="sick_lms100">
 			<material>Gazebo/Grey</material>
-			<turnGravityOff>true</turnGravityOff>
-    			<sensor type="gpu_ray" name="sick_lms100">
+			<turnGravityOff>false</turnGravityOff>
+    			<sensor type="ray" name="sick_lms100">
       				<pose>0 0 0 0 0 0</pose>
-      				<visualize>false</visualize>
+      				<visualize>true</visualize>
      	 			<update_rate>40</update_rate>
       				<ray>
         				<scan>
@@ -91,7 +91,7 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
           					<stddev>0.001</stddev>
         				</noise>
       				</ray>
-      				<plugin name="gazebo_ros_laser" filename="libgazebo_ros_gpu_laser.so">
+      				<plugin name="gazebo_ros_laser" filename="libgazebo_ros_laser.so">
         				<topicName>scan</topicName>
         				<frameName>sick_lms100</frameName>
       				</plugin>
