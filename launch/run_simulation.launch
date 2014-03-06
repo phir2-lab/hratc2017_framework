@@ -33,6 +33,7 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
     <!-- Spawn the Husky robot -->
     <include file="$(find hratc2014_framework)/launch/husky.launch"/>
     
+    
     <!-- Load the controllers -->
     <rosparam file="$(find hratc2014_framework)/controllers/controllers.yaml" command="load"/>
 

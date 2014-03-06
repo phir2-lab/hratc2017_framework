@@ -66,10 +66,10 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 		<gazebo reference="sick_lms100">
 			<material>Gazebo/Grey</material>
-			<turnGravityOff>false</turnGravityOff>
+			<turnGravityOff>true</turnGravityOff>
     			<sensor type="ray" name="sick_lms100">
       				<pose>0 0 0 0 0 0</pose>
-      				<visualize>true</visualize>
+      				<visualize>false</visualize>
      	 			<update_rate>40</update_rate>
       				<ray>
         				<scan>
