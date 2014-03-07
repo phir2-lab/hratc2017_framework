@@ -85,8 +85,8 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 			<plugin name="gazebo_ros_gps" filename="libhector_gazebo_ros_gps.so">
 			  <updateRate>4.0</updateRate>
 			  <bodyName>gps_antenna</bodyName>
-			  <topicName>fix</topicName>
-			  <velocityTopicName>fix_velocity</velocityTopicName>
+			  <topicName>/gps/fix</topicName>
+			  <velocityTopicName>/gps/fix_velocity</velocityTopicName>
 			  <drift>1.0 1.0 1.0</drift>
 			  <gaussianNoise>0.01 0.01 0.01</gaussianNoise>
 			  <velocityDrift>0 0 0</velocityDrift>

@@ -48,6 +48,7 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
     
     <!-- EKF for localization -->
     <node pkg="robot_pose_ekf" type="robot_pose_ekf" name="robot_pose_ekf">
+      <remap from="/imu_data" to="/imu/data"/>
       <rosparam>
         freq: 10.0
         sensor_timeout: 1.0
