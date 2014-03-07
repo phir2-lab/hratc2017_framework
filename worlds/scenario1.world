@@ -40,7 +40,7 @@
           <geometry>
             <mesh>
 	      <uri>file://scenario1.dae</uri>
-              <scale>1 1 0.6</scale>
+              <scale>1 1 0.4</scale>
             </mesh>
           </geometry>
         </collision>
@@ -48,7 +48,7 @@
           <geometry>
             <mesh>
 	      <uri>file://scenario1.dae</uri>
-              <scale>1 1 0.6</scale>
+              <scale>1 1 0.4</scale>
             </mesh>
           </geometry>
           <cast_shadows>false</cast_shadows>
@@ -61,7 +61,7 @@
     <model name="tree1">
       <static>true</static>
       <link name="tree1_link">
-	  <pose>3 3 1.055 0 0 0</pose>
+	  <pose>3 3 0.6 0 0 0</pose>
 	  <collision name="tree1_collision">
 	      <geometry>
 		  <mesh>
@@ -85,7 +85,7 @@
     <model name="tree2">
       <static>true</static>
       <link name="tree2_link">
-	  <pose>5 6 1.10331 0 0 0.3</pose>
+	  <pose>5 6 0.7 0 0 0.3</pose>
 	  <collision name="tree2_collision">
 	      <geometry>
 		  <mesh>
@@ -109,7 +109,7 @@
     <model name="tree3">
       <static>true</static>
       <link name="tree3_link">
-	  <pose>1 8 1.34436 0 0 0</pose>
+	  <pose>1 8 0.9 0 0 0</pose>
 	  <collision name="tree3_collision">
 	      <geometry>
 		  <mesh>
@@ -133,7 +133,7 @@
     <model name="tree4">
       <static>true</static>
       <link name="tree4_link">
-	  <pose>-5 4 0.83559 0 0 0.1</pose>
+	  <pose>-5 4 0.8 0 0 0.1</pose>
 	  <collision name="tree4_collision">
 	      <geometry>
 		  <mesh>
@@ -157,7 +157,7 @@
     <model name="tree5">
       <static>true</static>
       <link name="tree5_link">
-	  <pose>-10 -3 1.63138 0 0 0.3</pose>
+	  <pose>-10 -3 1.1 0 0 0.3</pose>
 	  <collision name="tree5_collision">
 	      <geometry>
 		  <mesh>
@@ -181,7 +181,7 @@
     <model name="tree6">
       <static>true</static>
       <link name="tree6_link">
-	  <pose>-6 -7 1.48782 0 0 0.5</pose>
+	  <pose>-6 -7 1.02 0 0 0.5</pose>
 	  <collision name="tree6_collision">
 	      <geometry>
 		  <mesh>
@@ -205,7 +205,7 @@
     <model name="tree7">
       <static>true</static>
       <link name="tree7_link">
-	  <pose>-1 -6 1.34505 0 0 0.2</pose>
+	  <pose>-1 -6 0.8 0 0 0.2</pose>
 	  <collision name="tree7_collision">
 	      <geometry>
 		  <mesh>
@@ -229,7 +229,7 @@
     <model name="tree8">
       <static>true</static>
       <link name="tree8_link">
-	  <pose>9 -4 0.79428 0 0 0.5</pose>
+	  <pose>9 -4 0.5 0 0 0.5</pose>
 	  <collision name="tree8_collision">
 	      <geometry>
 		  <mesh>
@@ -253,7 +253,7 @@
     <model name="tree9">
       <static>true</static>
       <link name="tree9_link">
-	  <pose>6 -10 1.10058 0 0 0.5</pose>
+	  <pose>6 -10 0.8 0 0 0.5</pose>
 	  <collision name="tree9_collision">
 	      <geometry>
 		  <mesh>
