@@ -150,7 +150,7 @@ class JudgeDredd(QtCore.QThread):
                     self.map[y-radius:y+radius,x-radius:x+radius][mask] = 183
 
                 coil = Coil()
-                coil.header.frame_id = "metal_detector_{}_coil".format(["left","middle","right"][co])
+                coil.header.frame_id = "{}_coil".format(["left","middle","right"][co])
                 if x <= self.mineMap.shape[2] and x >=0 and y <= self.mineMap.shape[1] and y >= 0:
                     for ch in range(3):
                         coil.channel.append(self.mineMap[3*co+ch,y,x] + random.random()*100)
