@@ -3,7 +3,7 @@ from PyQt4 import QtGui, QtCore
 from numpy import *
 import time, rospy, tf, numpy as np, random
 from gazebo_msgs.msg import ModelStates
-from geometry_msgs.msg import Pose, Twist
+from geometry_msgs.msg import Pose, PoseStamped, Twist
 from metal_detector_msgs.msg._Coil import Coil
 from tf.transformations import euler_from_quaternion, quaternion_from_euler
 from time import sleep
@@ -187,9 +187,10 @@ class JudgeDredd(QtCore.QThread):
 
     def receiveMinePosition(self,data):
 
-            q = [data.orientation.x, data.orientation.y, data.orientation.z, data.orientation.w]
+	    # TODO: Use the frame_id on the header file to change the coordinate system of the pose to a global system
+            q = [data.pose.orientation.x, data.pose.orientation.y, data.pose.orientation.z, data.pose.orientation.w]
             roll, pitch, yaw =  euler_from_quaternion(q)
-            mine = [data.position.x, data.position.y]
+            mine = [data.pose.position.x, data.pose.position.y]
             m = tuple(min(self.mines,key=lambda m: distance(m,mine)))
 
             if distance(m,mine) < self.minDistDetection:
@@ -215,7 +216,7 @@ class JudgeDredd(QtCore.QThread):
         else:
             pass #Ver como pegar a posição real pelo sistema de landmarks
 
-        rospy.Subscriber("/HRATC_FW/set_mine", Pose, self.receiveMinePosition)
+        rospy.Subscriber("/HRATC_FW/set_mine", PoseStamped, self.receiveMinePosition)
     	self.pubPose = rospy.Publisher('/HRATC_FW/pose', Pose)
         self.pubMineDetection = rospy.Publisher('/coils', Coil)
         
