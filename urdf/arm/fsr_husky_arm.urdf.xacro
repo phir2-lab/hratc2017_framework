@@ -142,7 +142,7 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
     <limit
       lower="-1.5708"
       upper="1.5708"
-      effort="100"
+      effort="15"
       velocity="0.5" />
   </joint>
 
@@ -206,7 +206,7 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
     <limit
       lower="-0.5"
       upper="0.25"
-      effort="20"
+      effort="15"
       velocity="0.5" />
   </joint>
 
@@ -273,7 +273,7 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
     <limit
       lower="-0.25"
       upper="0.5"
-      effort="20"
+      effort="15"
       velocity="0.5" />
   </joint>
 
@@ -444,32 +444,14 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
     <limit
       lower="-0.5"
       upper="0.25"
-      effort="20"
+      effort="15"
       velocity="0.5" />
   </joint>
   
-  <transmission name="upper_lift">
+  <transmission name="lift">
     <type>transmission_interface/SimpleTransmission</type>
     <joint name="upper_arm_joint"/>
-    <actuator name="upper_lift_motor">
-      <hardwareInterface>EffortJointInterface</hardwareInterface>
-      <mechanicalReduction>1</mechanicalReduction>
-    </actuator>
-  </transmission>
-  
-  <transmission name="lower_lift">
-    <type>transmission_interface/SimpleTransmission</type>
-    <joint name="lower_arm_joint"/>
-    <actuator name="lower_lift_motor">
-      <hardwareInterface>EffortJointInterface</hardwareInterface>
-      <mechanicalReduction>1</mechanicalReduction>
-    </actuator>
-  </transmission>
-  
-  <transmission name="mirror_lift">
-    <type>transmission_interface/SimpleTransmission</type>
-    <joint name="metal_detector_arm_joint"/>
-    <actuator name="mirror_lift_motor">
+    <actuator name="lift_motor">
       <hardwareInterface>EffortJointInterface</hardwareInterface>
       <mechanicalReduction>1</mechanicalReduction>
     </actuator>
@@ -484,11 +466,21 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
     </actuator>
   </transmission>
   
-  <!--<gazebo>
-    <plugin name="gazebo_ros_control" filename="libgazebo_ros_control.so">
-      <robotNamespace>/arm</robotNamespace>
-    </plugin>
-  </gazebo>-->
+  <gazebo>
+	<plugin name="mimic_plugin1" filename="libgazebo_mimic_plugin.so">
+            <joint>upper_arm_joint</joint>
+            <mimicJoint>lower_arm_joint</mimicJoint>
+            <multiplier>1.0</multiplier>
+        </plugin>
+  </gazebo>
+  
+  <gazebo>
+	<plugin name="mimic_plugin2" filename="libgazebo_mimic_plugin.so">
+            <joint>upper_arm_joint</joint>
+            <mimicJoint>metal_detector_arm_joint</mimicJoint>
+            <multiplier>-1.0</multiplier>
+        </plugin>
+  </gazebo>
   
 </xacro:macro>
 </robot>
