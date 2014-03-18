@@ -456,6 +456,24 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
       <mechanicalReduction>1</mechanicalReduction>
     </actuator>
   </transmission>
+  
+  <transmission name="mimic_lift">
+    <type>transmission_interface/SimpleTransmission</type>
+    <joint name="lower_arm_joint"/>
+    <actuator name="mimic_lift_motor">
+      <hardwareInterface>EffortJointInterface</hardwareInterface>
+      <mechanicalReduction>1</mechanicalReduction>
+    </actuator>
+  </transmission>
+  
+  <transmission name="mirror_lift">
+    <type>transmission_interface/SimpleTransmission</type>
+    <joint name="metal_detector_arm_joint"/>
+    <actuator name="mirror_lift_motor">
+      <hardwareInterface>EffortJointInterface</hardwareInterface>
+      <mechanicalReduction>1</mechanicalReduction>
+    </actuator>
+  </transmission>
 
   <transmission name="sweep">
     <type>transmission_interface/SimpleTransmission</type>
