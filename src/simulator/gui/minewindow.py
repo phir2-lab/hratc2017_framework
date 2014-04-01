@@ -388,6 +388,8 @@ class MineWindow(QtGui.QMainWindow, Ui_MainWindow):
 
     def draw(self):
         if self.competitorName != None:
+            if self.actionBoundaries.isChecked():
+                self.drawBoundaries()
             if self.actionCoveredArea.isChecked():
                 self.drawCoveredArea()
             if self.actionRobotPath.isChecked():
@@ -402,6 +404,26 @@ class MineWindow(QtGui.QMainWindow, Ui_MainWindow):
                 self.drawMinesExploded()
             if self.actionRobot.isChecked():
                 self.drawRobot()
+
+
+    def drawBoundaries(self):
+
+
+        glColor3f(0.,0.,0.)
+        glLineWidth(2.)
+
+        w = self.width/2.
+        h = self.height/2.
+
+        glBegin(GL_LINE_STRIP)
+        glVertex3f(-w,h,0.)
+        glVertex3f(w,h,0.)
+        glVertex3f(w,-h,0.)
+        glVertex3f(-w,-h,0.)
+        glVertex3f(-w,h,0.)
+        glEnd()
+
+        glLineWidth(1.)
 
 
     def drawCoveredArea(self):

@@ -345,6 +345,7 @@
     <addaction name="actionRobot"/>
     <addaction name="actionRobotPath"/>
     <addaction name="actionCoveredArea"/>
+    <addaction name="actionBoundaries"/>
     <addaction name="separator"/>
     <addaction name="actionCoilsSignal"/>
     <addaction name="separator"/>
@@ -468,7 +469,7 @@
     <string>Coil's signal</string>
    </property>
    <property name="shortcut">
-    <string>F9</string>
+    <string>F10</string>
    </property>
   </action>
   <action name="actionRobotPath">
@@ -584,6 +585,20 @@
   <action name="actionCredit">
    <property name="text">
     <string>Credits</string>
+   </property>
+  </action>
+  <action name="actionBoundaries">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="checked">
+    <bool>true</bool>
+   </property>
+   <property name="text">
+    <string>Boundaries</string>
+   </property>
+   <property name="shortcut">
+    <string>F9</string>
    </property>
   </action>
  </widget>
