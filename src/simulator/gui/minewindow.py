@@ -420,17 +420,19 @@ class MineWindow(QtGui.QMainWindow, Ui_MainWindow):
             glBindTexture(GL_TEXTURE_2D,mapTexture)
             glBegin(GL_QUADS)
 
+            w = self.width/2.
+            h = self.height/2.
             glTexCoord2d(0,1)
-            glVertex3f(-5.,5.,0.)
+            glVertex3f(-w,h,0.)
 
             glTexCoord2d(1,1)
-            glVertex3f(5.,5.,0.)
+            glVertex3f(w,h,0.)
 
             glTexCoord2d(1,0)
-            glVertex3f(5.,-5.,0.)
+            glVertex3f(w,-h,0.)
 
             glTexCoord2d(0,0)
-            glVertex3f(-5.,-5.,0.)
+            glVertex3f(-w,-h,0.)
 
             glEnd()
 
