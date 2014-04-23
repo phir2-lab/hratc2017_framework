@@ -4,11 +4,14 @@ project(hratc2014_framework)
 ## Find catkin macros and libraries
 ## if COMPONENTS list like find_package(catkin REQUIRED COMPONENTS xyz)
 ## is used, also find other catkin packages
-find_package(catkin REQUIRED COMPONENTS gazebo_ros)
+find_package(catkin REQUIRED COMPONENTS gazebo_ros message_generation rosconsole roscpp geometry_msgs sensor_msgs nav_msgs tf)
 
 ## System dependencies are found with CMake's conventions
 # find_package(Boost REQUIRED COMPONENTS system)
 find_package(gazebo REQUIRED)
+
+find_package(Eigen REQUIRED COMPONENTS Dense Cholesky)
+include_directories(${Eigen_INCLUDE_DIRS})
 
 ## Uncomment this if the package has a setup.py. This macro ensures
 ## modules and global scripts declared therein get installed
@@ -40,11 +43,22 @@ find_package(gazebo REQUIRED)
 ##   * add every package in MSG_DEP_SET to generate_messages(DEPENDENCIES ...)
 
 ## Generate messages in the 'msg' folder
-# add_message_files(
-#   FILES
-#   Message1.msg
-#   Message2.msg
-# )
+add_message_files(
+  DIRECTORY msg
+  FILES
+  GraftState.msg
+  GraftControl.msg
+  GraftSensorResidual.msg
+)
+
+## Generate added messages and services with any dependencies listed here
+generate_messages(
+  DEPENDENCIES
+  std_msgs
+  geometry_msgs
+  nav_msgs
+  sensor_msgs # may not be needed
+)
 
 ## Generate services in the 'srv' folder
 # add_service_files(
@@ -98,6 +112,20 @@ include_directories(include ${Boost_INCLUDE_DIR} ${catkin_INCLUDE_DIRS} ${GAZEBO
 # )
 add_library(gazebo_mimic_plugin src/gazebo_mimic_plugin/mimic_plugin.cpp)
 
+add_library(GraftOdometryTopic src/graft_ukf_absolute/GraftOdometryTopic.cpp)
+add_dependencies(GraftOdometryTopic ${PROJECT_NAME}_gencpp)
+
+add_library(GraftImuTopic src/graft_ukf_absolute/GraftImuTopic.cpp)
+add_dependencies(GraftImuTopic ${PROJECT_NAME}_gencpp)
+
+add_library(GraftParameterManager src/graft_ukf_absolute/GraftParameterManager.cpp)
+add_dependencies(GraftParameterManager ${PROJECT_NAME}_gencpp)
+target_link_libraries(GraftParameterManager GraftOdometryTopic GraftImuTopic)
+
+add_library(GraftUKFAbsolute src/graft_ukf_absolute/GraftUKFAbsolute.cpp)
+add_dependencies(GraftUKFAbsolute ${PROJECT_NAME}_gencpp)
+target_link_libraries(GraftUKFAbsolute GraftOdometryTopic GraftImuTopic)
+
 ## Declare a cpp executable
 #add_executable(arm_controller src/arm_controller.cpp)
 
@@ -108,6 +136,15 @@ add_library(gazebo_mimic_plugin src/gazebo_mimic_plugin/mimic_plugin.cpp)
 ## Specify libraries to link a library or executable target against
 #target_link_libraries(arm_controller ${catkin_LIBRARIES})
 target_link_libraries(gazebo_mimic_plugin ${catkin_LIBRARIES} ${GAZEBO_LIBRARIES})
+
+add_executable(gps_to_odom src/gps_to_odom/gps_to_odom.cpp)
+target_link_libraries(gps_to_odom ${catkin_LIBRARIES})
+
+add_executable(minefield_static_tf_publisher src/minefield_static_tf_publisher/minefield_static_tf_publisher.cpp)
+target_link_libraries(minefield_static_tf_publisher ${catkin_LIBRARIES})
+
+add_executable(graft_ukf_absolute src/graft_ukf_absolute/graft_ukf_absolute.cpp)
+target_link_libraries(graft_ukf_absolute GraftUKFAbsolute GraftParameterManager GraftOdometryTopic GraftImuTopic ${catkin_LIBRARIES})
 
 #############
 ## Install ##
