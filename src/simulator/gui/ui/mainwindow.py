@@ -2,7 +2,7 @@
 
 # Form implementation generated from reading ui file 'mainwindow.ui'
 #
-# Created: Fri Feb 28 17:30:33 2014
+# Created: Tue Apr  1 15:30:55 2014
 #      by: PyQt4 UI code generator 4.9.1
 #
 # WARNING! All changes made in this file will be lost!
@@ -209,6 +209,10 @@ class Ui_MainWindow(object):
         self.actionCredits_2.setObjectName(_fromUtf8("actionCredits_2"))
         self.actionCredit = QtGui.QAction(MainWindow)
         self.actionCredit.setObjectName(_fromUtf8("actionCredit"))
+        self.actionBoundaries = QtGui.QAction(MainWindow)
+        self.actionBoundaries.setCheckable(True)
+        self.actionBoundaries.setChecked(True)
+        self.actionBoundaries.setObjectName(_fromUtf8("actionBoundaries"))
         self.menuFile.addAction(self.actionConfiguration)
         self.menuFile.addSeparator()
         self.menuFile.addAction(self.actionExit)
@@ -220,6 +224,7 @@ class Ui_MainWindow(object):
         self.menuVisualization.addAction(self.actionRobot)
         self.menuVisualization.addAction(self.actionRobotPath)
         self.menuVisualization.addAction(self.actionCoveredArea)
+        self.menuVisualization.addAction(self.actionBoundaries)
         self.menuVisualization.addSeparator()
         self.menuVisualization.addAction(self.actionCoilsSignal)
         self.menuVisualization.addSeparator()
@@ -275,7 +280,7 @@ class Ui_MainWindow(object):
         self.actionRobot.setText(QtGui.QApplication.translate("MainWindow", "Robot", None, QtGui.QApplication.UnicodeUTF8))
         self.actionRobot.setShortcut(QtGui.QApplication.translate("MainWindow", "F6", None, QtGui.QApplication.UnicodeUTF8))
         self.actionCoilsSignal.setText(QtGui.QApplication.translate("MainWindow", "Coil\'s signal", None, QtGui.QApplication.UnicodeUTF8))
-        self.actionCoilsSignal.setShortcut(QtGui.QApplication.translate("MainWindow", "F9", None, QtGui.QApplication.UnicodeUTF8))
+        self.actionCoilsSignal.setShortcut(QtGui.QApplication.translate("MainWindow", "F10", None, QtGui.QApplication.UnicodeUTF8))
         self.actionRobotPath.setText(QtGui.QApplication.translate("MainWindow", "Robot\'s path", None, QtGui.QApplication.UnicodeUTF8))
         self.actionRobotPath.setShortcut(QtGui.QApplication.translate("MainWindow", "F7", None, QtGui.QApplication.UnicodeUTF8))
         self.actionCoveredArea.setText(QtGui.QApplication.translate("MainWindow", "Covered area", None, QtGui.QApplication.UnicodeUTF8))
@@ -295,4 +300,6 @@ class Ui_MainWindow(object):
         self.actionCredits.setText(QtGui.QApplication.translate("MainWindow", "Credits", None, QtGui.QApplication.UnicodeUTF8))
         self.actionCredits_2.setText(QtGui.QApplication.translate("MainWindow", "Credits", None, QtGui.QApplication.UnicodeUTF8))
         self.actionCredit.setText(QtGui.QApplication.translate("MainWindow", "Credits", None, QtGui.QApplication.UnicodeUTF8))
+        self.actionBoundaries.setText(QtGui.QApplication.translate("MainWindow", "Boundaries", None, QtGui.QApplication.UnicodeUTF8))
+        self.actionBoundaries.setShortcut(QtGui.QApplication.translate("MainWindow", "F9", None, QtGui.QApplication.UnicodeUTF8))
 
