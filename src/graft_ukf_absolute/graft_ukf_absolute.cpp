@@ -91,6 +91,9 @@ int main(int argc, char **argv)
     ros::init(argc, argv, "graft_ukf_absolute");
 	ros::NodeHandle n;
 	ros::NodeHandle pnh("~");
+
+    ros::Duration(10.0).sleep();
+
     state_pub = n.advertise<hratc2014_framework::GraftState>("/graft_ukf_absolute/state", 5);
     odom_pub = n.advertise<nav_msgs::Odometry>("/graft_ukf_absolute/odom_combined", 5);
 

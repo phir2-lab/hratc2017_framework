@@ -111,6 +111,7 @@ include_directories(include ${Boost_INCLUDE_DIR} ${catkin_INCLUDE_DIRS} ${GAZEBO
 #   src/${PROJECT_NAME}/fsr_husky_gazebo.cpp
 # )
 add_library(gazebo_mimic_plugin src/gazebo_mimic_plugin/mimic_plugin.cpp)
+add_library(gazebo_gps_plugin src/gazebo_gps_plugin/gazebo_ros_gps.cpp src/UTMConverter/UTMConverter.cpp)
 
 add_library(GraftOdometryTopic src/graft_ukf_absolute/GraftOdometryTopic.cpp)
 add_dependencies(GraftOdometryTopic ${PROJECT_NAME}_gencpp)
@@ -136,11 +137,12 @@ target_link_libraries(GraftUKFAbsolute GraftOdometryTopic GraftImuTopic)
 ## Specify libraries to link a library or executable target against
 #target_link_libraries(arm_controller ${catkin_LIBRARIES})
 target_link_libraries(gazebo_mimic_plugin ${catkin_LIBRARIES} ${GAZEBO_LIBRARIES})
+target_link_libraries(gazebo_gps_plugin ${GAZEBO_LIBRARIES})
 
-add_executable(gps_to_odom src/gps_to_odom/gps_to_odom.cpp)
+add_executable(gps_to_odom src/gps_to_odom/gps_to_odom.cpp src/UTMConverter/UTMConverter.cpp)
 target_link_libraries(gps_to_odom ${catkin_LIBRARIES})
 
-add_executable(minefield_static_tf_publisher src/minefield_static_tf_publisher/minefield_static_tf_publisher.cpp)
+add_executable(minefield_static_tf_publisher src/minefield_static_tf_publisher/minefield_static_tf_publisher.cpp src/UTMConverter/UTMConverter.cpp)
 target_link_libraries(minefield_static_tf_publisher ${catkin_LIBRARIES})
 
 add_executable(graft_ukf_absolute src/graft_ukf_absolute/graft_ukf_absolute.cpp)

@@ -65,11 +65,17 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
     
     
     <!-- GPS to Odom msg -->
-    <node pkg="hratc2014_framework" type="gps_to_odom" name="gps_to_odom">
+    <node pkg="hratc2014_framework" type="gps_to_odom" name="gps_to_odom" />
     
     <!-- UKF for global localization -->
-    <node name="graft_ukf_absolute" pkg="hratc2014_framework" type="graft_ukf_absolute" output="screen" >
+    <node name="graft_ukf_absolute" pkg="hratc2014_framework" type="graft_ukf_absolute" >
       <rosparam file="$(find hratc2014_framework)/settings/global_localization.yaml" command="load" />
+    </node>
+    
+    
+    <!-- The minefield frame -->
+    <node name="minefield_static_tf_publisher" pkg="hratc2014_framework" type="minefield_static_tf_publisher" output="screen">
+      <rosparam file="$(find hratc2014_framework)/settings/minefield.yaml" command="load" />
     </node>
     
     

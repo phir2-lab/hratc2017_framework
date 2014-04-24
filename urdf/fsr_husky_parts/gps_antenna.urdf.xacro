@@ -70,7 +70,7 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
     			</collision>
   		</link>
 		
-		<joint name="gps_anetnna_joint" type="fixed">
+		<joint name="gps_antenna_joint" type="fixed">
 			<parent link="${parent}"/>
 			<child link="gps_antenna"/>
 			<origin xyz="${x} ${y} ${z}" rpy="${rx} ${ry} ${rz}" /> 
@@ -85,9 +85,11 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 			<plugin name="gazebo_ros_gps" filename="libhector_gazebo_ros_gps.so">
 			  <updateRate>4.0</updateRate>
 			  <bodyName>gps_antenna</bodyName>
+			  <frameId>gps_antenna</frameId>
 			  <topicName>/gps/fix</topicName>
 			  <velocityTopicName>/gps/fix_velocity</velocityTopicName>
-			  <drift>1.0 1.0 1.0</drift>
+			  <offset>0 0 0</offset>
+			  <drift>0.001 0.001 0.001</drift>
 			  <gaussianNoise>0.01 0.01 0.01</gaussianNoise>
 			  <velocityDrift>0 0 0</velocityDrift>
 			  <velocityGaussianNoise>0.05 0.05 0.05</velocityGaussianNoise>

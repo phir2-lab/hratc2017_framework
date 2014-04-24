@@ -156,7 +156,8 @@ class JudgeDredd(QtCore.QThread):
                         coil.channel.append(self.mineMap[3*co+ch,y,x] + random.random()*100)
                         coil.zero.append(self.zeroChannel[3*co+ch])
 
-                self.pubMineDetection.publish(coil)
+                if (self.isSimulation):
+		  self.pubMineDetection.publish(coil)
                 signals.append(coil)
                 co += 1
 
@@ -211,6 +212,8 @@ class JudgeDredd(QtCore.QThread):
 
     def run(self):
 
+	self.isSimulation = rospy.get_param("is_simulation", True)
+
         if (self.isSimulation):
             rospy.Subscriber("/gazebo/model_states", ModelStates, self.receiveSimulationPose)
         else:
@@ -218,7 +221,9 @@ class JudgeDredd(QtCore.QThread):
 
         rospy.Subscriber("/HRATC_FW/set_mine", PoseStamped, self.receiveMinePosition)
     	self.pubPose = rospy.Publisher('/HRATC_FW/pose', Pose)
-        self.pubMineDetection = rospy.Publisher('/coils', Coil)
+    	
+    	if (self.isSimulation):
+	  self.pubMineDetection = rospy.Publisher('/coils', Coil)
         
         # Added a tf listener to check the position of the coils
         self.listener = tf.TransformListener()
