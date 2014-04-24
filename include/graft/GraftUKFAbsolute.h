@@ -37,7 +37,7 @@
 #include <Eigen/Dense>
 #include <Eigen/Cholesky>
 
-#include <graft/GraftState.h>
+#include <hratc2014_framework/GraftState.h>
 #include <nav_msgs/Odometry.h>
 #include <geometry_msgs/QuaternionStamped.h>
 #include <sensor_msgs/Imu.h>
