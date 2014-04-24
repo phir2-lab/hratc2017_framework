@@ -75,15 +75,15 @@ Husky A200 file and modified by the ISR University of Coimbra
     <property name="base_z_size" value="0.24750000" />
 
     <!--Weight of the base-->
-    <property name="base_mass" value="33.45489000" /> <!-- in kg-->
+    <property name="base_mass" value="3.345489000" /> <!-- in kg-->
 
     <!--Inertial values for the base at center of mass, aligned with coordinate system. Units are kg*m^2-->
-    <property name="base_ixx_com_cs" value="0.60216370" />
-    <property name="base_ixy_com_cs" value="-0.02364198" />
-    <property name="base_ixz_com_cs" value="-0.11972132" />
-    <property name="base_iyy_com_cs" value="1.73859574" />
-    <property name="base_iyz_com_cs" value="-0.00154437" />
-    <property name="base_izz_com_cs" value="2.02955229" />
+    <property name="base_ixx_com_cs" value="6.0216370" />
+    <property name="base_ixy_com_cs" value="0.0" />
+    <property name="base_ixz_com_cs" value="0.0" />
+    <property name="base_iyy_com_cs" value="17.3859574" />
+    <property name="base_iyz_com_cs" value="0.0" />
+    <property name="base_izz_com_cs" value="20.2955229" />
 
     <!-- BASE-FOOTPRINT -->
     <!-- base_footprint is a fictitious link(frame) that is on the ground right below base_link origin, navigation stack depends on this frame -->
