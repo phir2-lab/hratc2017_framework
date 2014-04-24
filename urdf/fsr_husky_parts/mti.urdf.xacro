@@ -70,7 +70,7 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 		<gazebo>    
 		    <plugin name="gazebo_ros_imu" filename="libgazebo_ros_imu.so">
 			<alwaysOn>true</alwaysOn>       
-			<bodyName>base_imu</bodyName>
+			<bodyName>base_footprint</bodyName>
 			<topicName>/imu/data</topicName>
 			<serviceName>imu_service</serviceName>
 			<gaussianNoise>0.0</gaussianNoise>

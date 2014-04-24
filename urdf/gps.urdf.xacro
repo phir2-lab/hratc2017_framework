@@ -1,6 +1,7 @@
 <?xml version="1.0"?>
 <!--
-Copyright (c) 2013, Goncalo Cabrita, ISR University of Coimbra
+Copyright (c) 2013, Goncalo Cabrita/ISR University of Coimbra
+Copyright (c) 2012, Ryan Gariepy/Clearpath Robotics
 All rights reserved.
 
 Redistribution and use in source and binary forms, with or without
@@ -24,24 +25,48 @@ LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND
 ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
 (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
 SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+
+This program contains the description of the HRATC2014 Husky robot based on the original Clearpath 
+Husky A200 file and modified by the ISR University of Coimbra
 -->
 
-<robot xmlns:sensor="http://playerstage.sourceforge.net/gazebo/xmlschema/#sensor"
-	xmlns:controller="http://playerstage.sourceforge.net/gazebo/xmlschema/#controller"
-	xmlns:interface="http://playerstage.sourceforge.net/gazebo/xmlschema/#interface"
-	xmlns:xacro="http://ros.org/wiki/xacro" name="gps_antenna">
+<robot 
 
-	<!-- GPS Antenna -->
+    xmlns:xi="http://www.w3.org/2001/XInclude"
+    xmlns:gazebo="http://playerstage.sourceforge.net/gazebo/xmlschema/#gz"
+    xmlns:model="http://playerstage.sourceforge.net/gazebo/xmlschema/#model"
+    xmlns:sensor="http://playerstage.sourceforge.net/gazebo/xmlschema/#sensor"
+    xmlns:body="http://playerstage.sourceforge.net/gazebo/xmlschema/#body"
+    xmlns:geom="http://playerstage.sourceforge.net/gazebo/xmlschema/#geom"
+    xmlns:joint="http://playerstage.sourceforge.net/gazebo/xmlschema/#joint"
+    xmlns:controller="http://playerstage.sourceforge.net/gazebo/xmlschema/#controller"
+    xmlns:interface="http://playerstage.sourceforge.net/gazebo/xmlschema/#interface"
+    xmlns:rendering="http://playerstage.sourceforge.net/gazebo/xmlschema/#rendering"
+    xmlns:renderable="http://playerstage.sourceforge.net/gazebo/xmlschema/#renderable"
+    xmlns:physics="http://playerstage.sourceforge.net/gazebo/xmlschema/#physics"
+    xmlns:xacro="http://ros.org/wiki/xacro" name="husky">
+       
+    <!-- Included URDF/XACRO Files -->
+    <xacro:include filename="$(find hratc2014_framework)/urdf/fsr_husky_parts/gps_antenna.urdf.xacro" />
 
-	<xacro:include filename="$(find hratc2014_framework)/urdf/fsr_husky_parts/common.xacro" />
+    <link name="base_footprint">
+        <!--<inertial>
+            <mass value="0.0001" />
+            <origin xyz="0 0 0" />
+            <inertia ixx="0.0001" ixy="0.0" ixz="0.0"
+                iyy="0.0001" iyz="0.0" 
+                izz="0.0001" />
+	      </inertial>-->
 
-	<xacro:property name="alfa_length" value="0.132" />
-	<xacro:property name="alfa_radius" value="0.019" />
-	<xacro:property name="antenna_length" value="0.45" />
-	<xacro:property name="antenna_radius" value="0.008" />
-
-	<xacro:macro name="gps_antenna" params="parent x y z rx ry rz"> 
-  		<link name="gps_antenna">
+        <visual>
+            <origin xyz="0 0 0" rpy="0 0 0" />
+            <geometry>
+                <box size="0.001 0.001 0.001" />
+            </geometry>
+        </visual>
+    </link>
+    
+    <link name="gps_antenna1">
     			<inertial>
       				<origin xyz="0.035 1.27350000005198E-07 0.084899" rpy="0 0 0" />
       				<mass value="0.28321" />
@@ -70,31 +95,27 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
     			</collision>
   		</link>
 		
-		<joint name="gps_antenna_joint" type="fixed">
-			<parent link="${parent}"/>
-			<child link="gps_antenna"/>
-			<origin xyz="${x} ${y} ${z}" rpy="${rx} ${ry} ${rz}" /> 
+		<joint name="gps_antenna_joint1" type="fixed">
+			<parent link="base_footprint"/>
+			<child link="gps_antenna1"/>
+			<origin xyz="0.0 0.0 1" rpy="0 0 0" /> 
 		</joint>
 		
-		<gazebo reference="gps_antenna">
+		<gazebo reference="gps_antenna1">
         		<material>Gazebo/White</material>
-        		<turnGravityOff>false</turnGravityOff>
+        		<turnGravityOff>true</turnGravityOff>
 		</gazebo>
 		
 		<gazebo>
 			<plugin name="gazebo_ros_gps" filename="libgazebo_gps_plugin.so">
 			  <updateRate>4.0</updateRate>
-			  <bodyName>gps_antenna</bodyName>
-			  <frameId>gps_antenna</frameId>
-			  <topicName>/gps/fix</topicName>
-			  <velocityTopicName>/gps/fix_velocity</velocityTopicName>
+			  <bodyName>gps_antenna1</bodyName>
+			  <topicName>/gps1/fix</topicName>
+			  <velocityTopicName>/gps1/fix_velocity</velocityTopicName>
 			  <offset>0 0 0</offset>
-			  <drift>0.001 0.001 0.001</drift>
-			  <gaussianNoise>0.01 0.01 0.01</gaussianNoise>
-			  <velocityDrift>0 0 0</velocityDrift>
-			  <velocityGaussianNoise>0.05 0.05 0.05</velocityGaussianNoise>
+			  <drift>0 0 0</drift>
+			  <gaussianNoise>0 0 0</gaussianNoise>
 			</plugin>
     		</gazebo>
-		
-	</xacro:macro>
+  
 </robot>

@@ -115,9 +115,9 @@ int main(int argc, char **argv)
 	ukfv.setProcessNoise(Q);
 	ukfv.setTopics(topics);
 
-	odom_.pose.pose.position.x = 0.0;
-	odom_.pose.pose.position.y = 0.0;
-	odom_.pose.pose.position.z = 0.0;
+    odom_.pose.pose.position.x = 549857.188289;
+    odom_.pose.pose.position.y = 4448419.656690;
+    odom_.pose.pose.position.z = 120.0;
 
 	odom_.pose.pose.orientation.w = 1.0;
 	odom_.pose.pose.orientation.x = 0.0;

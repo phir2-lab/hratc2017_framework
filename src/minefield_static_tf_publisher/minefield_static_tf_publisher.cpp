@@ -132,8 +132,8 @@ int main(int argc, char** argv)
 
     ROS_INFO("Minefield static tf broadcaster -- The center of the minefield is x:%lf y:%lf z:%lf (m)", center.x(), center.y(), center.z());
 
-    double w =  ( sqrt(pow(corner4.x()-corner1.x(), 2) + pow(corner4.y()-corner1.y(), 2) + pow(corner4.z()-corner1.z(), 2)) * sqrt(pow(corner3.x()-corner2.x(), 2) + pow(corner3.y()-corner2.y(), 2) + pow(corner3.z()-corner2.z(), 2)) ) / 2.0;
-    double h =  ( sqrt(pow(corner2.x()-corner1.x(), 2) + pow(corner2.y()-corner1.y(), 2) + pow(corner2.z()-corner1.z(), 2)) * sqrt(pow(corner4.x()-corner3.x(), 2) + pow(corner4.y()-corner3.y(), 2) + pow(corner4.z()-corner3.z(), 2)) ) / 2.0;
+    double w =  ( sqrt(pow(corner4.x()-corner1.x(), 2) + pow(corner4.y()-corner1.y(), 2) + pow(corner4.z()-corner1.z(), 2)) + sqrt(pow(corner3.x()-corner2.x(), 2) + pow(corner3.y()-corner2.y(), 2) + pow(corner3.z()-corner2.z(), 2)) ) / 2.0;
+    double h =  ( sqrt(pow(corner2.x()-corner1.x(), 2) + pow(corner2.y()-corner1.y(), 2) + pow(corner2.z()-corner1.z(), 2)) + sqrt(pow(corner4.x()-corner3.x(), 2) + pow(corner4.y()-corner3.y(), 2) + pow(corner4.z()-corner3.z(), 2)) ) / 2.0;
 
     ROS_INFO("Minefield static tf broadcaster -- The minefield is %lfx%lf (m)", w, h);
 
@@ -153,7 +153,7 @@ int main(int argc, char** argv)
     tf::Transform transform;
     transform.setOrigin( tf::Vector3(center.x(), center.y(), center.z()) );
     tf::Quaternion q;
-    q.setRPY(0.0, 0.0, atan2((corner4.y()+corner3.y())/2.0 - (corner2.y()+corner1.y())/2.0, (corner4.x()+corner3.x())/2.0 - (corner2.x()+corner1.x())/2.0));
+    q.setRPY(0.0, 0.0, atan2((corner4.y()+corner3.y())/2.0 - center.y(), (corner4.x()+corner3.x())/2.0 - center.x()));
     transform.setRotation(q);
 
     // Publish the transformation at the desired rate!

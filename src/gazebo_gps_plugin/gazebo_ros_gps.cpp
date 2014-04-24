@@ -207,6 +207,7 @@ void GazeboRosGps::Update()
   utm.hemisphere = reference_utm_.hemisphere;
 
   UTMConverter::UTMCoordinatesToLatitudeAndLongitude(utm, fix_);
+  fix_.altitude = reference_altitude_  + position.z;
   fix_.position_covariance_type = sensor_msgs::NavSatFix::COVARIANCE_TYPE_UNKNOWN;
 
   fix_publisher_.publish(fix_);
