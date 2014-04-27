@@ -30,7 +30,6 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
     <arg name="gui" default="true"/>
     
     <!-- Open the Gazebo world -->
-    <!-- <include file="$(find gazebo_ros)/launch/empty_world.launch"/> -->
     <include file="$(find hratc2014_framework)/launch/world.launch">
       <arg name="gui" value="$(arg gui)" />
     </include>
