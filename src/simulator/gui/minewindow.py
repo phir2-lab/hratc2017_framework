@@ -243,6 +243,12 @@ class MineWindow(QtGui.QMainWindow, Ui_MainWindow):
             log.set("Scoreboard","WrongMinesDetected",self.wrongMinesDetectedLB.text())
             log.set("Scoreboard","ExplodedMines",self.explodedMinesLB.text())
             log.set("Scoreboard","Time",self.timeLB.text())
+            percent = 0.0
+            if self.actionCoilsSignal.isChecked():
+                percent = self.Map[self.Map != 220].size/float(self.Map.size)
+            else:
+                percent = self.Map[self.Map == 183].size/float(self.Map.size)
+            log.set("Scoreboard","Covered Area",percent)
 
             path = os.path.expanduser("~/HRATC 2014 Simulator/")
             if not os.path.exists(path):
@@ -340,7 +346,7 @@ class MineWindow(QtGui.QMainWindow, Ui_MainWindow):
         if self.glwidget.mousePos != None:
             x, y = self.glwidget.mousePos
             msg = "x: {}\ty: {}\t".format(x,y)
-        if self.coils != None and self.coils != []:
+        if self.coils != None and self.coils.channel != []:
             c1, c2, c3 = self.coils.channel
             z1, z2, z3 = self.coils.zero
             msg = "{0}Channels: [{1:.2f}, {2:.2f}, {3:.2f}]\tZeros: [{4:.2f}, {5:.2f}, {6:.2f}]".format(msg, c1, c2, c3, z1, z2, z3)
@@ -430,7 +436,6 @@ class MineWindow(QtGui.QMainWindow, Ui_MainWindow):
         if self.Map != None:
 
             glEnable(GL_TEXTURE_2D)
-
             mapTexture = self.glwidget.bindTexture(
                             QtGui.QImage(
                                 self.Map.data,

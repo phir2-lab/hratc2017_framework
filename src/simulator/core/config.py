@@ -66,9 +66,10 @@ class Config(object):
         if self.randomMines:
             self.mines = []
             for i in range(self.numMines):
-                self.mines.append([
-                                    random.randrange(self.mapWidth)  - self.mapWidth/2.,
-                                    random.randrange(self.mapHeight) - self.mapHeight/2.])
+                x = y = 0
+                while(sqrt(pow(x,2) + pow(y,2)) < 2):
+                    x, y = random.randrange(self.mapWidth)  - self.mapWidth/2., random.randrange(self.mapHeight) - self.mapHeight/2.
+                self.mines.append([x, y])
         else:
             minesPos = self.minesFixedPos
             if minesPos !=  "":
