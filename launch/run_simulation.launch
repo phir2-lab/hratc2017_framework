@@ -49,37 +49,30 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
       <!--<remap from="/joint_states" to="/husky/joint_states" />-->
     </node>
     
+    <!-- GPS to Odom msg -->
+    <node pkg="hratc2014_framework" type="gps_to_odom" name="gps_to_odom" />
     
     <!-- EKF for localization -->
     <node pkg="robot_pose_ekf" type="robot_pose_ekf" name="robot_pose_ekf">
       <remap from="/imu_data" to="/imu/data"/>
+      <remap from="/gps" to="/gps/odom"/>
       <rosparam>
         freq: 10.0
         sensor_timeout: 1.0
         publish_tf: true
         odom_used: true
+        gps_used: true
         vo_used: false
-        output_frame: odom
+        output_frame: world
       </rosparam>
     </node>
-    
-    
-    <!-- GPS to Odom msg -->
-    <node pkg="hratc2014_framework" type="gps_to_odom" name="gps_to_odom" />
-    
-    <!-- UKF for global localization -->
-    <node name="graft_ukf_absolute" pkg="hratc2014_framework" type="graft_ukf_absolute" >
-      <rosparam file="$(find hratc2014_framework)/settings/global_localization.yaml" command="load" />
-    </node>
-    
     
     <!-- The minefield frame -->
     <node name="minefield_static_tf_publisher" pkg="hratc2014_framework" type="minefield_static_tf_publisher" output="screen">
       <rosparam file="$(find hratc2014_framework)/settings/minefield.yaml" command="load" />
     </node>
     
-    
     <!-- HRATC2014 Client -->
-    <node pkg="hratc2014_framework" type="simulator.py" name="simulator" output="screen" />
+    <node pkg="hratc2014_framework" type="simulator.py" name="simulator"/>
   
 </launch>

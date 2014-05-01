@@ -3,10 +3,12 @@ from PyQt4 import QtGui, QtCore
 from numpy import *
 import time, rospy, tf, numpy as np, random
 from gazebo_msgs.msg import ModelStates
+from nav_msgs.msg import Odometry
 from geometry_msgs.msg import Pose, PoseStamped, Twist
 from metal_detector_msgs.msg._Coil import Coil
 from tf.transformations import euler_from_quaternion, quaternion_from_euler
 from time import sleep
+import PyKDL
 
 
 def distance(pt1,pt2):
@@ -92,6 +94,32 @@ class JudgeDredd(QtCore.QThread):
 
             pose = [data.pose[idx].position.x,data.pose[idx].position.y, yaw]
             self.updateRobotPose(pose)
+            
+    def receiveRealPose(self, data):
+        
+        try:
+            (trans, rot) = self.listener.lookupTransform('world', 'minefield', rospy.Time(0))
+        except (tf.LookupException, tf.ConnectivityException, tf.ExtrapolationException):
+          return
+	
+	q = [rot[0], rot[1], rot[2], rot[3]]
+	roll, pitch, yaw =  euler_from_quaternion(q)
+        
+        #frame = PyKDL.Frame(PyKDL.Rotation.RPY(roll, pitch, yaw), PyKDL.Vector(trans[0],trans[1],trans[2]))
+        
+	q = [data.pose.pose.orientation.x, data.pose.pose.orientation.y, data.pose.pose.orientation.z, data.pose.pose.orientation.w]
+	roll, pitch, robot_yaw =  euler_from_quaternion(q)
+  
+	#robot = PyKDL.Frame(PyKDL.Rotation.RPY(roll, pitch, robot_yaw), PyKDL.Vector(data.pose.pose.position.x, data.pose.pose.position.y, data.pose.pose.position.z))
+
+	#robot_transformed = frame * robot;
+	
+	#[roll, pitch, yaw] = robot_transformed.M.GetRPY()
+	
+	#print data.pose.pose.position.x - trans[0], data.pose.pose.position.y - trans[1], robot_yaw - yaw
+
+	pose = [data.pose.pose.position.x - trans[0], data.pose.pose.position.y - trans[1], robot_yaw - yaw]
+	self.updateRobotPose(pose)
 
 
     def updateRobotPose(self,newPose):
@@ -215,9 +243,12 @@ class JudgeDredd(QtCore.QThread):
 	self.isSimulation = rospy.get_param("is_simulation", True)
 
         if (self.isSimulation):
+	    print "Running the HRATC2014 Framework for Gazebo"
             rospy.Subscriber("/gazebo/model_states", ModelStates, self.receiveSimulationPose)
         else:
-            pass #Ver como pegar a posição real pelo sistema de landmarks
+	    print "Running the HRATC2014 Framework for the Husky"
+            rospy.Subscriber("/robot_pose_ekf/world", Odometry, self.receiveRealPose)
+            # TODO: Change to PoseWithCovarianceStamped
 
         rospy.Subscriber("/HRATC_FW/set_mine", PoseStamped, self.receiveMinePosition)
     	self.pubPose = rospy.Publisher('/HRATC_FW/pose', Pose)

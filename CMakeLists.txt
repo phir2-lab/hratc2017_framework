@@ -43,22 +43,19 @@ include_directories(${Eigen_INCLUDE_DIRS})
 ##   * add every package in MSG_DEP_SET to generate_messages(DEPENDENCIES ...)
 
 ## Generate messages in the 'msg' folder
-add_message_files(
-  DIRECTORY msg
-  FILES
-  GraftState.msg
-  GraftControl.msg
-  GraftSensorResidual.msg
-)
+#add_message_files(
+#  DIRECTORY msg
+#  FILES
+#)
 
 ## Generate added messages and services with any dependencies listed here
-generate_messages(
-  DEPENDENCIES
-  std_msgs
-  geometry_msgs
-  nav_msgs
-  sensor_msgs # may not be needed
-)
+#generate_messages(
+#  DEPENDENCIES
+#  std_msgs
+#  geometry_msgs
+#  nav_msgs
+#  sensor_msgs # may not be needed
+#)
 
 ## Generate services in the 'srv' folder
 # add_service_files(
@@ -113,20 +110,6 @@ include_directories(include ${Boost_INCLUDE_DIR} ${catkin_INCLUDE_DIRS} ${GAZEBO
 add_library(gazebo_mimic_plugin src/gazebo_mimic_plugin/mimic_plugin.cpp)
 add_library(gazebo_gps_plugin src/gazebo_gps_plugin/gazebo_ros_gps.cpp src/UTMConverter/UTMConverter.cpp)
 
-add_library(GraftOdometryTopic src/graft_ukf_absolute/GraftOdometryTopic.cpp)
-add_dependencies(GraftOdometryTopic ${PROJECT_NAME}_gencpp)
-
-add_library(GraftImuTopic src/graft_ukf_absolute/GraftImuTopic.cpp)
-add_dependencies(GraftImuTopic ${PROJECT_NAME}_gencpp)
-
-add_library(GraftParameterManager src/graft_ukf_absolute/GraftParameterManager.cpp)
-add_dependencies(GraftParameterManager ${PROJECT_NAME}_gencpp)
-target_link_libraries(GraftParameterManager GraftOdometryTopic GraftImuTopic)
-
-add_library(GraftUKFAbsolute src/graft_ukf_absolute/GraftUKFAbsolute.cpp)
-add_dependencies(GraftUKFAbsolute ${PROJECT_NAME}_gencpp)
-target_link_libraries(GraftUKFAbsolute GraftOdometryTopic GraftImuTopic)
-
 ## Declare a cpp executable
 #add_executable(arm_controller src/arm_controller.cpp)
 
@@ -144,9 +127,6 @@ target_link_libraries(gps_to_odom ${catkin_LIBRARIES})
 
 add_executable(minefield_static_tf_publisher src/minefield_static_tf_publisher/minefield_static_tf_publisher.cpp src/UTMConverter/UTMConverter.cpp)
 target_link_libraries(minefield_static_tf_publisher ${catkin_LIBRARIES})
-
-add_executable(graft_ukf_absolute src/graft_ukf_absolute/graft_ukf_absolute.cpp)
-target_link_libraries(graft_ukf_absolute GraftUKFAbsolute GraftParameterManager GraftOdometryTopic GraftImuTopic ${catkin_LIBRARIES})
 
 #############
 ## Install ##
