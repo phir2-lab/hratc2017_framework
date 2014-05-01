@@ -30,12 +30,12 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
     <arg name="gui" default="true"/>
     
     <!-- Open the Gazebo world -->
-    <!-- <include file="$(find gazebo_ros)/launch/empty_world.launch"/> -->
-    <include file="$(find hratc2014_framework)/launch/world.launch">
-      <arg name="gui" value="$(arg gui)" />
-    </include>
+     <include file="$(find gazebo_ros)/launch/empty_world.launch"/> 
+     
     <!-- Spawn the Husky robot -->
-    <include file="$(find hratc2014_framework)/launch/husky.launch"/>
+    <include file="$(find hratc2014_framework)/launch/husky.launch">
+      <arg name="startz" value="0" />
+    </include>
     
     
     <!-- Load the controllers -->
@@ -48,6 +48,7 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
       respawn="false" output="screen">
       <!--<remap from="/joint_states" to="/husky/joint_states" />-->
     </node>
+    
     
     <!-- GPS to Odom msg -->
     <node pkg="hratc2014_framework" type="gps_to_odom" name="gps_to_odom" />
@@ -67,12 +68,14 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
       </rosparam>
     </node>
     
+    
     <!-- The minefield frame -->
     <node name="minefield_static_tf_publisher" pkg="hratc2014_framework" type="minefield_static_tf_publisher" output="screen">
       <rosparam file="$(find hratc2014_framework)/settings/minefield.yaml" command="load" />
     </node>
     
+    
     <!-- HRATC2014 Client -->
-    <node pkg="hratc2014_framework" type="simulator.py" name="simulator"/>
+    <node pkg="hratc2014_framework" type="simulator.py" name="simulator" output="screen" />
   
 </launch>

@@ -5,10 +5,13 @@ import time, rospy, tf, numpy as np, random
 from gazebo_msgs.msg import ModelStates
 from nav_msgs.msg import Odometry
 from geometry_msgs.msg import Pose, PoseStamped, Twist
+from nav_msgs.msg import Odometry
+from tf.msg import tfMessage
 from metal_detector_msgs.msg._Coil import Coil
 from tf.transformations import euler_from_quaternion, quaternion_from_euler
 from time import sleep
 import PyKDL
+from math import *
 
 
 def distance(pt1,pt2):
@@ -72,13 +75,29 @@ class JudgeDredd(QtCore.QThread):
         self.minesDetected = {}
         self.minesExploded = []
         mWidth, mHeight = self.width/self.cellXSize,self.height/self.cellYSize
-        self.map = np.ones((mWidth, mHeight))*220
+        self.map = np.ones((mHeight, mWidth))*220
 
         self.emitMap.emit([self.mineMap, self.map,[]])
         self.receivedMineWrongPos.emit(self.minesWrong)
         self.receivedMinePos.emit(self.minesDetected)
         self.receivedMineExplodedPos.emit(self.minesExploded)
         self.receivedRobotPos.emit(self.path)
+
+
+    def receiveOdom(self, odor):
+        q = [odor.pose.pose.orientation.x, odor.pose.pose.orientation.y, odor.pose.pose.orientation.z, odor.pose.pose.orientation.w]
+        roll, pitch, yaw =  euler_from_quaternion(q)
+        self.odometria = [odor.pose.pose.position.x, odor.pose.pose.position.y, yaw]
+        self.updateRobotPose(self.odometria)
+
+
+    def receiveOdomTf(self, tfmsg):
+        if tfmsg.transforms[0].header.frame_id=="odom":
+            odor = tfmsg.transforms[0].transform
+            q = [odor.rotation.x, odor.rotation.y, odor.rotation.z, odor.rotation.w]
+            roll, pitch, yaw =  euler_from_quaternion(q)
+            self.odometria = [odor.translation.x, odor.translation.y, yaw]
+            self.updateRobotPose(self.odometria)
 
 
     def receiveSimulationPose(self, data):
@@ -217,25 +236,24 @@ class JudgeDredd(QtCore.QThread):
     def receiveMinePosition(self,data):
 
 	    # TODO: Use the frame_id on the header file to change the coordinate system of the pose to a global system
-            q = [data.pose.orientation.x, data.pose.orientation.y, data.pose.orientation.z, data.pose.orientation.w]
-            roll, pitch, yaw =  euler_from_quaternion(q)
-            mine = [data.pose.position.x, data.pose.position.y]
-            m = tuple(min(self.mines,key=lambda m: distance(m,mine)))
+        q = [data.pose.orientation.x, data.pose.orientation.y, data.pose.orientation.z, data.pose.orientation.w]
+        roll, pitch, yaw =  euler_from_quaternion(q)
+        mine = [data.pose.position.x, data.pose.position.y]
+        m = tuple(min(self.mines,key=lambda m: distance(m,mine)))
 
-            if distance(m,mine) < self.minDistDetection:
-                if (self.minesDetected.has_key(m)):
-                    if distance(m, self.minesDetected[m]) > distance(m, mine):
-                        mine, self.minesDetected[m] = self.minesDetected[m], mine
-                        self.receivedMinePos.emit(self.minesDetected)
-
-                    self.minesWrong.append(mine)
-                    self.receivedMineWrongPos.emit(self.minesWrong)
-                else:
-                    self.minesDetected[m] = mine
+        if distance(m,mine) < self.minDistDetection:
+            if (self.minesDetected.has_key(m)):
+                if distance(m, self.minesDetected[m]) > distance(m, mine):
+                    mine, self.minesDetected[m] = self.minesDetected[m], mine
                     self.receivedMinePos.emit(self.minesDetected)
             else:
-                self.minesWrong.append(mine)
-                self.receivedMineWrongPos.emit(self.minesWrong)
+                self.minesDetected[m] = mine
+                self.receivedMinePos.emit(self.minesDetected)
+        else:
+#            m = tuple(min(self.minesWrong,key=lambda m: distance(m,mine)))
+#            if distance(m,mine) >= self.minDistDetection:
+            self.minesWrong.append(mine)
+            self.receivedMineWrongPos.emit(self.minesWrong)
 
 
     def run(self):
@@ -245,6 +263,8 @@ class JudgeDredd(QtCore.QThread):
         if (self.isSimulation):
 	    print "Running the HRATC2014 Framework for Gazebo"
             rospy.Subscriber("/gazebo/model_states", ModelStates, self.receiveSimulationPose)
+#            rospy.Subscriber("/odom", Odometry, self.receiveOdom)
+#            rospy.Subscriber("/tf", tfMessage, self.receiveOdomTf)
         else:
 	    print "Running the HRATC2014 Framework for the Husky"
             rospy.Subscriber("/robot_pose_ekf/world", Odometry, self.receiveRealPose)
