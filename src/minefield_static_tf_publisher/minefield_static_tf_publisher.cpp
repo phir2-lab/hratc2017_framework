@@ -141,7 +141,7 @@ int main(int argc, char** argv)
     pn.param("rate", rate, 20.0);
 
     std::string parent_frame;
-    pn.param<std::string>("parent_frame", parent_frame, "world");
+    pn.param<std::string>("parent_frame", parent_frame, "odom");
 
     std::string child_frame;
     pn.param<std::string>("child_frame", child_frame, "minefield");

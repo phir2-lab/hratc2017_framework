@@ -53,23 +53,23 @@ void fixCallback(const sensor_msgs::NavSatFix::ConstPtr& msg)
 
     nav_msgs::Odometry odom_msg;
     odom_msg.header.stamp = msg->header.stamp;
-    odom_msg.header.frame_id = "world";
-    odom_msg.child_frame_id = "gps_antenna";
+    odom_msg.header.frame_id = "gps_antenna";
+    //odom_msg.child_frame_id = "gps_antenna";
 
     odom_msg.pose.pose.position.x = utm.easting;
     odom_msg.pose.pose.position.y = utm.northing;
     odom_msg.pose.pose.position.z = msg->altitude;
-    odom_msg.pose.pose.orientation.w = 1;
-    odom_msg.pose.pose.orientation.x = 0;
+    odom_msg.pose.pose.orientation.w = 0;
+    odom_msg.pose.pose.orientation.x = 1;
     odom_msg.pose.pose.orientation.y = 0;
     odom_msg.pose.pose.orientation.z = 0;
 
     double cov[] = {0.001, 0.0, 0.0, 0.0, 0.0, 0.0,
                     0.0, 0.001, 0.0, 0.0, 0.0, 0.0,
                     0.0, 0.0, 500, 0.0, 0.0, 0.0,
-                    0.0, 0.0, 0.0, 10000, 0.0, 0.0,
-                    0.0, 0.0, 0.0, 0.0, 10000, 0.0,
-                    0.0, 0.0, 0.0, 0.0, 0.0, 1000};
+                    0.0, 0.0, 0.0, 99999, 0.0, 0.0,
+                    0.0, 0.0, 0.0, 0.0, 99999, 0.0,
+                    0.0, 0.0, 0.0, 0.0, 0.0, 99999};
     for(int i=0 ; i<36 ; i++) odom_msg.pose.covariance[i] = cov[i];
 
     pub_ptr->publish(odom_msg);

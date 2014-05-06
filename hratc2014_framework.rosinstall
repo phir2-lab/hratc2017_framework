@@ -19,5 +19,11 @@
     local-name:  hratc2014_entry_template
     version: master
 
+- git:
+    uri: https://github.com/brNX/navigation.git
+    local-name: robot_pose_ekf_cp
+    version: robot_pose_ekf
+  
+
 
 
