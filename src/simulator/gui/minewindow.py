@@ -110,6 +110,7 @@ class MineWindow(QtGui.QMainWindow, Ui_MainWindow):
     minesWrong = []
     minesDetected = {}
     minesExploded = []
+    minesExplodedDetected = []
     coils = None
     competitorName = None
     Map = None
@@ -241,8 +242,33 @@ class MineWindow(QtGui.QMainWindow, Ui_MainWindow):
             log.add_section("Scoreboard")
             log.set("Scoreboard","MinesDetected",self.mineDetectedLB.text())
             log.set("Scoreboard","WrongMinesDetected",self.wrongMinesDetectedLB.text())
-            log.set("Scoreboard","ExplodedMines",self.explodedMinesLB.text())
+            log.set("Scoreboard","ExplodedMines",len(self.minesExploded))
+            log.set("Scoreboard","ExplodedMinesDetected",len(self.minesExplodedDetected))
             log.set("Scoreboard","Time",self.timeLB.text())
+
+            undetected = undetectedCovered = 0
+            mWidth, mHeight = self.width/self.cellXSize,self.height/self.cellYSize
+            for m in self.mines:
+                if not self.minesDetected.has_key(tuple(m)):
+                    x, y = m[0]/self.cellXSize+mWidth/2., mHeight/2. - m[1]/self.cellYSize
+                    if (x<0) or (y<0) or (y >self.Map.shape[0]) or (x >self.Map.shape[1]):
+                        undetected += 1
+                        continue
+                    if self.actionCoilsSignal.isChecked():
+                        if self.Map[y,x] != 220:
+                            undetectedCovered += 1
+                        else:
+                            undetected += 1
+                    else:
+                        if self.Map[y,x] == 183:
+                            undetectedCovered += 1
+                        else:
+                            undetected += 1
+
+            log.set("Scoreboard","Undetected", undetected)
+            log.set("Scoreboard","UndetectedCovered", undetectedCovered)
+
+
             percent = 0.0
             if self.actionCoilsSignal.isChecked():
                 percent = self.Map[self.Map != 220].size/float(self.Map.size)
@@ -268,7 +294,7 @@ class MineWindow(QtGui.QMainWindow, Ui_MainWindow):
     def updateScoreboard(self):
         self.mineDetectedLB.setText(str(len(self.minesDetected)))
         self.wrongMinesDetectedLB.setText(str(len(self.minesWrong)))
-        self.explodedMinesLB.setText(str(len(self.minesExploded)))
+        self.explodedMinesLB.setText(str(len(self.minesExploded + self.minesExplodedDetected)))
 
 
     def startCompetitor(self, name):
@@ -294,6 +320,7 @@ class MineWindow(QtGui.QMainWindow, Ui_MainWindow):
         self.minesWrong = []
         self.minesDetected = {}
         self.minesExploded = []
+        self.minesExplodedDetected = []
         self.coils = None
 
 
@@ -327,7 +354,8 @@ class MineWindow(QtGui.QMainWindow, Ui_MainWindow):
 
 
     def addMineExplodedPos(self,minesExploded):
-        self.minesExploded = minesExploded
+        self.minesExploded = minesExploded[0]
+        self.minesExplodedDetected = minesExploded[1]
         self.updateScoreboard()
 
 
@@ -501,6 +529,11 @@ class MineWindow(QtGui.QMainWindow, Ui_MainWindow):
         if self.minesExploded != []:
             glColor3f(1., 0., .0)
             for mine in self.minesExploded:
+                GLCircle(mine)
+
+        if self.minesExplodedDetected != []:
+            glColor3f(1., 0., .0)
+            for mine in self.minesExplodedDetected:
                 GLCircle(mine)
 
 

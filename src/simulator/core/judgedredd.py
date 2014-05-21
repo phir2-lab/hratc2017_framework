@@ -74,13 +74,14 @@ class JudgeDredd(QtCore.QThread):
         self.minesWrong = []
         self.minesDetected = {}
         self.minesExploded = []
+        self.minesExplodedDetected = []
         mWidth, mHeight = self.width/self.cellXSize,self.height/self.cellYSize
         self.map = np.ones((mHeight, mWidth))*220
 
         self.emitMap.emit([self.mineMap, self.map,[]])
         self.receivedMineWrongPos.emit(self.minesWrong)
         self.receivedMinePos.emit(self.minesDetected)
-        self.receivedMineExplodedPos.emit(self.minesExploded)
+        self.receivedMineExplodedPos.emit([self.minesExploded,self.minesExplodedDetected])
         self.receivedRobotPos.emit(self.path)
 
 
@@ -215,20 +216,30 @@ class JudgeDredd(QtCore.QThread):
             for mine in self.mines:
                 for wheel in wheels:
                     if distance(wheel,mine) < self.maxDistExplosion:
-                        if not mine in self.minesExploded:
+                        if self.minesDetected.has_key(tuple(mine)):
+                            if not mine in self.minesExplodedDetected:
+                                self.minesExplodedDetected.append(mine)
+                                self.receivedMineExplodedPos.emit([self.minesExploded,self.minesExplodedDetected])
+                        elif not mine in self.minesExploded:
                             self.minesExploded.append(mine)
-                            self.receivedMineExplodedPos.emit(self.minesExploded)
+                            self.receivedMineExplodedPos.emit([self.minesExploded,self.minesExplodedDetected])
 
 
     def receiveMinePosition(self,data):
 
-	    # TODO: Use the frame_id on the header file to change the coordinate system of the pose to a global system
+        # TODO: Use the frame_id on the header file to change the coordinate system of the pose to a global system
         q = [data.pose.orientation.x, data.pose.orientation.y, data.pose.orientation.z, data.pose.orientation.w]
         roll, pitch, yaw =  euler_from_quaternion(q)
         mine = [data.pose.position.x, data.pose.position.y]
         m = tuple(min(self.mines,key=lambda m: distance(m,mine)))
 
         if distance(m,mine) < self.minDistDetection:
+
+            if list(m) in self.minesExploded:
+                self.minesExplodedDetected.append(list(m))
+                self.minesExploded.remove(list(m))
+                self.receivedMineExplodedPos.emit([self.minesExploded,self.minesExplodedDetected])
+
             if (self.minesDetected.has_key(m)):
                 if distance(m, self.minesDetected[m]) > distance(m, mine):
                     mine, self.minesDetected[m] = self.minesDetected[m], mine
