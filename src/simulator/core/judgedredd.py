@@ -4,7 +4,7 @@ from numpy import *
 import time, rospy, tf, numpy as np, random
 from gazebo_msgs.msg import ModelStates
 from nav_msgs.msg import Odometry
-from geometry_msgs.msg import Pose, PoseStamped, Twist
+from geometry_msgs.msg import Pose, PoseStamped, Twist, PoseWithCovarianceStamped
 from nav_msgs.msg import Odometry
 from tf.msg import tfMessage
 from metal_detector_msgs.msg._Coil import Coil
@@ -84,6 +84,19 @@ class JudgeDredd(QtCore.QThread):
         self.receivedRobotPos.emit(self.path)
 
 
+    def receiveOdomEKF(self, odor):
+        xm ,ym, (pitchm, rollm, yawm) = 549848.663622 , 4448426.10338, euler_from_quaternion([0.,0.,0.999998918808,0.00147050426938])
+
+        q = [odor.pose.pose.orientation.x, odor.pose.pose.orientation.y, odor.pose.pose.orientation.z, odor.pose.pose.orientation.w]
+        roll, pitch, yaw =  euler_from_quaternion(q)
+
+        x, y = odor.pose.pose.position.x, odor.pose.pose.position.y
+        x1 = (x-xm)*cos(yawm) + (y-ym)*sin(yawm)
+        y1 = -(x-xm)*sin(yawm) + (y-ym)*cos(yawm)
+        self.odometria = [x1, y1, yaw-yawm]
+        self.updateRobotPose(self.odometria)
+
+
     def receiveOdom(self, odor):
         q = [odor.pose.pose.orientation.x, odor.pose.pose.orientation.y, odor.pose.pose.orientation.z, odor.pose.pose.orientation.w]
         roll, pitch, yaw =  euler_from_quaternion(q)
@@ -113,32 +126,6 @@ class JudgeDredd(QtCore.QThread):
 
             pose = [data.pose[idx].position.x,data.pose[idx].position.y, yaw]
             self.updateRobotPose(pose)
-            
-    def receiveRealPose(self, data):
-        
-        try:
-            (trans, rot) = self.listener.lookupTransform('world', 'minefield', rospy.Time(0))
-        except (tf.LookupException, tf.ConnectivityException, tf.ExtrapolationException):
-          return
-	
-	q = [rot[0], rot[1], rot[2], rot[3]]
-	roll, pitch, yaw =  euler_from_quaternion(q)
-        
-        #frame = PyKDL.Frame(PyKDL.Rotation.RPY(roll, pitch, yaw), PyKDL.Vector(trans[0],trans[1],trans[2]))
-        
-	q = [data.pose.pose.orientation.x, data.pose.pose.orientation.y, data.pose.pose.orientation.z, data.pose.pose.orientation.w]
-	roll, pitch, robot_yaw =  euler_from_quaternion(q)
-  
-	#robot = PyKDL.Frame(PyKDL.Rotation.RPY(roll, pitch, robot_yaw), PyKDL.Vector(data.pose.pose.position.x, data.pose.pose.position.y, data.pose.pose.position.z))
-
-	#robot_transformed = frame * robot;
-	
-	#[roll, pitch, yaw] = robot_transformed.M.GetRPY()
-	
-	#print data.pose.pose.position.x - trans[0], data.pose.pose.position.y - trans[1], robot_yaw - yaw
-
-	pose = [data.pose.pose.position.x - trans[0], data.pose.pose.position.y - trans[1], robot_yaw - yaw]
-	self.updateRobotPose(pose)
 
 
     def updateRobotPose(self,newPose):
@@ -204,7 +191,7 @@ class JudgeDredd(QtCore.QThread):
                         coil.zero.append(self.zeroChannel[3*co+ch])
 
                 if (self.isSimulation):
-		  self.pubMineDetection.publish(coil)
+                    self.pubMineDetection.publish(coil)
                 signals.append(coil)
                 co += 1
 
@@ -258,23 +245,23 @@ class JudgeDredd(QtCore.QThread):
 
     def run(self):
 
-	self.isSimulation = rospy.get_param("is_simulation", True)
+        self.isSimulation = rospy.get_param("is_simulation", False)
 
         if (self.isSimulation):
-	    print "Running the HRATC2014 Framework for Gazebo"
+            print "Running the HRATC2014 Framework for Gazebo"
             rospy.Subscriber("/gazebo/model_states", ModelStates, self.receiveSimulationPose)
 #            rospy.Subscriber("/odom", Odometry, self.receiveOdom)
 #            rospy.Subscriber("/tf", tfMessage, self.receiveOdomTf)
         else:
-	    print "Running the HRATC2014 Framework for the Husky"
-            rospy.Subscriber("/robot_pose_ekf/world", Odometry, self.receiveRealPose)
-            # TODO: Change to PoseWithCovarianceStamped
+            print "Running the HRATC2014 Framework for the Husky"
+            rospy.Subscriber("/robot_pose_ekf_cp/odom", PoseWithCovarianceStamped, self.receiveOdomEKF)
+            rospy.Subscriber("/robot_pose_ekf/odom", PoseWithCovarianceStamped, self.receiveOdomEKF)
 
         rospy.Subscriber("/HRATC_FW/set_mine", PoseStamped, self.receiveMinePosition)
-    	self.pubPose = rospy.Publisher('/HRATC_FW/pose', Pose)
-    	
-    	if (self.isSimulation):
-	  self.pubMineDetection = rospy.Publisher('/coils', Coil)
+        self.pubPose = rospy.Publisher('/HRATC_FW/pose', Pose)
+
+        if (self.isSimulation):
+            self.pubMineDetection = rospy.Publisher('/coils', Coil)
         
         # Added a tf listener to check the position of the coils
         self.listener = tf.TransformListener()
