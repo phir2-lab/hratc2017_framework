@@ -97,6 +97,6 @@ class Config(object):
 
 #        self.mineMap = MineMapGenerator(mines, mWidth, mHeight)
         self.mineMap, self.zeroChannel = GenerateUsingRealDataset(mines,metals1,metals2,mWidth,mHeight,True)
-        self.mines = [ [(m[0]-mWidth/2.)*self.cellWidth, (mHeight/2. - m[1])*self.cellHeight] for m in mines]
+#        self.mines = [ [(m[0]-mWidth/2.)*self.cellWidth, (mHeight/2. - m[1])*self.cellHeight] for m in mines]
 
 
