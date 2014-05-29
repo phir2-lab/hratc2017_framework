@@ -248,10 +248,14 @@ class JudgeDredd(QtCore.QThread):
                 self.minesDetected[m] = mine
                 self.receivedMinePos.emit(self.minesDetected)
         else:
-#            m = tuple(min(self.minesWrong,key=lambda m: distance(m,mine)))
-#            if distance(m,mine) >= self.minDistDetection:
-            self.minesWrong.append(mine)
-            self.receivedMineWrongPos.emit(self.minesWrong)
+            if self.minesWrong != []:
+                m = tuple(min(self.minesWrong,key=lambda m: distance(m,mine)))
+                if distance(m,mine) >= self.minDistDetection:
+                    self.minesWrong.append(mine)
+                    self.receivedMineWrongPos.emit(self.minesWrong)
+            else:
+                self.minesWrong.append(mine)
+                self.receivedMineWrongPos.emit(self.minesWrong)
 
 
     def run(self):
