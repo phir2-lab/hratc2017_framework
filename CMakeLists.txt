@@ -4,7 +4,7 @@ project(hratc2014_framework)
 ## Find catkin macros and libraries
 ## if COMPONENTS list like find_package(catkin REQUIRED COMPONENTS xyz)
 ## is used, also find other catkin packages
-find_package(catkin REQUIRED COMPONENTS gazebo_ros message_generation rosconsole roscpp geometry_msgs sensor_msgs nav_msgs tf)
+find_package(catkin REQUIRED COMPONENTS cmake_modules gazebo_ros message_generation rosconsole roscpp geometry_msgs sensor_msgs nav_msgs tf)
 
 ## System dependencies are found with CMake's conventions
 # find_package(Boost REQUIRED COMPONENTS system)
