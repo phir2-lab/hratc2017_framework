@@ -20,6 +20,7 @@
   <author email="guilhermefrancosi@gmail.com">Guilherme Schvarcz Franco</author>
 
   <buildtool_depend>catkin</buildtool_depend>
+  <build_depend>cmake_modules</build_depend>
   <build_depend>roscpp</build_depend>
   <build_depend>std_msgs</build_depend>
   <build_depend>control_msgs</build_depend>
