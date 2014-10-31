@@ -128,6 +128,9 @@ target_link_libraries(gps_to_odom ${catkin_LIBRARIES})
 add_executable(minefield_static_tf_publisher src/minefield_static_tf_publisher/minefield_static_tf_publisher.cpp src/UTMConverter/UTMConverter.cpp)
 target_link_libraries(minefield_static_tf_publisher ${catkin_LIBRARIES})
 
+add_executable(judge src/judge/judge.cpp)
+target_link_libraries(judge ${catkin_LIBRARIES})
+
 #############
 ## Install ##
 #############
