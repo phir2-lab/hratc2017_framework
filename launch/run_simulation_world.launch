@@ -72,8 +72,5 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
     <node name="minefield_static_tf_publisher" pkg="hratc2014_framework" type="minefield_static_tf_publisher" output="screen">
       <rosparam file="$(find hratc2014_framework)/settings/minefield.yaml" command="load" />
     </node>
-    
-    <!-- HRATC2014 Client -->
-    <node pkg="hratc2014_framework" type="simulator.py" name="simulator"/>
   
 </launch>

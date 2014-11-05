@@ -1,27 +1,109 @@
-#include <ros/ros.h>
-#include <visualization_msgs/Marker.h>
+#include "judge.h"
 
-#include "robotPose.h"
+#include <iostream>
+#include <string>
 
+using namespace std;
 
+Judge::Judge()
+{
+    n = new ros::NodeHandle("~");
 
-ros::NodeHandle* n;
-RobotPose* robotPose;
+    string filename;
+    if(n->getParam("config", filename)==false)
+    {
+        ROS_ERROR("Failed to get param 'config'");
+    }
 
-ros::Publisher pub_marker;
-uint32_t shape;
+    robotPose = new RobotPose("/minefield","/robot_pose_ekf/odom");
 
-ros::Publisher pub_robotPath;
-visualization_msgs::Marker robotpath;
+    config = new Config(filename);
 
-void initializeMarker()
+//    // Initialize publishers
+//    initializeMarker();
+    initializeTrueMinesMarkers();
+    initializeRobotPath();
+
+    rate = new ros::Rate(5);
+}
+
+void Judge::run()
+{
+//    ros::Rate r(5); // try to keep the loop in a 10 Hz frequency
+
+    int count = 0;
+    while (ros::ok())
+    {
+        geometry_msgs::PoseStamped p = robotPose->GetLocalPose();
+        robotZ = p.pose.position.z;
+//        cout << "Pose:" << p.pose.position.x << ' ' << p.pose.position.y << ' ' << tf::getYaw(p.pose.orientation) << endl;
+
+//        updateMarker();
+        updateTrueMinesMarkers();
+        updateRobotPath(count++);
+
+        ros::spinOnce();
+        rate->sleep();
+//        r.sleep();
+    }
+}
+
+void Judge::initializeMarker()
 {
     pub_marker = n->advertise<visualization_msgs::Marker>("visualization_marker", 1);
     // Set our initial shape type to be a cube
     shape = visualization_msgs::Marker::CUBE;
 }
 
-void initializeRobotPath()
+void Judge::initializeTrueMinesMarkers()
+{
+    pub_trueMinesMarker = n->advertise<visualization_msgs::MarkerArray>("trueMines_marker", 1);
+
+    trueMinesMarkers.markers.resize(config->numMines);
+
+    cout << trueMinesMarkers.markers.size() << endl;
+
+    for(int i=0; i<trueMinesMarkers.markers.size(); i++){
+        // Set the frame ID and timestamp.  See the TF tutorials for information on these.
+        trueMinesMarkers.markers[i].header.frame_id = "minefield";
+        trueMinesMarkers.markers[i].header.stamp = ros::Time::now();
+
+        // Set the namespace and id for this marker.  This serves to create a unique ID
+        // Any marker sent with the same namespace and id will overwrite the old one
+        trueMinesMarkers.markers[i].ns = "trueMines";
+        trueMinesMarkers.markers[i].id = i;
+
+        // Set the marker type.
+        trueMinesMarkers.markers[i].type = visualization_msgs::Marker::CYLINDER;
+
+        // Set the marker action.  Options are ADD and DELETE
+        trueMinesMarkers.markers[i].action = visualization_msgs::Marker::ADD;
+
+        // Set the pose of the marker.  This is a full 6DOF pose relative to the frame/time specified in the header
+        trueMinesMarkers.markers[i].pose.position.x = config->minesPositions[i].x;
+        trueMinesMarkers.markers[i].pose.position.y = config->minesPositions[i].y;
+        trueMinesMarkers.markers[i].pose.position.z = 0;
+        trueMinesMarkers.markers[i].pose.orientation.x = 0.0;
+        trueMinesMarkers.markers[i].pose.orientation.y = 0.0;
+        trueMinesMarkers.markers[i].pose.orientation.z = 0.0;
+        trueMinesMarkers.markers[i].pose.orientation.w = 1.0;
+
+        // Set the scale of the marker -- 1x1x1 here means 1m on a side
+        trueMinesMarkers.markers[i].scale.x = 0.2;
+        trueMinesMarkers.markers[i].scale.y = 0.2;
+        trueMinesMarkers.markers[i].scale.z = 0.01;
+
+        // Set the color -- BLUE!
+        trueMinesMarkers.markers[i].color.r = 0.0f;
+        trueMinesMarkers.markers[i].color.g = 0.4f;
+        trueMinesMarkers.markers[i].color.b = 1.0f;
+        trueMinesMarkers.markers[i].color.a = 1.0;
+
+        trueMinesMarkers.markers[i].lifetime = ros::Duration();
+    }
+}
+
+void Judge::initializeRobotPath()
 {
     pub_robotPath = n->advertise<visualization_msgs::Marker>("hratc_path",10);
     robotpath.header.frame_id = "minefield";
@@ -37,11 +119,11 @@ void initializeRobotPath()
     robotpath.color.a = 1.0;
 }
 
-void updateMarker()
+void Judge::updateMarker()
 {
     visualization_msgs::Marker marker;
     // Set the frame ID and timestamp.  See the TF tutorials for information on these.
-    marker.header.frame_id = "/my_frame";
+    marker.header.frame_id = "/minefield";
     marker.header.stamp = ros::Time::now();
 
     // Set the namespace and id for this marker.  This serves to create a unique ID
@@ -101,7 +183,22 @@ void updateMarker()
     pub_marker.publish(marker);
 }
 
-void updateRobotPath(int i)
+void Judge::updateTrueMinesMarkers()
+{
+    cout << "Publishing true mines" << endl;
+    // Publish the marker
+    for(int i=0; i<trueMinesMarkers.markers.size(); i++){
+        trueMinesMarkers.markers[i].header.stamp = ros::Time::now();
+        trueMinesMarkers.markers[i].pose.position.z = robotZ-0.1;
+//        cout << trueMinesMarkers.markers[i].ns << ' ' << trueMinesMarkers.markers[i].id << endl;
+//        rate->sleep();
+    }
+
+    pub_trueMinesMarker.publish(trueMinesMarkers);
+
+}
+
+void Judge::updateRobotPath(int i)
 {
     geometry_msgs::Point p = robotPose->GetLocalPose().pose.position;
 //    p.x = i/10;
@@ -110,39 +207,4 @@ void updateRobotPath(int i)
 //    p.z = 0;
     robotpath.points.push_back(p);
     pub_robotPath.publish(robotpath);
-}
-
-int main(int argc,char **argv)
-{
-    ros::init(argc, argv, "hratc_viewer");
-    ROS_INFO("HRATC");
-
-    n = new ros::NodeHandle();
-
-    robotPose = new RobotPose("/minefield","/robot_pose_ekf/odom");
-    geometry_msgs::PoseStamped p;
-
-//    // Initialize publishers
-//    initializeMarker();
-    initializeRobotPath();
-
-//    // Initialize subscribers
-////    ros::Subscriber sub_odom = n.subscribe("odom", 50, fixCallback);
-////    ros::Subscriber sub_robotPoseEKF = n.subscribe("/robot_pose_ekf/odom", 50, receiveRobotPoseEKF);
-
-    ros::Rate r(10); // try to keep the loop in a 10 Hz frequency
-
-    int count = 0;
-    while (ros::ok())
-    {
-//        updateMarker();
-        updateRobotPath(count++);
-        p = robotPose->GetGlobalPose();
-//        cout << "Pose:" << p.pose.position.x << ' ' << p.pose.position.y << ' ' << tf::getYaw(p.pose.orientation) << endl;
-
-        ros::spinOnce();
-        r.sleep();
-    }
-
-    return 0;
 }
