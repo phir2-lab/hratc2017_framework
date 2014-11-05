@@ -131,6 +131,9 @@ target_link_libraries(minefield_static_tf_publisher ${catkin_LIBRARIES})
 add_executable(judge src/judge/main.cpp src/judge/judge.cpp src/judge/config.cpp src/judge/robotPose.cpp)
 target_link_libraries(judge ${catkin_LIBRARIES})
 
+add_executable(mineFieldViewer src/minefieldViewer/main.cpp src/minefieldViewer/minefieldviewer.cpp)
+target_link_libraries(mineFieldViewer ${catkin_LIBRARIES})
+
 #############
 ## Install ##
 #############
