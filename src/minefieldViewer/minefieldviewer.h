@@ -4,6 +4,7 @@
 #include <nav_msgs/OccupancyGrid.h>
 #include <tf/transform_listener.h>
 #include <geometry_msgs/Twist.h>
+#include "../config/config.h"
 
 #include <string>
 using std::string;

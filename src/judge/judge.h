@@ -9,7 +9,7 @@
 using namespace std;
 
 #include "robotPose.h"
-#include "config.h"
+#include "../config/config.h"
 
 class Judge
 {
