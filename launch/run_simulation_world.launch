@@ -72,5 +72,15 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
     <node name="minefield_static_tf_publisher" pkg="hratc2014_framework" type="minefield_static_tf_publisher" output="screen">
       <rosparam file="$(find hratc2014_framework)/settings/minefield.yaml" command="load" />
     </node>
+
+    <node name="judge" pkg="hratc2014_framework"  type="judge"
+      output="screen">
+     <param name="~config" value="$(find hratc2014_framework)/src/config/config.ini"/>    
+    </node>
+
+    <node name="mineFieldViewer" pkg="hratc2014_framework"  type="mineFieldViewer"
+      output="screen">
+     <param name="~config" value="$(find hratc2014_framework)/src/config/config.ini"/>    
+    </node>
   
 </launch>

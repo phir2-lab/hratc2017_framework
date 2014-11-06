@@ -35,8 +35,7 @@ class Config
         // MAP_DIMENSIONS
         float width;
         float height;
-        float cellWidth;
-        float cellHeight;
+        float resolution;
 
         // MINES
         int numMines;

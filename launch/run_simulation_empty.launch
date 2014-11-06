@@ -77,6 +77,14 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
     
     
     <!-- HRATC2014 Client -->
-    <node pkg="hratc2014_framework" type="simulator.py" name="simulator" output="screen" />
+    <node name="judge" pkg="hratc2014_framework"  type="judge" output="screen">
+     <param name="~config" value="$(find hratc2014_framework)/src/config/config.ini"/>    
+    </node>
+
+    <node name="mineFieldViewer" pkg="hratc2014_framework"  type="mineFieldViewer" output="screen">
+     <param name="~config" value="$(find hratc2014_framework)/src/config/config.ini"/>    
+    </node>
+
+   <!-- <node pkg="hratc2014_framework" type="simulator.py" name="simulator" output="screen" /> -->
   
 </launch>

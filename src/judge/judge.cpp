@@ -14,10 +14,9 @@ Judge::Judge()
     {
         ROS_ERROR("Failed to get param 'config'");
     }
+    config = new Config(filename);
 
     robotPose = new RobotPose("/minefield","/robot_pose_ekf/odom");
-
-    config = new Config(filename);
 
 //    // Initialize publishers
 //    initializeMarker();
@@ -60,8 +59,6 @@ void Judge::initializeTrueMinesMarkers()
     pub_trueMinesMarker = n->advertise<visualization_msgs::MarkerArray>("trueMines_marker", 1);
 
     trueMinesMarkers.markers.resize(config->numMines);
-
-    cout << trueMinesMarkers.markers.size() << endl;
 
     for(int i=0; i<trueMinesMarkers.markers.size(); i++){
         // Set the frame ID and timestamp.  See the TF tutorials for information on these.
@@ -185,7 +182,6 @@ void Judge::updateMarker()
 
 void Judge::updateTrueMinesMarkers()
 {
-    cout << "Publishing true mines" << endl;
     // Publish the marker
     for(int i=0; i<trueMinesMarkers.markers.size(); i++){
         trueMinesMarkers.markers[i].header.stamp = ros::Time::now();
