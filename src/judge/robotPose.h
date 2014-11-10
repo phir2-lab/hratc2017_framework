@@ -44,6 +44,7 @@
 #include <message_filters/subscriber.h>
 #include <nav_msgs/Odometry.h>
 #include <geometry_msgs/PoseWithCovarianceStamped.h>
+#include <tf/transform_datatypes.h>
 
 using namespace std;
 
@@ -52,22 +53,27 @@ class RobotPose
 public:
     RobotPose(string targetFrame, string inputTopic);
 
-    const geometry_msgs::PoseStamped & GetGlobalPose();
-    const geometry_msgs::PoseStamped & GetLocalPose();
+    const geometry_msgs::PoseStamped & getGlobalPose();
+    const geometry_msgs::PoseStamped & getLocalPose();
+    const vector<geometry_msgs::PoseStamped> & getWheelsPoses();
+
 
 private:
     message_filters::Subscriber<geometry_msgs::PoseWithCovarianceStamped> sub_;
     tf::TransformListener tf_;
     tf::MessageFilter<geometry_msgs::PoseWithCovarianceStamped> * tf_filter_;
+    vector< tf::TransformListener* > listeners;
     ros::NodeHandle n_;
     string target_frame_;
     string input_topic_;
+
     geometry_msgs::PoseStamped globalPose_;
     geometry_msgs::PoseStamped localPose_;
-
+    vector<geometry_msgs::PoseStamped> wheelsPoses;
+    vector<geometry_msgs::PoseStamped> emptyVector;
 
     //  Callback to register with tf::MessageFilter to be called when transforms are available
-    void msgCallback(const boost::shared_ptr<const geometry_msgs::PoseWithCovarianceStamped>& msg);
+    void robotPoseCallback(const boost::shared_ptr<const geometry_msgs::PoseWithCovarianceStamped>& msg);
 
 };
 
