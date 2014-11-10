@@ -41,7 +41,7 @@ minefieldViewer::minefieldViewer() :
 
 void minefieldViewer::run()
 {
-    // creating the node handler and publisher for the map
+    // creating the coverage rate and the map
     ros::Rate r(30);
     ros::Publisher map_pub = mapNodeHandler->advertise<nav_msgs::OccupancyGrid>("occupancyGrid", 1);
     ros::Publisher cover_pub = mapNodeHandler->advertise<std_msgs::Float32>("coverageRate", 1);
@@ -49,22 +49,26 @@ void minefieldViewer::run()
     // ROS loop
     while (ros::ok())
     {
+        // find transformations for each coil
         for(int i=0; i<3;++i)
         {
             // getting left, middle and right coils transforms
             if ( getCoilTransform(i) )
             {
+                // mark grid cells as visited
                 fillGrid();
             }
         }
-
         // Setting frame id and timestamp for the occupancy grid
         grid.header.frame_id = "/minefield";
         grid.header.stamp = ros::Time::now();
-        grid.info.origin.position.z = transform.getOrigin().z()-0.30;                // uint32 -- set by hand
-
+        //plain grid height is set to the last coil z position
+        grid.info.origin.position.z = transform.getOrigin().z()-0.30; 
         // Publish the view of the coverage area
         map_pub.publish(grid);
+
+
+
         //publish the rate of coverage area
         std_msgs::Float32 rate;
         rate.data = coverage/float(grid.info.width*grid.info.height);
