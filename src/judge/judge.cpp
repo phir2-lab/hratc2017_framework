@@ -14,10 +14,9 @@ Judge::Judge()
     {
         ROS_ERROR("Failed to get param 'config'");
     }
+    config = new Config(filename);
 
     robotPose = new RobotPose("/minefield","/robot_pose_ekf/odom");
-
-    config = new Config(filename);
 
     sub_setMine = n->subscribe("/HRATC_FW/set_mine", 100, &Judge::checkMineDetection, this);
 
@@ -66,6 +65,7 @@ void Judge::initializeMinesMarkers()
     exploded.resize(config->numMines, false);
 
     for(int i=0; i<trueMines.markers.size(); i++){
+
         // Set the frame ID and timestamp.  See the TF tutorials for information on these.
         trueMines.markers[i].header.frame_id = "minefield";
         trueMines.markers[i].header.stamp = ros::Time::now();

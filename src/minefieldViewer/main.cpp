@@ -18,6 +18,6 @@ int main( int argc, char** argv )
     ros::init(argc, argv, "mineFieldViewer");
 
     // initialize mineField
-    minefieldViewer m(RESOLUTION, WIDTH, HEIGHT, DETECTION_RADIUS);
+    minefieldViewer m;
     m.run();
 }

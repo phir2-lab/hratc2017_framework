@@ -10,7 +10,7 @@
 using namespace std;
 
 #include "robotPose.h"
-#include "config.h"
+#include "../config/config.h"
 
 enum mineType { PROPERLY_DETECTED, WRONGLY_DETECTED, KNOWN_EXPLODED, UNKNOWN_EXPLODED};
 

@@ -4,6 +4,7 @@
 #include <nav_msgs/OccupancyGrid.h>
 #include <tf/transform_listener.h>
 #include <geometry_msgs/Twist.h>
+#include "../config/config.h"
 
 #include <string>
 using std::string;
@@ -20,9 +21,11 @@ using std::vector;
 class minefieldViewer
 {
 public:
-    minefieldViewer(float resolution, int w, int h, float r);
+    minefieldViewer();
     void run();
 private:
+    // Node handler pointer
+    ros::NodeHandle* mapNodeHandler;
 
     // the coverage map
     nav_msgs::OccupancyGrid grid;
@@ -35,6 +38,12 @@ private:
     
     // radius in cells
     float cellRadius;
+
+    // Config class
+    Config* config;
+
+    // coverage rate
+    float coverage;
   
 };
 

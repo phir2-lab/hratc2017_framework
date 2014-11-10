@@ -306,7 +306,7 @@ Visualization Manager:
       Marker Topic: /hratc_viewer/trueMines_marker
       Name: TrueMines
       Namespaces:
-        trueMines: true
+        {}
       Queue Size: 100
       Value: true
     - Alpha: 0.7
@@ -315,7 +315,7 @@ Visualization Manager:
       Draw Behind: false
       Enabled: false
       Name: CoveredArea
-      Topic: occupancyGrid
+      Topic: /mineFieldViewer/occupancyGrid
       Value: false
     - Class: rviz/MarkerArray
       Enabled: true

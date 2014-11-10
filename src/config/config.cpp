@@ -16,19 +16,19 @@ using namespace std;
 Config::Config(string name)
 {
     // Get full path of the config file
-    string filename = ros::package::getPath("hratc2014_framework");
-    filename += "/src/judge/" + name;
-    cout << "Config: " << filename << endl;
+//    string filename = ros::package::getPath("hratc2014_framework");
+//    filename += "/src/config/" + name;
+    cout << "Config: " << name << endl;
 
     // Open .ini file
     boost::property_tree::ptree pt;
-    boost::property_tree::ini_parser::read_ini(filename.c_str(), pt);
+    boost::property_tree::ini_parser::read_ini(name.c_str(), pt);
 
     // Read map dimensions
     width = pt.get<float>("MapDimensions.width");
     height = pt.get<float>("MapDimensions.height");
-    cellWidth = pt.get<float>("MapDimensions.cellwidth");
-    cellHeight = pt.get<float>("MapDimensions.cellheight");
+    resolution = pt.get<float>("MapDimensions.resolution");
+
 
     // Read mines information
     numMines = pt.get<int>("Mines.nummines");
