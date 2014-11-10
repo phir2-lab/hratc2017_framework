@@ -5,6 +5,7 @@
 #include <visualization_msgs/Marker.h>
 #include <visualization_msgs/MarkerArray.h>
 #include <geometry_msgs/PoseStamped.h>
+#include <nav_msgs/OccupancyGrid.h>
 #include <vector>
 
 using namespace std;
@@ -43,7 +44,7 @@ class Judge
         visualization_msgs::MarkerArray unknownExplodedMines;
         vector<bool> detected;
         vector<bool> exploded;
-        vector<bool> unresolved;
+        vector<int> unresolved;
 
         ros::Publisher pub_robotPath;
         visualization_msgs::Marker robotpath;
@@ -52,6 +53,7 @@ class Judge
         void initializeRobotPath();
 
         void checkMineDetection(const geometry_msgs::PoseStamped::ConstPtr &guess);
+        void checkUnresolvedMines(const nav_msgs::OccupancyGrid::ConstPtr &grid);
         void checkMineExplosion();
         void addMineMarker(mineType mtype, Position2D pos);
 

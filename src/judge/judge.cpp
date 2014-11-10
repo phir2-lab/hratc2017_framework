@@ -19,14 +19,10 @@ Judge::Judge()
     robotPose = new RobotPose("/minefield","/robot_pose_ekf/odom");
 
     sub_setMine = n->subscribe("/HRATC_FW/set_mine", 100, &Judge::checkMineDetection, this);
+    sub_occupancyGrid = n->subscribe("/mineFieldViewer/occupancyGrid", 100, &Judge::checkUnresolvedMines, this);
 
     initializeMinesMarkers();
     initializeRobotPath();
-
-    addMineMarker(PROPERLY_DETECTED, Position2D(2.0,3.0));
-    addMineMarker(WRONGLY_DETECTED, Position2D(3.0,3.0));
-    addMineMarker(KNOWN_EXPLODED, Position2D(1.0,3.0));
-    addMineMarker(UNKNOWN_EXPLODED, Position2D(4.0,3.0));
 
     rate = new ros::Rate(20);
 }
@@ -172,9 +168,9 @@ void Judge::addMineMarker(mineType mtype, Position2D pos)
             array = &unknownExplodedMines;
             // Set the namespace.
             mine.ns = "UEMines";
-            // Set the color -- DARK_RED!
-            mine.color.r = 0.6f;
-            mine.color.g = 0.0f;
+            // Set the color -- ORANGE!
+            mine.color.r = 1.0f;
+            mine.color.g = 0.3f;
             mine.color.b = 0.0f;
             mine.color.a = 1.0;
     }
@@ -192,7 +188,7 @@ void Judge::updateMinesMarkers()
 
     for(int i=0; i<trueMines.markers.size(); i++){
         trueMines.markers[i].header.stamp = ros::Time::now();
-        trueMines.markers[i].pose.position.z = robotZ-0.1;
+        trueMines.markers[i].pose.position.z = robotZ-0.2;
     }
 
     for(int i=0; i<properlyDetectedMines.markers.size(); i++){
@@ -274,11 +270,39 @@ void Judge::checkMineExplosion()
             if(dists[i] <= config->explosionMaxDist){
                 if(exploded[i] == false){
                     exploded[i] = true;
-                    cout << "EXPLODIIIIIIIIIIIIUUUUUUUUUUUU!!!!" << endl;
-                    addMineMarker(UNKNOWN_EXPLODED,Position2D(trueMines.markers[i].pose.position.x,trueMines.markers[i].pose.position.y));
+                    unresolved.push_back(i);
                 }
             }
         }
+    }
+}
+
+void Judge::checkUnresolvedMines(const nav_msgs::OccupancyGrid::ConstPtr & grid)
+{
+    if(!unresolved.empty()){
+        int w = grid->info.width;
+        int h = grid->info.height;
+        cout << w << ' ' << h << endl;
+        for(int i=0; i<unresolved.size();i++){
+            // check if region containing mine was visited
+            cout << grid->info.origin.position.x << ' ' << grid->info.origin.position.y << endl;
+
+            int x = (-grid->info.origin.position.x + trueMines.markers[unresolved[i]].pose.position.x)/grid->info.resolution;
+            int y = (-grid->info.origin.position.y + trueMines.markers[unresolved[i]].pose.position.y)/grid->info.resolution;
+            int occ = grid->data[x + y*w];
+
+            cout << "x:" << x << " y:" << y << " occ:" << occ << endl;
+
+            if(occ==0){ // visited
+                cout << "Exploded Known Mine!!!!" << endl;
+                addMineMarker(KNOWN_EXPLODED,Position2D(trueMines.markers[unresolved[i]].pose.position.x,trueMines.markers[unresolved[i]].pose.position.y));
+            }else{
+                cout << "Exploded Unknown Mine!!!!" << endl;
+                addMineMarker(UNKNOWN_EXPLODED,Position2D(trueMines.markers[unresolved[i]].pose.position.x,trueMines.markers[unresolved[i]].pose.position.y));
+            }
+        }
+
+        unresolved.clear();
     }
 }
 

@@ -5,7 +5,7 @@
 
 int main(int argc,char **argv)
 {
-    ros::init(argc, argv, "hratc_viewer");
+    ros::init(argc, argv, "judge");
     ROS_INFO("HRATC");
 
     Judge dredd;
