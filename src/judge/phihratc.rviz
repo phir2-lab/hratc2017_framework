@@ -234,10 +234,10 @@ Visualization Manager:
       Visual Enabled: true
     - Class: rviz/Marker
       Enabled: true
-      Marker Topic: /hratc_path
+      Marker Topic: /judge/hratc_path
       Name: RobotPath
       Namespaces:
-        {}
+        robotPath: true
       Queue Size: 1
       Value: true
     - Alpha: 0.5
@@ -312,7 +312,7 @@ Visualization Manager:
       Marker Topic: /judge/wronglyDetectedMines_marker
       Name: WronglyDetectedMines
       Namespaces:
-        WDMines: true
+        {}
       Queue Size: 100
       Value: true
     - Class: rviz/MarkerArray
@@ -328,7 +328,7 @@ Visualization Manager:
       Marker Topic: /judge/unknownExplodedMines_marker
       Name: UnknownExplodedMines
       Namespaces:
-        UEMines: true
+        {}
       Queue Size: 100
       Value: true
     - Class: rviz/Marker
@@ -395,11 +395,11 @@ Visualization Manager:
         Value: false
       Name: Current View
       Near Clip Distance: 0.01
-      Scale: 51.9569
+      Scale: 41.6144
       Target Frame: <Fixed Frame>
       Value: TopDownOrtho (rviz)
-      X: -0.293518
-      Y: 0.659755
+      X: 0
+      Y: 0
     Saved: ~
 Window Geometry:
   Displays:

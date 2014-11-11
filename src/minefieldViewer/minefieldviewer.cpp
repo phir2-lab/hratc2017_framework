@@ -109,8 +109,7 @@ void minefieldViewer::fillGrid()
     {
         for(int y=-cellRadius; y<+cellRadius; ++y)
         {
-            if( ( w>=0 )  && ( w<grid.info.width  ) && 
-                ( h>=0 )  && ( h<grid.info.height ) &&
+            if(
                 ( w+x>=0) && ( w+x<grid.info.width) &&
                 ( h+y>=0) && ( h+y<grid.info.height)
               )
@@ -120,10 +119,10 @@ void minefieldViewer::fillGrid()
                 if( sqrt(x*x+y*y) <= cellRadius )
                 {
                     // count new cell
-                    if(grid.data[(h+x)*grid.info.width + w+y]!=0)
+                    if(grid.data[(h+y)*grid.info.width + w+x]!=0)
                         coverage+=1;
                     // mark cell as covered
-                    grid.data[(h+x)*grid.info.width + w+y] =0;
+                    grid.data[(h+y)*grid.info.width + w+x] =0;
                 }            
             }
         }
