@@ -28,7 +28,8 @@ Config::Config(string name)
     width = pt.get<float>("MapDimensions.width");
     height = pt.get<float>("MapDimensions.height");
     resolution = pt.get<float>("MapDimensions.resolution");
-
+    numCellsInX = width/resolution;
+    numCellsInY = height/resolution;
 
     // Read mines information
     numMines = pt.get<int>("Mines.nummines");

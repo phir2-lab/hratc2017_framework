@@ -22,6 +22,7 @@ Judge::Judge()
     sub_occupancyGrid = n->subscribe("/mineFieldViewer/occupancyGrid", 100, &Judge::checkUnresolvedMines, this);
 
     initializeMinesMarkers();
+    initializeScoreboard();
     initializeRobotPath();
 
     rate = new ros::Rate(20);
@@ -36,6 +37,7 @@ void Judge::run()
 //        cout << "Pose:" << p.pose.position.x << ' ' << p.pose.position.y << ' ' << tf::getYaw(p.pose.orientation) << endl;
 
         updateMinesMarkers();
+        updateScoreboard();
         updateRobotPath();
         checkMineExplosion();
 
@@ -304,6 +306,102 @@ void Judge::checkUnresolvedMines(const nav_msgs::OccupancyGrid::ConstPtr & grid)
 
         unresolved.clear();
     }
+}
+
+void Judge::initializeScoreboard()
+{
+    // Initialize scoreboard publishers
+    pub_textProperlyDetectedMines = n->advertise<visualization_msgs::Marker>("scoreboard_properlyDetectedMines", 1);
+    pub_textWronglyDetectedMines = n->advertise<visualization_msgs::Marker>("scoreboard_wronglyDetectedMines", 1);
+    pub_textKnownExplodedMines = n->advertise<visualization_msgs::Marker>("scoreboard_knownExplodedMines", 1);
+    pub_textUnknownExplodedMines = n->advertise<visualization_msgs::Marker>("scoreboard_unknownExplodedMines", 1);
+
+    // Initialize default text marker
+    visualization_msgs::Marker tempMarker;
+    tempMarker.header.frame_id = "minefield";
+    tempMarker.header.stamp = ros::Time::now();
+    tempMarker.id = 0;
+    tempMarker.type = visualization_msgs::Marker::TEXT_VIEW_FACING;
+    tempMarker.action = visualization_msgs::Marker::ADD;
+    tempMarker.pose.position.x = 0.0;
+    tempMarker.pose.position.y = config->height/2.0;
+    tempMarker.pose.position.z = 0.0;
+    tempMarker.pose.orientation.x = 0.0;
+    tempMarker.pose.orientation.y = 0.0;
+    tempMarker.pose.orientation.z = 0.0;
+    tempMarker.pose.orientation.w = 1.0;
+    tempMarker.color.a = 1.0;
+    tempMarker.scale.x = 1.0;
+    tempMarker.scale.y = 1.0;
+    tempMarker.scale.z = 0.6;
+    tempMarker.lifetime = ros::Duration();
+
+    textProperlyDetectedMines = tempMarker;
+    textWronglyDetectedMines = tempMarker;
+    textKnownExplodedMines = tempMarker;
+    textUnknownExplodedMines = tempMarker;
+
+    // Initialize properly detected mines texts -- GREEN!
+    textProperlyDetectedMines.ns = "scoreboard_PDMines";
+    textProperlyDetectedMines.color.r = 0.0f;
+    textProperlyDetectedMines.color.g = 0.7f;
+    textProperlyDetectedMines.color.b = 0.0f;
+    textProperlyDetectedMines.pose.position.x -= 3.0;
+    textProperlyDetectedMines.pose.position.y += 1.2;
+
+    // Initialize wrongly detected mines texts -- MAGENTA!
+    textWronglyDetectedMines.ns = "scoreboard_WDMines";
+    textWronglyDetectedMines.color.r = 0.701f;
+    textWronglyDetectedMines.color.g = 0.0f;
+    textWronglyDetectedMines.color.b = 0.909f;
+    textWronglyDetectedMines.pose.position.x -= 3.0;
+    textWronglyDetectedMines.pose.position.y += 0.6;
+
+    // Initialize known exploded mines texts -- RED!
+    textKnownExplodedMines.ns = "scoreboard_KEMines";
+    textKnownExplodedMines.color.r = 1.0f;
+    textKnownExplodedMines.color.g = 0.0f;
+    textKnownExplodedMines.color.b = 0.0f;
+    textKnownExplodedMines.pose.position.x += 3.5;
+    textKnownExplodedMines.pose.position.y += 1.2;
+
+    // Initialize unknown exploded mines texts -- ORANGE!
+    textUnknownExplodedMines.ns = "scoreboard_UEMines";
+    textUnknownExplodedMines.color.r = 1.0f;
+    textUnknownExplodedMines.color.g = 0.3f;
+    textUnknownExplodedMines.color.b = 0.0f;
+    textUnknownExplodedMines.pose.position.x += 3.21;
+    textUnknownExplodedMines.pose.position.y += 0.6;
+}
+
+void Judge::updateScoreboard()
+{
+    std::stringstream ss;
+
+    textProperlyDetectedMines.header.stamp = ros::Time::now();
+    ss << "Properly Detected: " << properlyDetectedMines.markers.size();
+    textProperlyDetectedMines.text=ss.str();
+    ss.str("");
+
+    textWronglyDetectedMines.header.stamp = ros::Time::now();
+    ss << "Wrongly Detected: " << wronglyDetectedMines.markers.size();
+    textWronglyDetectedMines.text=ss.str();
+    ss.str("");
+
+    textKnownExplodedMines.header.stamp = ros::Time::now();
+    ss << "Known Exploded: " << knownExplodedMines.markers.size();
+    textKnownExplodedMines.text=ss.str();
+    ss.str("");
+
+    textUnknownExplodedMines.header.stamp = ros::Time::now();
+    ss << "Unknown Exploded: " << unknownExplodedMines.markers.size();
+    textUnknownExplodedMines.text=ss.str();
+    ss.str("");
+
+    pub_textProperlyDetectedMines.publish(textProperlyDetectedMines);
+    pub_textWronglyDetectedMines.publish(textWronglyDetectedMines);
+    pub_textKnownExplodedMines.publish(textKnownExplodedMines);
+    pub_textUnknownExplodedMines.publish(textUnknownExplodedMines);
 }
 
 

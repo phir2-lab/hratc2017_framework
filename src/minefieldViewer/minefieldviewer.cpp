@@ -24,13 +24,13 @@ minefieldViewer::minefieldViewer() :
 
     // Loading grid with config file data 
     grid.info.resolution = config->resolution;  // float32
-    grid.info.width      = config->width;       // uint32
-    grid.info.height     = config->height;      // uint32
+    grid.info.width      = config->numCellsInX;       // uint32
+    grid.info.height     = config->numCellsInY;      // uint32
     // 0-100 -> selecting gray (50)
     grid.data.resize(grid.info.width*grid.info.height, 50);
     // setting origin 
-    grid.info.origin.position.x = -config->width/2.0*grid.info.resolution;    // uint32
-    grid.info.origin.position.y = -config->height/2.0*grid.info.resolution;   // uint32
+    grid.info.origin.position.x = -config->numCellsInX/2.0*grid.info.resolution;    // uint32
+    grid.info.origin.position.y = -config->numCellsInY/2.0*grid.info.resolution;   // uint32
     // detection radius in cells
     cellRadius = config->detectionMinDist/grid.info.resolution;
 

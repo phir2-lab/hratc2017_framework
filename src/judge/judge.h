@@ -49,7 +49,18 @@ class Judge
         ros::Publisher pub_robotPath;
         visualization_msgs::Marker robotpath;
 
+        ros::Publisher pub_textProperlyDetectedMines;
+        ros::Publisher pub_textWronglyDetectedMines;
+        ros::Publisher pub_textKnownExplodedMines;
+        ros::Publisher pub_textUnknownExplodedMines;
+        visualization_msgs::Marker textProperlyDetectedMines;
+        visualization_msgs::Marker textWronglyDetectedMines;
+        visualization_msgs::Marker textKnownExplodedMines;
+        visualization_msgs::Marker textUnknownExplodedMines;
+
+
         void initializeMinesMarkers();
+        void initializeScoreboard();
         void initializeRobotPath();
 
         void checkMineDetection(const geometry_msgs::PoseStamped::ConstPtr &guess);
@@ -58,6 +69,7 @@ class Judge
         void addMineMarker(mineType mtype, Position2D pos);
 
         void updateMinesMarkers();
+        void updateScoreboard();
         void updateRobotPath();
 };
 

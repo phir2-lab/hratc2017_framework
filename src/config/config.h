@@ -36,6 +36,8 @@ class Config
         float width;
         float height;
         float resolution;
+        int numCellsInX;
+        int numCellsInY;
 
         // MINES
         int numMines;
