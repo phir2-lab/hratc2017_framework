@@ -109,7 +109,11 @@ void minefieldViewer::fillGrid()
     {
         for(int y=-cellRadius; y<+cellRadius; ++y)
         {
-            if(w>=0 && w<grid.info.width && h>=0 && h<grid.info.height)
+            if( ( w>=0 )  && ( w<grid.info.width  ) && 
+                ( h>=0 )  && ( h<grid.info.height ) &&
+                ( w+x>=0) && ( w+x<grid.info.width) &&
+                ( h+y>=0) && ( h+y<grid.info.height)
+              )
             {
                 //cout << "x " << x << " y " << y << endl;
                 // setting color to scanned (white)
