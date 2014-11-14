@@ -3,12 +3,12 @@ from minemapgenerator import MineMapGenerator, GenerateUsingRealDataset
 from numpy import *
 import os, random, tf, rospy
 from gazebo_msgs.msg import ModelStates
-from nav_msgs.msg import Odometry
 from geometry_msgs.msg import Pose, PoseStamped, Twist, PoseWithCovarianceStamped
 from nav_msgs.msg import Odometry
+from std_msgs.msg import Bool
 from tf.msg import tfMessage
-from metal_detector_msgs.msg._Coil import Coil
 from tf.transformations import euler_from_quaternion, quaternion_from_euler
+from metal_detector_msgs.msg._Coil import Coil
 from time import sleep
 import rospkg
 
@@ -21,8 +21,8 @@ class CoilSimulator(object):
         self.load()
         self.listener = tf.TransformListener()
         self.pubMineDetection = rospy.Publisher("/coils", Coil)
+        self.pubStartEveryone = rospy.Publisher("/configDone", Bool)
         #rospy.Subscriber("/robot_pose_ekf/odom", PoseWithCovarianceStamped, self.receiveOdomEKF)
-
 
     def load(self,path=defaultpath+"config.ini"):
         configFile = ConfigParser()
@@ -43,17 +43,38 @@ class CoilSimulator(object):
 
         self.minesFixedPos = configFile.get("Mines","MinesPositions")
         self.generateMines()
+        self.save(path)
+
+    def save(self,path):
+        cfile = open(path,"w")
+
+        configFile = ConfigParser()
+
+        configFile.add_section("MapDimensions")
+        configFile.set("MapDimensions","width",self.mapWidth)
+        configFile.set("MapDimensions","height",self.mapHeight)
+        configFile.set("MapDimensions","resolution",self.resolution)
+
+        configFile.add_section("Mines")
+        configFile.set("Mines","numMines",self.numMines)
+        if(self.randomMines):
+            configFile.set("Mines","RandomMines","true")
+        else:
+            configFile.set("Mines","RandomMines","false")
+        self.minesFixedPos = ""
+        if not self.randomMines:
+            self.minesFixedPos = "|".join( ",".join(str(v) for v in r) for r in self.mines)
+
+        configFile.set("Mines","MinesPositions",self.minesFixedPos)
+
+        configFile.set("Mines","DetectionMinDist",self.minDistDetection)
+        configFile.set("Mines","ExplosionMaxDist",self.maxDistExplosion)
+        configFile.write(cfile)
+
+        cfile.close()
 
 
     def generateMines(self):
-#        if self.randomMines:
-#            self.mines = []
-#            for i in range(self.numMines):
-#                x = y = 0
-#                while(sqrt(pow(x,2) + pow(y,2)) < 2):
-#                    x, y = random.randrange(self.mapWidth)  - self.mapWidth/2., random.randrange(self.mapHeight) - self.mapHeight/2.
-#                self.mines.append([x, y])
-#        else:
         minesPos = self.minesFixedPos
         if minesPos !=  "":
             self.mines = [[float(v) for v in r.split(",")] for r in minesPos.split("|")]
@@ -78,77 +99,9 @@ class CoilSimulator(object):
 
         self.mineMap, self.zeroChannel = GenerateUsingRealDataset(mines,metals1,metals2,mWidth,mHeight,True)
 
-    def updateCoils(self,newPose):
-        robotX, robotY, yaw = newPose
-        if self.listener == None:
-            return
-
-        # Lookup for the coils using tf
-        try:
-            (trans,rot) = self.listener.lookupTransform('base_footprint', 'left_coil', rospy.Time(0))
-        except (tf.LookupException, tf.ConnectivityException, tf.ExtrapolationException):
-            return
-        leftCoilX = trans[0]*cos(yaw) - trans[1]*sin(yaw)
-        leftCoilY = trans[0]*sin(yaw) + trans[1]*cos(yaw)
-
-        try:
-            (trans,rot) = self.listener.lookupTransform('base_footprint', 'middle_coil', rospy.Time(0))
-        except (tf.LookupException, tf.ConnectivityException, tf.ExtrapolationException):
-          return
-        middleCoilX = trans[0]*cos(yaw) - trans[1]*sin(yaw)
-        middleCoilY = trans[0]*sin(yaw) + trans[1]*cos(yaw)
-
-        try:
-            (trans,rot) = self.listener.lookupTransform('base_footprint', 'right_coil', rospy.Time(0))
-        except (tf.LookupException, tf.ConnectivityException, tf.ExtrapolationException):
-            return
-        rightCoilX = trans[0]*cos(yaw) - trans[1]*sin(yaw)
-        rightCoilY = trans[0]*sin(yaw) + trans[1]*cos(yaw)
-
-        actualCoilPose = [middleCoilX, middleCoilY]
-        x,y = robotX,robotY
-        lastPose = None
-        if len(self.path)>0:
-            lastPose = self.path[-1]
-        radRange = deg2rad(10)
-
-        if self.lastCoilPose == None or distance(self.lastCoilPose,actualCoilPose) > self.cellXSize*2 or (lastPose != None and (distance(lastPose,newPose) > 0.1 or not -radRange < abs(yaw-lastPose[2]) < radRange)):
-            self.lastCoilPose = actualCoilPose
-            y, x = ( int((self.height/2 - y)/self.cellYSize), int((self.width/2 + x)/self.cellXSize) )
-
-            coils = [[x+leftCoilX/self.cellXSize,y-leftCoilY/self.cellXSize]]
-            coils.append([x+middleCoilX/self.cellXSize,y-middleCoilY/self.cellXSize])
-            coils.append([x+rightCoilX/self.cellXSize,y-rightCoilY/self.cellXSize])
-
-            co = 0
-            for x,y in coils:
-                coil = Coil()
-                coil.header.frame_id = "{}_coil".format(["left","middle","right"][co])
-                if x <= self.mineMap.shape[2] and x >=0 and y <= self.mineMap.shape[1] and y >= 0:
-                    for ch in range(3):
-                        coil.channel.append(self.mineMap[3*co+ch,y,x] + random.random()*100)
-                        coil.zero.append(self.zeroChannel[3*co+ch])
-
-                if (self.isSimulation):
-                    self.pubMineDetection.publish(coil)
-                co += 1
-
-    def receiveOdomEKF(self, odor):
-        xm ,ym, (pitchm, rollm, yawm) = 549848.663622 , 4448426.10338, euler_from_quaternion([0.,0.,0.999998918808,0.00147050426938])
-
-        q = [odor.pose.pose.orientation.x, odor.pose.pose.orientation.y, odor.pose.pose.orientation.z, odor.pose.pose.orientation.w]
-        roll, pitch, yaw =  euler_from_quaternion(q)
-
-        x, y = odor.pose.pose.position.x, odor.pose.pose.position.y
-        x1 = (x-xm)*cos(yawm) + (y-ym)*sin(yawm)
-        y1 = -(x-xm)*sin(yawm) + (y-ym)*cos(yawm)
-        self.pose = [x1, y1, yaw-yawm]
-        self.updateCoils(self.pose)
-
-
+        self.mines = [ [m[0]*self.resolution - self.mapWidth/2., -m[1]*self.resolution + self.mapHeight/2.] for m in mines]
 
     def pubCoilsonMinefield(self):
-        
         if self.listener == None:
             return
 
@@ -194,9 +147,10 @@ if __name__=='__main__':
         
     rospy.init_node('coilSimulator')
     coilSimulator = CoilSimulator()
-        
+
     r = rospy.Rate(10)
     while not rospy.is_shutdown():
+        coilSimulator.pubStartEveryone.publish(True)
         coilSimulator.pubCoilsonMinefield()
         r.sleep()
 

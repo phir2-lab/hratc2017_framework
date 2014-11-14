@@ -14,6 +14,19 @@ minefieldViewer::minefieldViewer() :
     transform(),
     listeners()
 {
+
+    canStart = false;
+    ros::Subscriber sub_configDone = mapNodeHandler->subscribe("/configDone", 100, &minefieldViewer::checkStart, this);
+    ros::Rate rate(20);
+
+    cout << "Waiting to start!" << endl;
+    while (canStart == false)
+    {
+        ros::spinOnce();
+        rate.sleep();
+    }
+    cout << "Done" << endl;
+
     // loading config file at $(hratc201X_framework)/src/config/config.ini)
     string filename;
     if(mapNodeHandler->getParam("config", filename)==false)
@@ -37,6 +50,13 @@ minefieldViewer::minefieldViewer() :
     // start tf listeners -- one per coil
     for(int i=0; i<3;++i)
         listeners.push_back(new tf::TransformListener);
+}
+
+
+void minefieldViewer::checkStart(const std_msgs::Bool::ConstPtr &flag)
+{
+    if(flag->data == true)
+        canStart = true;
 }
 
 void minefieldViewer::run()
@@ -88,7 +108,7 @@ bool minefieldViewer::getCoilTransform(int i)
         ros::Time(0), transform);
     }
     catch (tf::TransformException &ex) {
-        ROS_ERROR("%s",ex.what());
+//        ROS_ERROR("%s",ex.what());
         bool no_error = false;
         // 30 Hz -- maybe too fast
         ros::Duration(0.05).sleep();

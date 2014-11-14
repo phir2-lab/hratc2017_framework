@@ -24,7 +24,10 @@ class Config(object):
 
         configFile.add_section("Mines")
         configFile.set("Mines","numMines",self.numMines)
-        configFile.set("Mines","RandomMines",self.randomMines)
+        if(self.randomMines)
+            configFile.set("Mines","RandomMines","true")
+        else
+            configFile.set("Mines","RandomMines","false")
         self.minesFixedPos = ""
         if not self.randomMines:
             self.minesFixedPos = "|".join( ",".join(str(v) for v in r) for r in self.mines)

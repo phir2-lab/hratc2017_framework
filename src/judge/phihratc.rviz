@@ -27,7 +27,7 @@ Panels:
     Experimental: false
     Name: Time
     SyncMode: 0
-    SyncSource: LaserScan
+    SyncSource: ""
 Visualization Manager:
   Class: ""
   Displays:
@@ -300,13 +300,13 @@ Visualization Manager:
       Queue Size: 100
       Value: true
     - Class: rviz/MarkerArray
-      Enabled: false
+      Enabled: true
       Marker Topic: /judge/properlyDetectedMines_marker
       Name: ProperlyDetectedMines
       Namespaces:
         {}
       Queue Size: 100
-      Value: false
+      Value: true
     - Class: rviz/MarkerArray
       Enabled: true
       Marker Topic: /judge/wronglyDetectedMines_marker
@@ -320,7 +320,7 @@ Visualization Manager:
       Marker Topic: /judge/knownExplodedMines_marker
       Name: KnownExplodedMines
       Namespaces:
-        KEMines: true
+        {}
       Queue Size: 100
       Value: true
     - Class: rviz/MarkerArray
@@ -363,6 +363,14 @@ Visualization Manager:
         scoreboard_UEMines: true
       Queue Size: 100
       Value: true
+    - Class: rviz/Marker
+      Enabled: true
+      Marker Topic: /judge/scoreboard_elapsedTime
+      Name: Scoreboard_time
+      Namespaces:
+        scoreboard_ElapsedTime: true
+      Queue Size: 100
+      Value: true
   Enabled: true
   Global Options:
     Background Color: 48; 48; 48
@@ -395,11 +403,11 @@ Visualization Manager:
         Value: false
       Name: Current View
       Near Clip Distance: 0.01
-      Scale: 41.6144
+      Scale: 44.9529
       Target Frame: <Fixed Frame>
       Value: TopDownOrtho (rviz)
-      X: 0
-      Y: 0
+      X: 0.373397
+      Y: 0.189016
     Saved: ~
 Window Geometry:
   Displays:

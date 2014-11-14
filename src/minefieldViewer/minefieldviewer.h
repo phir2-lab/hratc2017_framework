@@ -4,6 +4,7 @@
 #include <nav_msgs/OccupancyGrid.h>
 #include <tf/transform_listener.h>
 #include <geometry_msgs/Twist.h>
+#include <std_msgs/Bool.h>
 #include "../config/config.h"
 
 #include <string>
@@ -44,6 +45,9 @@ private:
 
     // coverage rate
     float coverage;
+
+    void checkStart(const std_msgs::Bool::ConstPtr &flag);
+    bool canStart;
   
 };
 

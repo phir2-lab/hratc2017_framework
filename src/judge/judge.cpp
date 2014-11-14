@@ -2,12 +2,29 @@
 
 #include <iostream>
 #include <string>
+#include <sys/types.h>
+#include <sys/stat.h>
+#include <pwd.h>
+#include <unistd.h>
 
 using namespace std;
 
 Judge::Judge()
 {
     n = new ros::NodeHandle("~");
+    canStart = false;
+
+    rate = new ros::Rate(20);
+
+    sub_configDone = n->subscribe("/configDone", 100, &Judge::checkStart, this);
+
+    cout << "Waiting to start!" << endl;
+    while (canStart == false)
+    {
+        ros::spinOnce();
+        rate->sleep();
+    }
+    cout << "Done" << endl;
 
     string filename;
     if(n->getParam("config", filename)==false)
@@ -20,12 +37,24 @@ Judge::Judge()
 
     sub_setMine = n->subscribe("/HRATC_FW/set_mine", 100, &Judge::checkMineDetection, this);
     sub_occupancyGrid = n->subscribe("/mineFieldViewer/occupancyGrid", 100, &Judge::checkUnresolvedMines, this);
+    sub_coveredArea = n->subscribe("/mineFieldViewer/coverageRate", 100, &Judge::getCoverageRate, this);
 
+    coverageRate = 0.0;
+
+    initializeLogFile();
     initializeMinesMarkers();
     initializeScoreboard();
     initializeRobotPath();
 
-    rate = new ros::Rate(20);
+
+    start = ros::WallTime::now();
+    last = start;
+}
+
+void Judge::checkStart(const std_msgs::Bool::ConstPtr &flag)
+{
+    if(flag->data == true)
+        canStart = true;
 }
 
 void Judge::run()
@@ -41,9 +70,35 @@ void Judge::run()
         updateRobotPath();
         checkMineExplosion();
 
+        current = ros::WallTime::now();
+        if(current-last > ros::WallDuration(5.0)){
+            saveLog();
+//            last = current;
+            last = last+ros::WallDuration(5.0);
+        }
+
         ros::spinOnce();
         rate->sleep();
     }
+}
+
+void Judge::initializeLogFile()
+{
+    const char *homedir;
+    if ((homedir = getenv("HOME")) == NULL)
+        homedir = getpwuid(getuid())->pw_dir;
+
+    string path = string(homedir) + string("/HRATC");
+
+    struct stat st = {0};
+    if (stat(path.c_str(), &st) == -1)
+        mkdir(path.c_str(), 0700);
+
+    path = path+string("/log.txt");
+
+    logFile.open(path.c_str(), fstream::out);
+    if (!logFile.is_open())
+        std::cout << "Error opening file";
 }
 
 void Judge::initializeMinesMarkers()
@@ -308,6 +363,11 @@ void Judge::checkUnresolvedMines(const nav_msgs::OccupancyGrid::ConstPtr & grid)
     }
 }
 
+void Judge::getCoverageRate(const std_msgs::Float32::ConstPtr &rate)
+{
+    coverageRate = rate->data;
+}
+
 void Judge::initializeScoreboard()
 {
     // Initialize scoreboard publishers
@@ -315,6 +375,7 @@ void Judge::initializeScoreboard()
     pub_textWronglyDetectedMines = n->advertise<visualization_msgs::Marker>("scoreboard_wronglyDetectedMines", 1);
     pub_textKnownExplodedMines = n->advertise<visualization_msgs::Marker>("scoreboard_knownExplodedMines", 1);
     pub_textUnknownExplodedMines = n->advertise<visualization_msgs::Marker>("scoreboard_unknownExplodedMines", 1);
+    pub_textElapsedTime = n->advertise<visualization_msgs::Marker>("scoreboard_elapsedTime", 1);
 
     // Initialize default text marker
     visualization_msgs::Marker tempMarker;
@@ -336,10 +397,19 @@ void Judge::initializeScoreboard()
     tempMarker.scale.z = 0.6;
     tempMarker.lifetime = ros::Duration();
 
+    textElapsedTime = tempMarker;
     textProperlyDetectedMines = tempMarker;
     textWronglyDetectedMines = tempMarker;
     textKnownExplodedMines = tempMarker;
     textUnknownExplodedMines = tempMarker;
+
+    // Initialize elapsed mine texts -- GREEN!
+    textElapsedTime.ns = "scoreboard_ElapsedTime";
+    textElapsedTime.color.r = 0.0f;
+    textElapsedTime.color.g = 0.0f;
+    textElapsedTime.color.b = 0.0f;
+//    textElapsedTime.pose.position.x -= 3.0;
+    textElapsedTime.pose.position.y = -config->height/2.0 - 1.2;
 
     // Initialize properly detected mines texts -- GREEN!
     textProperlyDetectedMines.ns = "scoreboard_PDMines";
@@ -378,6 +448,14 @@ void Judge::updateScoreboard()
 {
     std::stringstream ss;
 
+    textElapsedTime.header.stamp = ros::Time::now();
+    int elapsed = (current-start).toSec();
+    int secs = elapsed%60;
+    int mins = elapsed/60;
+    ss << "Time: " << setfill('0') << setw(2) << mins << ':' << setfill('0') << setw(2) << secs;
+    textElapsedTime.text=ss.str();
+    ss.str("");
+
     textProperlyDetectedMines.header.stamp = ros::Time::now();
     ss << "Properly Detected: " << properlyDetectedMines.markers.size();
     textProperlyDetectedMines.text=ss.str();
@@ -398,6 +476,7 @@ void Judge::updateScoreboard()
     textUnknownExplodedMines.text=ss.str();
     ss.str("");
 
+    pub_textElapsedTime.publish(textElapsedTime);
     pub_textProperlyDetectedMines.publish(textProperlyDetectedMines);
     pub_textWronglyDetectedMines.publish(textWronglyDetectedMines);
     pub_textKnownExplodedMines.publish(textKnownExplodedMines);
@@ -426,4 +505,20 @@ void Judge::updateRobotPath()
     geometry_msgs::Point p = robotPose->getLocalPose().pose.position;
     robotpath.points.push_back(p);
     pub_robotPath.publish(robotpath);
+}
+
+void Judge::saveLog()
+{
+    int elapsed = (current-start).toSec();
+    int secs = elapsed%60;
+    int mins = elapsed/60;
+//    cout << "Time: " << setfill('0') << setw(2) << mins << ':' << setfill('0') << setw(2) << secs << endl;
+
+    logFile << "Time: " << setfill('0') << setw(2) << mins << ':' << setfill('0') << setw(2) << secs << endl;
+    logFile << "properlyDetectedMines: " << properlyDetectedMines.markers.size() << endl;
+    logFile << "wronglyDetectedMines: " << wronglyDetectedMines.markers.size() << endl;
+    logFile << "knownExplodedMines: " << knownExplodedMines.markers.size() << endl;
+    logFile << "unknownExplodedMines: " << unknownExplodedMines.markers.size() << endl;
+    logFile << "coverageRate: " << coverageRate << endl;
+    logFile << endl;
 }

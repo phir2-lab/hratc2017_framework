@@ -99,13 +99,19 @@ def GenerateUsingRealDataset(posMines, posMetals1, posMetals2, width, height, fl
     h,w = (mine01[0].T)[1].T.shape
     for m in posMines:
         obj,xi,xf,yi,yf=modifyObject(mine01,m)
+        print "Mine:",xi,xf,yi,yf,width,height
         if xi<0 or xf>=width or yi<0 or yf>=height:
+            print "Deu ruim"
             continue
         if mask[yi:yf,xi:xf].max() == 0:
             placeObject(mat,obj,xi,xf,yi,yf)
             mask[yi:yf,xi:xf] += 1
             actualPosMines.append(m)
             numValidMines += 1
+        else:
+            print "Sobrepos"
+
+    print "NumValidMines:", numValidMines
     if flag==True:
         count = 0
         while numValidMines < len(posMines) and count < 50:
@@ -118,6 +124,7 @@ def GenerateUsingRealDataset(posMines, posMetals1, posMetals2, width, height, fl
                 mask[yi:yf,xi:xf] += 1
                 actualPosMines.append(m)
                 numValidMines += 1
+                print "Mine:",m,xi,xf,yi,yf,width,height  
             count += 1
 
     h,w = (metal01[0].T)[1].T.shape
