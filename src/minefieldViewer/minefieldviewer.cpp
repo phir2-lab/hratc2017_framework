@@ -14,10 +14,20 @@ minefieldViewer::minefieldViewer() :
     transform(),
     listeners()
 {
-
-    canStart = false;
     ros::Subscriber sub_configDone = mapNodeHandler->subscribe("/configDone", 100, &minefieldViewer::checkStart, this);
     ros::Rate rate(20);
+
+    // Check if it is simulation, so it must wait the generation of the mines map
+    bool isSimulation;
+    if(mapNodeHandler->getParam("isSimulation", isSimulation)==false)
+    {
+        canStart = true;
+    }else{
+        if(isSimulation)
+            canStart = false;
+        else
+            canStart = true;
+    }
 
     cout << "Waiting to start!" << endl;
     while (canStart == false)

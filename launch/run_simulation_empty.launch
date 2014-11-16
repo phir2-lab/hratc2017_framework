@@ -75,16 +75,24 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
       <rosparam file="$(find hratc2014_framework)/settings/minefield.yaml" command="load" />
     </node>
     
-    
-    <!-- HRATC2014 Client -->
-    <node name="judge" pkg="hratc2014_framework"  type="judge" output="screen">
+    <!-- The coil signal simulator - required when not using the real robot -->
+    <node name="coilSignalSimulator" pkg="hratc2014_framework" type="coilSignalSimulator.py"/>
+
+    <!-- The HRATC judge -->
+    <node name="judge" pkg="hratc2014_framework"  type="judge"
+      output="screen">
      <param name="~config" value="$(find hratc2014_framework)/src/config/config.ini"/>    
+     <param name="~isSimulation" value="true"/>    
     </node>
 
-    <node name="mineFieldViewer" pkg="hratc2014_framework"  type="mineFieldViewer" output="screen">
+    <!-- The minefield viewer - updates an occupancy grid displaying the covered area -->
+    <node name="mineFieldViewer" pkg="hratc2014_framework"  type="mineFieldViewer"
+      output="screen">
      <param name="~config" value="$(find hratc2014_framework)/src/config/config.ini"/>    
+     <param name="~isSimulation" value="true"/>    
     </node>
 
-   <!-- <node pkg="hratc2014_framework" type="simulator.py" name="simulator" output="screen" /> -->
+    <!-- Visualization in RVIZ -->
+    <node name="rviz" pkg="rviz" type="rviz" args="-d $(find hratc2014_framework)/hratc.rviz" /> 
   
 </launch>

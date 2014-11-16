@@ -18,6 +18,18 @@ Judge::Judge()
 
     sub_configDone = n->subscribe("/configDone", 100, &Judge::checkStart, this);
 
+    // Check if it is simulation, so it must wait the generation of the mines map
+    bool isSimulation;
+    if(n->getParam("isSimulation", isSimulation)==false)
+    {
+        canStart = true;
+    }else{
+        if(isSimulation)
+            canStart = false;
+        else
+            canStart = true;
+    }
+
     cout << "Waiting to start!" << endl;
     while (canStart == false)
     {

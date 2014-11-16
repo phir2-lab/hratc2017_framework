@@ -1,16 +1,11 @@
+#!/usr/bin/python
+
 from ConfigParser import ConfigParser
 from minemapgenerator import MineMapGenerator, GenerateUsingRealDataset
-from numpy import *
-import os, random, tf, rospy
-from gazebo_msgs.msg import ModelStates
-from geometry_msgs.msg import Pose, PoseStamped, Twist, PoseWithCovarianceStamped
-from nav_msgs.msg import Odometry
+from numpy import arange
 from std_msgs.msg import Bool
-from tf.msg import tfMessage
-from tf.transformations import euler_from_quaternion, quaternion_from_euler
 from metal_detector_msgs.msg._Coil import Coil
-from time import sleep
-import rospkg
+import random, tf, rospy, rospkg
 
 defaultpath = rospkg.RosPack().get_path("hratc2014_framework") + "/src/config/"
 print defaultpath
@@ -22,7 +17,6 @@ class CoilSimulator(object):
         self.listener = tf.TransformListener()
         self.pubMineDetection = rospy.Publisher("/coils", Coil)
         self.pubStartEveryone = rospy.Publisher("/configDone", Bool)
-        #rospy.Subscriber("/robot_pose_ekf/odom", PoseWithCovarianceStamped, self.receiveOdomEKF)
 
     def load(self,path=defaultpath+"config.ini"):
         configFile = ConfigParser()
@@ -81,6 +75,9 @@ class CoilSimulator(object):
         else:
             self.mines = []
 
+        for i in arange(self.numMines-len(self.mines)):
+            self.mines.append([ random.randrange(self.mapWidth)  - self.mapWidth/2., random.randrange(self.mapHeight) - self.mapHeight/2.])
+
         mWidth, mHeight = self.mapWidth/self.resolution,self.mapHeight/self.resolution
         mines = [ [mWidth/2. + m[0]/self.resolution, mHeight/2. - m[1]/self.resolution] for m in self.mines]
 
@@ -100,6 +97,7 @@ class CoilSimulator(object):
         self.mineMap, self.zeroChannel = GenerateUsingRealDataset(mines,metals1,metals2,mWidth,mHeight,True)
 
         self.mines = [ [m[0]*self.resolution - self.mapWidth/2., -m[1]*self.resolution + self.mapHeight/2.] for m in mines]
+        self.numMines = len(self.mines)
 
     def pubCoilsonMinefield(self):
         if self.listener == None:
@@ -145,7 +143,7 @@ class CoilSimulator(object):
 
 if __name__=='__main__':
         
-    rospy.init_node('coilSimulator')
+    rospy.init_node('coilSignalSimulator')
     coilSimulator = CoilSimulator()
 
     r = rospy.Rate(10)
