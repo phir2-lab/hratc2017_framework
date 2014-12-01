@@ -304,7 +304,7 @@ void Judge::checkMineDetection(const geometry_msgs::PoseStamped::ConstPtr & gues
 
         if(dists[i] <= config->detectionMinDist){
             missed = false;
-            if(detected[i] == false){
+            if(detected[i] == false && exploded[i] == false){
                 detected[i] = true;
                 addMineMarker(PROPERLY_DETECTED,Position2D(trueMines.markers[i].pose.position.x,trueMines.markers[i].pose.position.y));
             }
