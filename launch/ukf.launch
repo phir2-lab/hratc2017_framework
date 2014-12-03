@@ -28,8 +28,8 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 <launch>
     
     <!-- UKF for global localization -->
-    <node name="graft_ukf_absolute" pkg="hratc2014_framework" type="graft_ukf_absolute" output="screen">
-      <rosparam file="$(find hratc2014_framework)/settings/global_localization.yaml" command="load" />
+    <node name="graft_ukf_absolute" pkg="hratc2015_framework" type="graft_ukf_absolute" output="screen">
+      <rosparam file="$(find hratc2015_framework)/settings/global_localization.yaml" command="load" />
     </node>
   
 </launch>

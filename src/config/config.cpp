@@ -16,7 +16,7 @@ using namespace std;
 Config::Config(string name)
 {
     // Get full path of the config file
-//    string filename = ros::package::getPath("hratc2014_framework");
+//    string filename = ros::package::getPath("hratc2015_framework");
 //    filename += "/src/config/" + name;
     cout << "Config: " << name << endl;
 

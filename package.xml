@@ -1,9 +1,9 @@
 <?xml version="1.0"?>
 <package>
   
-  <name>hratc2014_framework</name>
+  <name>hratc2015_framework</name>
   <version>0.0.0</version>
-  <description>The hratc2014_framework package.</description>
+  <description>The hratc2015_framework package.</description>
 
   <maintainer email="goncabrita@gmail.com">Gonçalo Cabrita</maintainer>
   <maintainer email="reneuland@gmail.com">Renata das Chagas Neuland</maintainer>
@@ -12,7 +12,7 @@
   <maintainer email="guilhermefrancosi@gmail.com">Guilherme Schvarcz Franco</maintainer>
 
   <license>BSD</license>
-  <url type="website">http://www.isr.uc.pt/~embedded/events/HRATC2014</url>
+  <url type="website">http://www.isr.uc.pt/~embedded/events/HRATC2015</url>
   <author email="goncabrita@gmail.com">Gonçalo Cabrita</author>
   <author email="reneuland@gmail.com">Renata das Chagas Neuland</author>
   <author email="rqmaffei@gmail.com">Renan de Queiros Maffei</author>

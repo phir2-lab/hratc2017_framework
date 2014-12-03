@@ -31,7 +31,7 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
   
   <param name="/use_sim_time" value="true" />
 
-  <node name="gazebo" pkg="gazebo_ros" type="gzserver" args="$(find hratc2014_framework)/worlds/scenario1.world" respawn="false" output="screen"/>
+  <node name="gazebo" pkg="gazebo_ros" type="gzserver" args="$(find hratc2015_framework)/worlds/scenario1.world" respawn="false" output="screen"/>
 
   <!-- Start gui -->
   <group if="$(arg gui)">

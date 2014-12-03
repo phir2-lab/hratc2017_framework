@@ -33,7 +33,7 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 	<!-- SICK LMS100-->
 
-	<xacro:include filename="$(find hratc2014_framework)/urdf/fsr_husky_parts/common.xacro" />
+	<xacro:include filename="$(find hratc2015_framework)/urdf/fsr_husky_parts/common.xacro" />
 
 	<xacro:property name="laser_x" value="0.105" />
 	<xacro:property name="laser_y" value="0.102" />
@@ -46,13 +46,13 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 			<visual>
 				<origin xyz="0 0 0" rpy="0 0 0" />
 				<geometry>
-					<mesh filename="package://hratc2014_framework/models/fsr_husky_parts/sick_lms100.stl" />
+					<mesh filename="package://hratc2015_framework/models/fsr_husky_parts/sick_lms100.stl" />
 				</geometry>
 				<material name="DarkGray" />
   			</visual>
     			<collision>
       				<geometry>
-					<mesh filename="package://hratc2014_framework/models/fsr_husky_parts/sick_lms100.stl" />
+					<mesh filename="package://hratc2015_framework/models/fsr_husky_parts/sick_lms100.stl" />
         				<!-- <box size="${laser_x} ${laser_y} ${laser_z}" /> -->
       				</geometry>
     			</collision>

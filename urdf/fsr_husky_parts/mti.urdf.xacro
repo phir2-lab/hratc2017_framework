@@ -31,7 +31,7 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 	xmlns:interface="http://playerstage.sourceforge.net/gazebo/xmlschema/#interface"
 	xmlns:xacro="http://ros.org/wiki/xacro" name="mti">
 
-	<xacro:include filename="$(find hratc2014_framework)/urdf/fsr_husky_parts/common.xacro" />
+	<xacro:include filename="$(find hratc2015_framework)/urdf/fsr_husky_parts/common.xacro" />
 
 	<xacro:property name="mti_length" value="0.057" />
 	<xacro:property name="mti_width" value="0.042" />

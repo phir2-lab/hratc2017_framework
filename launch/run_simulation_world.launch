@@ -30,15 +30,15 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
     <arg name="gui" default="true"/>
     
     <!-- Open the Gazebo world -->
-    <include file="$(find hratc2014_framework)/launch/world.launch">
+    <include file="$(find hratc2015_framework)/launch/world.launch">
       <arg name="gui" value="$(arg gui)" />
     </include>
     <!-- Spawn the Husky robot -->
-    <include file="$(find hratc2014_framework)/launch/husky.launch"/>
+    <include file="$(find hratc2015_framework)/launch/husky.launch"/>
     
     
     <!-- Load the controllers -->
-    <rosparam file="$(find hratc2014_framework)/controllers/controllers.yaml" command="load"/>
+    <rosparam file="$(find hratc2015_framework)/controllers/controllers.yaml" command="load"/>
 
     <node name="controller_spawner" pkg="controller_manager" type="spawner" respawn="false"
       output="screen" args="joint_state_controller arm_controller ptu_d46_controller"/>
@@ -49,7 +49,7 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
     </node>
    
    
-    <node pkg="hratc2014_framework" type="gps_to_odom" name="gps_to_odom" />
+    <node pkg="hratc2015_framework" type="gps_to_odom" name="gps_to_odom" />
 
     <!-- EKF for absolute localization (clearpath) -->
     <node pkg="robot_pose_ekf_cp" type="robot_pose_ekf_cp" name="robot_pose_ekf" output="screen">
@@ -69,28 +69,28 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
     </node>
     
     <!-- The minefield frame -->
-    <node name="minefield_static_tf_publisher" pkg="hratc2014_framework" type="minefield_static_tf_publisher" output="screen">
-      <rosparam file="$(find hratc2014_framework)/settings/minefield.yaml" command="load" />
+    <node name="minefield_static_tf_publisher" pkg="hratc2015_framework" type="minefield_static_tf_publisher" output="screen">
+      <rosparam file="$(find hratc2015_framework)/settings/minefield.yaml" command="load" />
     </node>
 
     <!-- The coil signal simulator - required when not using the real robot -->
-    <node name="coilSignalSimulator" pkg="hratc2014_framework" type="coilSignalSimulator.py"/>
+    <node name="coilSignalSimulator" pkg="hratc2015_framework" type="coilSignalSimulator.py"/>
 
     <!-- The HRATC judge -->
-    <node name="judge" pkg="hratc2014_framework"  type="judge"
+    <node name="judge" pkg="hratc2015_framework"  type="judge"
       output="screen">
-     <param name="~config" value="$(find hratc2014_framework)/src/config/config.ini"/>    
+     <param name="~config" value="$(find hratc2015_framework)/src/config/config.ini"/>    
      <param name="~isSimulation" value="true"/>    
     </node>
 
     <!-- The minefield viewer - updates an occupancy grid displaying the covered area -->
-    <node name="mineFieldViewer" pkg="hratc2014_framework"  type="mineFieldViewer"
+    <node name="mineFieldViewer" pkg="hratc2015_framework"  type="mineFieldViewer"
       output="screen">
-     <param name="~config" value="$(find hratc2014_framework)/src/config/config.ini"/>    
+     <param name="~config" value="$(find hratc2015_framework)/src/config/config.ini"/>    
      <param name="~isSimulation" value="true"/>    
     </node>
 
     <!-- Visualization in RVIZ -->
-    <node name="rviz" pkg="rviz" type="rviz" args="-d $(find hratc2014_framework)/hratc.rviz" /> 
+    <node name="rviz" pkg="rviz" type="rviz" args="-d $(find hratc2015_framework)/hratc.rviz" /> 
   
 </launch>
