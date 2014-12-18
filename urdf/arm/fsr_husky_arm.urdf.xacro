@@ -31,21 +31,22 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 	xmlns:interface="http://playerstage.sourceforge.net/gazebo/xmlschema/#interface"
 	xmlns:xacro="http://ros.org/wiki/xacro" name="fsr_husky_arm">
 <xacro:macro name="fsr_husky_arm" params="parent x y z rx ry rz"> 
+    
   <link
     name="base_arm_link">
     <inertial>
       <origin
-        xyz="0.0748500402726595 0.0136470618219005 -0.0925164110070736"
+        xyz="0.062584 0.18878 0.37271"
         rpy="0 0 0" />
       <mass
-        value="0.215286927386896" />
+        value="0.85803" />
       <inertia
-        ixx="0.00151952875960782"
-        ixy="-5.00239624175035E-05"
-        ixz="-0.000104007201846032"
-        iyy="0.00181155299285244"
-        iyz="0.000216578123822788"
-        izz="0.000582288664758318" />
+        ixx="0.0087778"
+        ixy="-0.00034853"
+        ixz="0.0010654"
+        iyy="0.014921"
+        iyz="-0.0021847"
+        izz="0.01488" />
     </inertial>
     <visual>
       <origin
@@ -55,11 +56,7 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
         <mesh
           filename="package://hratc2015_framework/models/arm/base_arm_link.STL" />
       </geometry>
-      <material
-        name="Gray">
-        <color
-          rgba="0.776470588235294 0.756862745098039 0.737254901960784 1" />
-      </material>
+      <material name="Black" />
     </visual>
     <collision>
       <origin
@@ -72,7 +69,8 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
     </collision>
   </link>
   <gazebo reference="base_arm_link">
-        <material>Gazebo/Grey</material>
+        <material>Gazebo/Black</material>
+	<selfCollide>false</selfCollide>
         <turnGravityOff>true</turnGravityOff>
     </gazebo>
 
@@ -86,17 +84,17 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
     name="arm_axel">
     <inertial>
       <origin
-        xyz="-6.71167554128979E-05 0.147555068632442 -5.01352348164508E-07"
+        xyz="-0.0045492 0.35516 -0.025701"
         rpy="0 0 0" />
       <mass
-        value="0.116752432749066" />
+        value="0.49315" />
       <inertia
-        ixx="0.000715149281043979"
-        ixy="7.80945806556874E-07"
-        ixz="6.95759354868419E-10"
-        iyy="8.63256490972112E-06"
-        iyz="-1.92225108206073E-09"
-        izz="0.000715441962309322" />
+        ixx="0.0060272"
+        ixy="-0.00056478"
+        ixz="8.6784E-05"
+        iyy="0.0010748"
+        iyz="-0.00058695"
+        izz="0.0064909" />
     </inertial>
     <visual>
       <origin
@@ -107,7 +105,7 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
           filename="package://hratc2015_framework/models/arm/arm_axel.STL" />
       </geometry>
       <material
-        name="Gray">
+        name="DarkGray">
         <color
           rgba="0.776470588235294 0.756862745098039 0.737254901960784 1" />
       </material>
@@ -124,6 +122,7 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
   </link>
   <gazebo reference="arm_axel">
         <material>Gazebo/Grey</material>
+        <selfCollide>false</selfCollide>
         <turnGravityOff>true</turnGravityOff>
     </gazebo>
 
@@ -131,36 +130,36 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
     name="arm_axel_joint"
     type="revolute">
     <origin
-      xyz="0.06 0.152 0"
-      rpy="1.5708 0 0" />
+      xyz="0.12828 -0.4402 0.049088"
+      rpy="1.5708 6.123E-17 1.5708" />
     <parent
       link="base_arm_link" />
     <child
       link="arm_axel" />
     <axis
       xyz="0 -1 0" />
-    <limit
+	<limit
       lower="-1.5708"
-      upper="1.5708"
-      effort="15"
-      velocity="0.5" />
+      upper="3.14"
+      effort="75"
+      velocity="2" />
   </joint>
 
   <link
     name="upper_arm">
     <inertial>
       <origin
-        xyz="0.000102539584510564 0.025319004836415 0.373317706752181"
+        xyz="9.76184988289996E-05 0.0241578589661459 0.355397722899461"
         rpy="0 0 0" />
       <mass
-        value="0.310661228623748" />
+        value="0.326325490126923" />
       <inertia
-        ixx="0.0301188716585458"
-        ixy="-4.68610675580059E-08"
-        ixz="1.48034298202518E-05"
-        iyy="0.0301182394443099"
-        iyz="-0.000152720615635198"
-        izz="8.7451640283179E-05" />
+        ixx="0.0322020258970473"
+        ixy="-4.4638355127408E-08"
+        ixz="1.53741858406116E-05"
+        iyy="0.032199356997134"
+        iyz="-0.000144641063316242"
+        izz="9.23314207900664E-05" />
     </inertial>
     <visual>
       <origin
@@ -188,6 +187,7 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
   </link>
   <gazebo reference="upper_arm">
         <material>Gazebo/Grey</material>
+        <selfCollide>false</selfCollide>
         <turnGravityOff>true</turnGravityOff>
     </gazebo>
 
@@ -195,36 +195,36 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
     name="upper_arm_joint"
     type="revolute">
     <origin
-      xyz="0 0.1459 -0.0096445"
-      rpy="-1.5708 0 -1.5708" />
+      xyz="0 0.44 0.011736"
+      rpy="1.5708 0 -1.5708" />
     <parent
       link="arm_axel" />
     <child
       link="upper_arm" />
     <axis
-      xyz="0 1 0" />
+      xyz="0 -1 0" />
     <limit
-      lower="-0.5"
-      upper="0.25"
-      effort="15"
-      velocity="0.5" />
+      lower="-0.5236"
+      upper="0.5236"
+      effort="35"
+      velocity="2" />
   </joint>
 
   <link
     name="metal_detector_arm">
     <inertial>
       <origin
-        xyz="0.00200170148149059 -0.0639004587205252 -0.0667324909004516"
+        xyz="-0.0131202075717661 -0.0723031614133108 -0.0463889610764896"
         rpy="0 0 0" />
       <mass
-	value="0.00001" /><!--value="0.730115545526703" />-->
+        value="0.730115578586952" />
       <inertia
-        ixx="0.00564260404067653"
-        ixy="4.21272987506857E-05"
-        ixz="4.78655101148471E-05"
-        iyy="0.00114533989924875"
-        iyz="0.00095063627641457"
-        izz="0.00479397824386875" />
+        ixx="0.00493443507445138"
+        ixy="-0.000620294299504152"
+        ixz="-0.000306843036961987"
+        iyy="0.0014212633147968"
+        iyz="0.00125817384513895"
+        izz="0.00527185766074029" />
     </inertial>
     <visual>
       <origin
@@ -252,6 +252,7 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
   </link>
   <gazebo reference="metal_detector_arm">
         <material>Gazebo/Grey</material>
+        <selfCollide>false</selfCollide>
         <turnGravityOff>true</turnGravityOff>
     </gazebo>
 
@@ -262,36 +263,36 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
       joint="upper_arm_joint"
       multiplier="-1" />
     <origin
-      xyz="0 0 0.8475"
-      rpy="1.5708 -1.5708 0" />
+      xyz="-0.783340615005693 0.189233712627677 0.0344999999999998"
+      rpy="-1.5707963267949 1.140744854051 -1.26098072342103" />
     <parent
       link="upper_arm" />
     <child
       link="metal_detector_arm" />
     <axis
-      xyz="0 0 -1" />
-    <limit
-      lower="-0.25"
-      upper="0.5"
-      effort="15"
-      velocity="0.5" />
+      xyz="0.397068061333986 -0.865669276483222 -0.30488302416088" />
+	<limit
+      lower="-0.5236"
+      upper="0.5236"
+      effort="35"
+      velocity="2" />
   </joint>
 
   <link
     name="metal_detector_antenna">
     <inertial>
       <origin
-        xyz="3.6833E-07 0.011468 -0.12477"
+        xyz="0.124781096368378 -0.279414752184092 -0.122957072146209"
         rpy="0 0 0" />
       <mass
-	value="0.00001" /><!--value="12.099" />-->
+        value="12.0992798706323" />
       <inertia
-        ixx="0.060468"
-        ixy="-4.3221E-09"
-        ixz="5.3405E-07"
-        iyy="0.27654"
-        iyz="-0.0010461"
-        izz="0.21765" />
+        ixx="0.223638341370907"
+        ixy="0.0140547266307369"
+        ixz="0.0258666395393033"
+        iyy="0.250461845552196"
+        iyz="-0.0571594766057374"
+        izz="0.0805524351506661" />
     </inertial>
     <visual>
       <origin
@@ -319,6 +320,7 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
   </link>
   <gazebo reference="metal_detector_antenna">
         <material>Gazebo/Green</material>
+        <selfCollide>false</selfCollide>
         <turnGravityOff>true</turnGravityOff>
     </gazebo>
 
@@ -326,8 +328,8 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
     name="metal_detector_antenna_joint"
     type="fixed">
     <origin
-      xyz="0 -0.33276 0.095344"
-      rpy="0 0 0" />
+      xyz="0 0 0"
+      rpy="0 -2.7756E-17 -1.3878E-17" />
     <parent
       link="metal_detector_arm" />
     <child
@@ -386,17 +388,17 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
     name="lower_arm">
     <inertial>
       <origin
-        xyz="-4.03262433168461E-08 0.0238835580685394 0.38020982511275"
+        xyz="-0.234602780446024 -0.225204746125893 0.0031580399460546"
         rpy="0 0 0" />
       <mass
-        value="0.315289032495142" />
+        value="1.27837430758482" />
       <inertia
-        ixx="0.0311225242878348"
-        ixy="-2.44666563034439E-10"
-        ixz="3.98116348654419E-09"
-        iyy="0.0311222097229973"
-        iyz="-0.000155853742938512"
-        izz="8.78358578959995E-05" />
+        ixx="0.0167023392786261"
+        ixy="0.0172620654204666"
+        ixz="0.00171207285568604"
+        iyy="0.0255068597107398"
+        iyz="0.000242235271108958"
+        izz="0.0382877611003989" />
     </inertial>
     <visual>
       <origin
@@ -424,6 +426,7 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
   </link>
   <gazebo reference="lower_arm">
         <material>Gazebo/Grey</material>
+        <selfCollide>false</selfCollide>
         <turnGravityOff>true</turnGravityOff>
     </gazebo>
 
@@ -433,21 +436,22 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
     <mimic
       joint="upper_arm_joint" />
     <origin
-      xyz="0 0.0809 -0.011058"
-      rpy="-1.5708 0 -1.5708" />
+      xyz="0 0.375 0"
+      rpy="3.1416 0 0.70689" />
     <parent
       link="arm_axel" />
     <child
       link="lower_arm" />
     <axis
-      xyz="0 1 0" />
+      xyz="0 0 1" />
     <limit
-      lower="-0.5"
-      upper="0.25"
-      effort="15"
-      velocity="0.5" />
-  </joint>
+      lower="-0.5236"
+      upper="0.5236"
+      effort="35"
+      velocity="2" />
+	</joint>
   
+  <!-- Transmissions -->
   <transmission name="lift">
     <type>transmission_interface/SimpleTransmission</type>
     <joint name="upper_arm_joint"/>
@@ -457,7 +461,7 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
     </actuator>
   </transmission>
   
-  <transmission name="mimic_lift">
+  <transmission name="mimic_lift1">
     <type>transmission_interface/SimpleTransmission</type>
     <joint name="lower_arm_joint"/>
     <actuator name="mimic_lift_motor">
@@ -466,7 +470,7 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
     </actuator>
   </transmission>
   
-  <transmission name="mirror_lift">
+  <transmission name="mirror_lift2">
     <type>transmission_interface/SimpleTransmission</type>
     <joint name="metal_detector_arm_joint"/>
     <actuator name="mirror_lift_motor">
@@ -484,6 +488,7 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
     </actuator>
   </transmission>
   
+  <!-- Gazebo mimic plugins -->
   <gazebo>
 	<plugin name="mimic_plugin1" filename="libgazebo_mimic_plugin.so">
             <joint>upper_arm_joint</joint>

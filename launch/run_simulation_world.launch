@@ -41,7 +41,7 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
     <rosparam file="$(find hratc2015_framework)/controllers/controllers.yaml" command="load"/>
 
     <node name="controller_spawner" pkg="controller_manager" type="spawner" respawn="false"
-      output="screen" args="joint_state_controller arm_controller ptu_d46_controller"/>
+      output="screen" args="joint_state_controller arm_controller tilt_controller"/>
 
     <node name="robot_state_publisher" pkg="robot_state_publisher" type="robot_state_publisher"
       respawn="false" output="screen">

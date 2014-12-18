@@ -1,0 +1,59 @@
+<?xml version="1.0"?>
+<!--
+Copyright (c) 2013, Goncalo Cabrita, ISR University of Coimbra
+All rights reserved.
+
+Redistribution and use in source and binary forms, with or without
+modification, are permitted provided that the following conditions are met:
+    * Redistributions of source code must retain the above copyright
+      notice, this list of conditions and the following disclaimer.
+    * Redistributions in binary form must reproduce the above copyright
+      notice, this list of conditions and the following disclaimer in the
+      documentation and/or other materials provided with the distribution.
+    * Neither the name of Clearpath Robotics nor the
+      names of its contributors may be used to endorse or promote products
+      derived from this software without specific prior written permission.
+
+THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND
+ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
+WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
+DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDERS BE LIABLE FOR ANY
+DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES
+(INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;
+LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND
+ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
+(INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
+SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+-->
+
+<robot xmlns:sensor="http://playerstage.sourceforge.net/gazebo/xmlschema/#sensor"
+	xmlns:controller="http://playerstage.sourceforge.net/gazebo/xmlschema/#controller"
+	xmlns:interface="http://playerstage.sourceforge.net/gazebo/xmlschema/#interface"
+	xmlns:xacro="http://ros.org/wiki/xacro" name="tilt">
+
+	<xacro:macro name="tilt" params="parent x y z rx ry rz"> 
+		
+		<link name="tilt_link">
+  		</link> 
+		<joint name="tilt_joint" type="revolute">
+    			<origin xyz="${x} ${y} ${z}" rpy="0 0 0" />
+    			<parent link="husky_bridge" />
+    			<child link="tilt_link" />
+    			<axis xyz="0 -1 0" />
+    			<limit effort="6.0" lower="-0.5" upper="0.5" velocity="1.17" />
+			<dynamics damping="0.008" friction="0.6" />
+  		</joint>
+		
+		<transmission name="tilt">
+		  <type>transmission_interface/SimpleTransmission</type>
+		  <joint name="tilt_joint">
+		  <hardwareInterface>EffortJointInterface</hardwareInterface>
+		  </joint>
+		  <actuator name="tilt_motor">
+		    <hardwareInterface>EffortJointInterface</hardwareInterface>
+		    <mechanicalReduction>1</mechanicalReduction>
+		  </actuator>
+		</transmission>
+		
+	</xacro:macro>
+</robot>

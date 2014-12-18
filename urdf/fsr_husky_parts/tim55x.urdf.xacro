@@ -29,48 +29,51 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 <robot xmlns:sensor="http://playerstage.sourceforge.net/gazebo/xmlschema/#sensor"
 	xmlns:controller="http://playerstage.sourceforge.net/gazebo/xmlschema/#controller"
 	xmlns:interface="http://playerstage.sourceforge.net/gazebo/xmlschema/#interface"
-	xmlns:xacro="http://ros.org/wiki/xacro" name="sick_lms100">
+	xmlns:xacro="http://ros.org/wiki/xacro" name="tim_55x">
 
 	<!-- SICK LMS100-->
 
 	<xacro:include filename="$(find hratc2015_framework)/urdf/fsr_husky_parts/common.xacro" />
+
+	<xacro:property name="scale_factor" value="0.001" />
 
 	<xacro:property name="laser_x" value="0.105" />
 	<xacro:property name="laser_y" value="0.102" />
 	<xacro:property name="laser_z" value="0.152" />
 	<xacro:property name="laser_mass" value="1.1" />
 
-	<xacro:macro name="sick_lms100" params="parent x y z rx ry rz"> 
-  		<link name="sick_lms100">
+	<xacro:macro name="tim_55x" params="parent x y z rx ry rz"> 
+  		<link name="tim_55x">
 			<xacro:box_inertial x="${laser_x}" y="${laser_y}" z="${laser_z}" mass="${laser_mass}" />
 			<visual>
-				<origin xyz="0 0 0" rpy="0 0 0" />
+				<origin xyz="-0.120 -0.075 -0.06246" rpy="-1.5708 -1.5708 0" />
 				<geometry>
-					<mesh filename="package://hratc2015_framework/models/fsr_husky_parts/sick_lms100.stl" />
+					<mesh filename="package://hratc2015_framework/models/fsr_husky_parts/tim55x.STL" scale="${scale_factor} ${scale_factor} ${scale_factor}" />
 				</geometry>
 				<material name="DarkGray" />
   			</visual>
     			<collision>
+				<origin xyz="-0.120 -0.075 -0.06246" rpy="-1.5708 -1.5708 0" />
       				<geometry>
-					<mesh filename="package://hratc2015_framework/models/fsr_husky_parts/sick_lms100.stl" />
+					<mesh filename="package://hratc2015_framework/models/fsr_husky_parts/tim55x.STL" scale="${scale_factor} ${scale_factor} ${scale_factor}" />
         				<!-- <box size="${laser_x} ${laser_y} ${laser_z}" /> -->
       				</geometry>
     			</collision>
   		</link>
 
-		<joint name="joint_sick_lms100" type="fixed">
+		<joint name="joint_tim_55x" type="fixed">
 			<parent link="${parent}"/>
-			<child link="sick_lms100"/>
-			<origin xyz="${x} ${y} ${z}" rpy="${rx} ${ry} ${rz}" /> 
+			<child link="tim_55x"/>
+			<origin xyz="${x} ${y} ${z+0.06246}" rpy="${rx} ${ry} ${rz}" /> 
 		</joint>
 
-		<gazebo reference="sick_lms100">
+		<gazebo reference="tim_55x">
 			<material>Gazebo/Grey</material>
 			<turnGravityOff>true</turnGravityOff>
-    			<sensor type="ray" name="sick_lms100">
+    			<sensor type="ray" name="tim_55x">
       				<pose>0 0 0 0 0 0</pose>
       				<visualize>false</visualize>
-     	 			<update_rate>40</update_rate>
+     	 			<update_rate>15</update_rate>
       				<ray>
         				<scan>
           					<horizontal>
@@ -81,8 +84,8 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
           					</horizontal>
         				</scan>
         				<range>
-          					<min>0.10</min>
-          					<max>30.0</max>
+          					<min>0.05</min>
+          					<max>10.0</max>
           					<resolution>0.01</resolution>
         				</range>
         				<noise>
@@ -93,7 +96,7 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
       				</ray>
       				<plugin name="gazebo_ros_laser" filename="libgazebo_ros_laser.so">
         				<topicName>scan</topicName>
-        				<frameName>sick_lms100</frameName>
+        				<frameName>tim_55x</frameName>
       				</plugin>
     			</sensor>
   		</gazebo>

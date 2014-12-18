@@ -29,20 +29,17 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 <robot xmlns:sensor="http://playerstage.sourceforge.net/gazebo/xmlschema/#sensor"
 	xmlns:controller="http://playerstage.sourceforge.net/gazebo/xmlschema/#controller"
 	xmlns:interface="http://playerstage.sourceforge.net/gazebo/xmlschema/#interface"
-	xmlns:xacro="http://ros.org/wiki/xacro" name="husky_bridge">
-	
-	<!-- Bridge -->
+	xmlns:xacro="http://ros.org/wiki/xacro" name="top_cover">
 
+	<!-- Top Cover -->
+
+  	<xacro:property name="scale_factor" value="0.001" />
 	<xacro:property name="husky_width" value="0.42" />
-	<xacro:property name="husky_heigh" value="0.245" />
-	<xacro:property name="scale_factor" value="0.001" />
-	<xacro:property name="bridge_height" value="0.385" />
 
-
-	<xacro:macro name="husky_bridge" params="parent x y z rx ry rz"> 
-		<link name="husky_bridge">
+	<xacro:macro name="top_cover" params="parent x y z rx ry rz"> 
+		<link name="top_cover">
 			<inertial>
-      				<origin xyz="1.3205E-08 -0.12511 0.1844" rpy="0 0 0" />
+      				<origin xyz="0 0 0.1844" rpy="0 0 0" />
      				 <mass value="0.41909" />
       				<inertia
        					ixx="0.0062892349956719"
@@ -53,29 +50,29 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
         				izz="1.18429869738408E-05" />
     			</inertial>
 			<visual>
-      				<origin xyz="-0.31 ${-husky_width/2} ${-husky_heigh-bridge_height}" rpy="1.5708 0 1.5708" />
+      				<origin xyz="0.07 ${-husky_width/2-0.0025} -0.10" rpy="1.5708 0 1.5708" />
       				<geometry>
-					<mesh filename="package://hratc2015_framework/models/fsr_husky_parts/bridge.STL" scale="${scale_factor} ${scale_factor} ${scale_factor}" />
+					<mesh filename="package://hratc2015_framework/models/fsr_husky_parts/top_cover.STL" scale="${scale_factor} ${scale_factor} ${scale_factor}" />
       				</geometry>
-      				<material name="Black" />
+      				<material name="Yellow" />
     			</visual>
 			<collision>
-      				<origin xyz="-0.31 ${-husky_width/2} ${-husky_heigh}" rpy="1.5708 0 1.5708" />
+      				<origin xyz="0.0 ${-husky_width/2-0.0025} -0.10" rpy="1.5708 0 1.5708" />
       				<geometry>
-					<mesh filename="package://hratc2015_framework/models/fsr_husky_parts/bridge.STL" scale="${scale_factor} ${scale_factor} ${scale_factor}" />
+					<mesh filename="package://hratc2015_framework/models/fsr_husky_parts/top_cover.STL" scale="${scale_factor} ${scale_factor} ${scale_factor}" />
       				</geometry>
     			</collision>
 		</link>
-		<gazebo reference="husky_bridge">
-	        	<material>Gazebo/Black</material>
+		<gazebo reference="top_cover">
+	        	<material>Gazebo/Yellow</material>
 	        	<turnGravityOff>false</turnGravityOff>
     		</gazebo>
 
-		<joint name="joint_husky_bridge" type="fixed">
+		<joint name="joint_top_cover" type="fixed">
 			<parent link="${parent}"/>
-			<child link="husky_bridge"/>
-			<origin xyz="${x+0.31} ${y} ${z+bridge_height}" rpy="${rx} ${ry} ${rz}" /> 
+			<child link="top_cover"/>
+			<origin xyz="${x} ${y} ${z}" rpy="${rx} ${ry} ${rz}" /> 
 		</joint>
    
-  	</xacro:macro>
+	</xacro:macro>
 </robot>

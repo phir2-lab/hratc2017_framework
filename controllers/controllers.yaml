@@ -55,28 +55,20 @@
         arm_axel_joint:
           goal: 0.05
   
-  # Pan and Tilt Controller -----------------------------------
-  ptu_d46_controller:
+  # Tilt Controller -----------------------------------
+  tilt_controller:
     type: effort_controllers/JointTrajectoryController
     joints:
-      - ptu_d46_pan_joint
-      - ptu_d46_tilt_joint
+      - tilt_joint
     gains:
-      ptu_d46_pan_joint:
-        p: 100.0
-        i: 0.01
-        d: 10.0
-      ptu_d46_tilt_joint:
+      tilt_joint:
         p: 100.0
         i: 0.01
         d: 10.0
     joint_trajectory_node:
       joints:
-        - ptu_d46_pan_joint
-        - ptu_d46_tilt_joint
+        - tilt_joint
       constraints:
         goal_time: 10.0
-        ptu_d46_pan_joint:
-          goal: 0.05
-        ptu_d46_tilt_joint:
+        tilt_joint:
           goal: 0.05
