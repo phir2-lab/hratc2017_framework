@@ -140,7 +140,7 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
       xyz="0 -1 0" />
 	<limit
       lower="-1.5708"
-      upper="3.14"
+      upper="3.06"
       effort="75"
       velocity="2" />
   </joint>
@@ -205,7 +205,7 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
       xyz="0 -1 0" />
     <limit
       lower="-0.5236"
-      upper="0.5236"
+      upper="0.16"
       effort="35"
       velocity="2" />
   </joint>
@@ -228,8 +228,8 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
     </inertial>
     <visual>
       <origin
-        xyz="0 0 0"
-        rpy="0 0 0" />
+        xyz="0.0255 0.0026 -0.01050"
+        rpy="-1.865 -0.1 -1" />
       <geometry>
         <mesh
           filename="package://hratc2015_framework/models/arm/metal_detector_arm.STL" />
@@ -242,8 +242,8 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
     </visual>
     <collision>
       <origin
-        xyz="0 0 0"
-        rpy="0 0 0" />
+        xyz="0.0255 0.0026 -0.01050"
+        rpy="-1.865 -0.1 -1" />
       <geometry>
         <mesh
           filename="package://hratc2015_framework/models/arm/metal_detector_arm.STL" />
@@ -263,7 +263,7 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
       joint="upper_arm_joint"
       multiplier="-1" />
     <origin
-      xyz="-0.783340615005693 0.189233712627677 0.0344999999999998"
+      xyz="0.0 0.0344999999999998 0.8483340615005693"
       rpy="-1.5707963267949 1.140744854051 -1.26098072342103" />
     <parent
       link="upper_arm" />
@@ -273,7 +273,7 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
       xyz="0.397068061333986 -0.865669276483222 -0.30488302416088" />
 	<limit
       lower="-0.5236"
-      upper="0.5236"
+      upper="0.16"
       effort="35"
       velocity="2" />
   </joint>
@@ -296,8 +296,8 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
     </inertial>
     <visual>
       <origin
-        xyz="0 0 0"
-        rpy="0 0 0" />
+        xyz="0.026 0 -0.29"
+        rpy="-1.9 -0.45 -1.45" />
       <geometry>
         <mesh
           filename="package://hratc2015_framework/models/arm/metal_detector_antenna.STL" />
@@ -310,8 +310,8 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
     </visual>
     <collision>
       <origin
-        xyz="0 0 0"
-        rpy="0 0 0" />
+        xyz="0.026 0 -0.29"
+        rpy="-1.9 -0.45 -1.45" />
       <geometry>
         <mesh
           filename="package://hratc2015_framework/models/arm/metal_detector_antenna.STL" />
@@ -328,8 +328,8 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
     name="metal_detector_antenna_joint"
     type="fixed">
     <origin
-      xyz="0 0 0"
-      rpy="0 -2.7756E-17 -1.3878E-17" />
+      xyz="0.0350 -0.075 0.27"
+      rpy="0.350 0 0.42" /> -->
     <parent
       link="metal_detector_arm" />
     <child
@@ -348,7 +348,7 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
   </link>
   
   <joint name="left_coil_joint" type="fixed">
-      <origin xyz="0.18 0 0" rpy="0 0 0" />
+      <origin xyz="0.18 -0.02 0.04" rpy="0 0 0" />
       <parent link="metal_detector_antenna"/>
       <child link="left_coil" />
   </joint>
@@ -363,7 +363,7 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
   </link>
   
   <joint name="middle_coil_joint" type="fixed">
-      <origin xyz="0 0 0" rpy="0 0 0" />
+      <origin xyz="0 -0.02 0.04" rpy="0 0 0" />
       <parent link="metal_detector_antenna"/>
       <child link="middle_coil" />
   </joint>
@@ -378,7 +378,7 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
   </link>
   
   <joint name="right_coil_joint" type="fixed">
-      <origin xyz="-0.18 0 0" rpy="0 0 0" />
+      <origin xyz="-0.18 -0.02 0.04" rpy="0 0 0" />
       <parent link="metal_detector_antenna"/>
       <child link="right_coil" />
   </joint>
@@ -446,7 +446,7 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
       xyz="0 0 1" />
     <limit
       lower="-0.5236"
-      upper="0.5236"
+      upper="0.16"
       effort="35"
       velocity="2" />
 	</joint>
