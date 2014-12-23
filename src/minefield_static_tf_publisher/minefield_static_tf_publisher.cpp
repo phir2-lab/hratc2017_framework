@@ -33,6 +33,7 @@
 *  POSSIBILITY OF SUCH DAMAGE.
 *
 * Author: Goncalo Cabrita on 21/04/2014
+* Updated: Baptiste Gil on 26/08/2014
 *
 * This software publishes a static transform between the world frame
 * and the minefield frame.
@@ -40,17 +41,16 @@
 * The minefield frame is centered on the 4 GPS coordinates that define
 * the minefield itself.
 *
-*   1 ------------------------------------------------------------ 4
-*   |                                                              |
-*   |                              y                               |
-*   |                              ^                               |
-*   |                              |                               |
-*   |                              o-- > x                         |
-*   |                            z                                 |
-*   |                                                              |
-*   |                                                              |
-*   |                                                              |
-*   2 ------------------------------------------------------------ 3
+*   4 ------------- 3
+*   |               |
+*   |         x     |
+*   |         ^     |
+*   |         |     |
+*   |   y < --o     |
+*   |           z   |
+*   |               |
+*   |               |
+*   1 ------------- 2
 *
 *********************************************************************/
 
@@ -127,15 +127,12 @@ int main(int argc, char** argv)
 
     ROS_INFO("Minefield static tf broadcaster -- Corner4 lat:%lf long:%lf alt:%lf - x:%lf y:%lf z:%lf", fix.latitude, fix.longitude, fix.altitude, corner4.x(), corner4.y(), corner4.z());
 
-    // Find the center of the minefield, this will be the origin of the minefield frame
-    tf::Vector3 center = tf::Vector3((corner1.x() + corner2.x() + corner3.x() + corner4.x()) / 4.0, (corner1.y() + corner2.y() + corner3.y() + corner4.y()) / 4.0, (corner1.z() + corner2.z() + corner3.z() + corner4.z()) / 4.0);
-
-    ROS_INFO("Minefield static tf broadcaster -- The center of the minefield is x:%lf y:%lf z:%lf (m)", center.x(), center.y(), center.z());
-
     double w =  ( sqrt(pow(corner4.x()-corner1.x(), 2) + pow(corner4.y()-corner1.y(), 2) + pow(corner4.z()-corner1.z(), 2)) + sqrt(pow(corner3.x()-corner2.x(), 2) + pow(corner3.y()-corner2.y(), 2) + pow(corner3.z()-corner2.z(), 2)) ) / 2.0;
     double h =  ( sqrt(pow(corner2.x()-corner1.x(), 2) + pow(corner2.y()-corner1.y(), 2) + pow(corner2.z()-corner1.z(), 2)) + sqrt(pow(corner4.x()-corner3.x(), 2) + pow(corner4.y()-corner3.y(), 2) + pow(corner4.z()-corner3.z(), 2)) ) / 2.0;
 
-    ROS_INFO("Minefield static tf broadcaster -- The minefield is %lfx%lf (m)", w, h);
+    ROS_INFO("Minefield static tf broadcaster:");
+    ROS_INFO(" -- The minefield is %lfx%lf (m)", w, h);
+    ROS_INFO(" -- With the origin on corner_1 ");
 
     double rate;
     pn.param("rate", rate, 20.0);
@@ -148,19 +145,57 @@ int main(int argc, char** argv)
 
     ROS_INFO("Minefield static tf broadcaster -- Publishing static transform from %s to %s at %lf hz...", parent_frame.c_str(), child_frame.c_str(), rate);
 
+    double roll = 0.0;
+    double pitch = 0.0;
+    double yaw = atan2(-(corner4.x()- corner1.x()), corner4.y() - corner1.y())+1.5707963;
+
+    ROS_INFO(" -- Minefield yaw: %lf (rad)", yaw);
+
     // Generate the transformation from the world frame to the minefield frame
     static tf::TransformBroadcaster br;
     tf::Transform transform;
-    transform.setOrigin( tf::Vector3(center.x(), center.y(), center.z()) );
+    transform.setOrigin( tf::Vector3(corner1.x(), corner1.y(), corner1.z()) );
     tf::Quaternion q;
-    q.setRPY(0.0, 0.0, atan2((corner4.y()+corner3.y())/2.0 - center.y(), (corner4.x()+corner3.x())/2.0 - center.x()));
+//    q.setRPY(roll, pitch, yaw);
+    q.setRPY(0.0, 0.0, 0.0); //Use minefield without the orientation
     transform.setRotation(q);
+
+    ROS_INFO(" --Real Corner_1 at minefield is x:%lf y:%lf z:%lf (m)", corner1.x(),corner1.y(),corner1.z());
+    ROS_INFO(" --Real Corner_2 at minefield is x:%lf y:%lf z:%lf (m)", corner2.x(),corner2.y(),corner2.z());
+    ROS_INFO(" --Real Corner_3 at minefield is x:%lf y:%lf z:%lf (m)", corner3.x(),corner3.y(),corner3.z());
+    ROS_INFO(" --Real Corner_4 at minefield is x:%lf y:%lf z:%lf (m)", corner4.x(),corner4.y(),corner4.z());
+
+    tf::Transform corner_1_;
+    corner_1_.setOrigin( tf::Vector3(corner1.x()-transform.getOrigin().x(), corner1.y()-transform.getOrigin().y(), corner1.z()-transform.getOrigin().z()) );
+    q.setRPY(roll, pitch, yaw);
+    corner_1_.setRotation(q); //Use the same as minefield
+    ROS_INFO(" -- Corner_1 at minefield is x:%lf y:%lf z:%lf (m)", corner_1_.getOrigin().x(),corner_1_.getOrigin().y(),corner_1_.getOrigin().z());
+
+    tf::Transform corner_2_;
+    corner_2_.setOrigin( tf::Vector3(corner2.x()-transform.getOrigin().x(), corner2.y()-transform.getOrigin().y(), corner2.z()-transform.getOrigin().z()) );
+    corner_2_.setRotation(q); //Use the same as minfield
+    ROS_INFO(" -- Corner_2 at minefield is x:%lf y:%lf z:%lf (m)", corner_2_.getOrigin().x(),corner_2_.getOrigin().y(),corner_2_.getOrigin().z());
+
+    tf::Transform corner_3_;
+    corner_3_.setOrigin( tf::Vector3(corner3.x()-transform.getOrigin().x(), corner3.y()-transform.getOrigin().y(), corner3.z()-transform.getOrigin().z()) );
+    corner_3_.setRotation(q); //Use the same as minefield
+    ROS_INFO(" -- Corner_3 at minefield is x:%lf y:%lf z:%lf (m)", corner_3_.getOrigin().x(),corner_3_.getOrigin().y(),corner_3_.getOrigin().z());
+
+    tf::Transform corner_4_;
+    corner_4_.setOrigin( tf::Vector3(corner4.x()-transform.getOrigin().x(), corner4.y()-transform.getOrigin().y(), corner4.z()-transform.getOrigin().z()) );
+    corner_4_.setRotation(q); //Use the same as minefield
+    ROS_INFO(" -- Corner_4 at minefield is x:%lf y:%lf z:%lf (m)", corner_4_.getOrigin().x(),corner_4_.getOrigin().y(),corner_4_.getOrigin().z());
 
     // Publish the transformation at the desired rate!
     ros::Rate loop(rate);
     while(ros::ok())
     {
         br.sendTransform(tf::StampedTransform(transform, ros::Time::now(), parent_frame, child_frame));
+        br.sendTransform(tf::StampedTransform(corner_1_, ros::Time::now(), child_frame, "corner_1"));
+        br.sendTransform(tf::StampedTransform(corner_2_, ros::Time::now(), child_frame, "corner_2"));
+        br.sendTransform(tf::StampedTransform(corner_3_, ros::Time::now(), child_frame, "corner_3"));
+        br.sendTransform(tf::StampedTransform(corner_4_, ros::Time::now(), child_frame, "corner_4"));
+
         ros::spinOnce();
         loop.sleep();
     }
