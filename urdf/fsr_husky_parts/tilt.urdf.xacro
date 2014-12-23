@@ -31,29 +31,110 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 	xmlns:interface="http://playerstage.sourceforge.net/gazebo/xmlschema/#interface"
 	xmlns:xacro="http://ros.org/wiki/xacro" name="tilt">
 
+	<!-- Tilt Module -->
+
 	<xacro:macro name="tilt" params="parent x y z rx ry rz"> 
-		
-		<link name="tilt_link">
-  		</link> 
+  		<link name="tilt_base_link">
+    			<inertial>
+      				<origin xyz="0.0460197853129896 -0.0345620367624565 0.673567143254325" rpy="0 0 0" />
+      				<mass value="0.0585867274989263" />
+      				<inertia
+        				ixx="1.8665172785833E-05"
+        				ixy="6.44836212134259E-06"
+        				ixz="7.47656484874687E-06"
+        				iyy="5.73777331599441E-05"
+        				iyz="1.17404715762795E-06"
+        				izz="6.00483041818136E-05" />
+    			</inertial>
+    			<visual>
+      				<origin xyz="0 0 0" rpy="0 0 0" />
+      				<geometry>
+					<mesh filename="package://hratc2015_framework/models/fsr_husky_parts/tilt_base_link.STL" />
+     	 			</geometry>
+      				<material name="Black" />
+    			</visual>
+    			<collision>
+      				<origin xyz="0 0 0" rpy="0 0 0" />
+      				<geometry>
+					<mesh filename="package://hratc2015_framework/models/fsr_husky_parts/tilt_base_link.STL" />
+      				</geometry>
+    			</collision>
+  		</link>
+		<gazebo reference="tilt_base_link">
+        		<material>Gazebo/FlatBlack</material>
+        		<turnGravityOff>false</turnGravityOff>
+    		</gazebo>
+
+		<joint name="tilt_base_joint" type="fixed">
+			<parent link="${parent}"/>
+			<child link="tilt_base_link"/>
+			<origin xyz="${x} ${y} ${z}" rpy="${rx} ${ry} ${rz}" /> 
+		</joint>
+
+  		<link name="tilt_link">
+    			<inertial>
+      				<origin xyz="-0.00129015307949742 0.00224156872637131 0.000205265483947359" rpy="0 0 0" />
+      				<mass value="0.00819465820673721" />
+      				<inertia
+        				ixx="5.89716130625059E-06"
+        				ixy="-1.95459322632056E-07"
+        				ixz="1.1148474535632E-08"
+        				iyy="5.69442865488394E-06"
+        				iyz="7.98441689224292E-10"
+        				izz="1.51501714183501E-06" />
+    			</inertial>
+    			<visual>
+      				<origin xyz="0 0 0" rpy="0 0 0" />
+      				<geometry>
+					<mesh filename="package://hratc2015_framework/models/fsr_husky_parts/tilt_link.STL" />
+      				</geometry>
+      				<material name="DarkGray" />
+    			</visual>
+    			<collision>
+      				<origin xyz="0 0 0" rpy="0 0 0" />
+      				<geometry>
+					<mesh filename="package://hratc2015_framework/models/fsr_husky_parts/tilt_link.STL" />
+      				</geometry>
+    			</collision>
+  		</link>
+		<gazebo reference="tilt_link">
+        		<material>Gazebo/FlatBlack</material>
+        		<turnGravityOff>false</turnGravityOff>
+    		</gazebo>
+  
 		<joint name="tilt_joint" type="revolute">
-    			<origin xyz="${x} ${y} ${z}" rpy="0 0 0" />
-    			<parent link="husky_bridge" />
+    			<origin xyz="0.0065635 -0.04414 0.67735" rpy="1.5708 -1.5202 1.5708" />
+    			<parent link="tilt_base_link" />
     			<child link="tilt_link" />
-    			<axis xyz="0 -1 0" />
+    			<axis xyz="0 0 -1" />
     			<limit effort="6.0" lower="-0.5" upper="0.5" velocity="1.17" />
 			<dynamics damping="0.008" friction="0.6" />
   		</joint>
-		
-		<transmission name="tilt">
-		  <type>transmission_interface/SimpleTransmission</type>
-		  <joint name="tilt_joint">
-		  <hardwareInterface>EffortJointInterface</hardwareInterface>
-		  </joint>
-		  <actuator name="tilt_motor">
-		    <hardwareInterface>EffortJointInterface</hardwareInterface>
-		    <mechanicalReduction>1</mechanicalReduction>
-		  </actuator>
-		</transmission>
-		
+
+<!--	  <link name="tim_55x_link" />
+	  <joint name="tim_55x_joint" type="fixed">
+	    <origin xyz="0.054558 0.022286 0" rpy="1.5708 2.8361E-16 1.6214" />
+	    <parent link="tilt_link" />
+	    <child link="tim_55x_link" />
+	    <axis xyz="0 0 0" />
+	  </joint>
+		-->	  
+	  <transmission name="tilt">
+	    <type>transmission_interface/SimpleTransmission</type>
+	    <joint name="tilt_joint">
+	    <hardwareInterface>EffortJointInterface</hardwareInterface>
+	    </joint>
+	    <actuator name="tilt_motor">
+	      <hardwareInterface>EffortJointInterface</hardwareInterface>
+	      <mechanicalReduction>1</mechanicalReduction>
+	    </actuator>
+	  </transmission>
+	  
+	  <!--<gazebo>
+	    <plugin name="gazebo_ros_control" filename="libgazebo_ros_control.so">
+	      <robotNamespace>/tilt</robotNamespace>
+	    </plugin>
+	  </gazebo>-->
+
 	</xacro:macro>
 </robot>
