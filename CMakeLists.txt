@@ -134,6 +134,9 @@ target_link_libraries(judge ${catkin_LIBRARIES})
 add_executable(mineFieldViewer src/minefieldViewer/main.cpp src/minefieldViewer/minefieldviewer.cpp src/config/config.cpp)
 target_link_libraries(mineFieldViewer ${catkin_LIBRARIES})
 
+add_executable(pointcloud_generator_node src/pcl_generator/pointcloud_generator.cpp)
+target_link_libraries(pointcloud_generator_node ${catkin_LIBRARIES})
+
 #############
 ## Install ##
 #############
