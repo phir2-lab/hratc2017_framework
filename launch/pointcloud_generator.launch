@@ -1,32 +1,37 @@
 <launch>
 
-	      <!-- robot_self_filter will take care of self-filtering -->
-	<node name="robot_self_filter" pkg="robot_self_filter" type="self_filter" respawn="true">
-	  <!-- The topic for the input cloud -->
-	  <remap from="cloud_in" to="tilt_scan_cloud" />
-	  <!-- The topic for the output cloud -->
-	  <remap from="cloud_out" to="tilt_scan_cloud_filtered" />
-	  <!-- The frame of the sensor used to obtain the data to be filtered; This parameter is optional. If it is not specified, shadow points will be considered outside -->
-	  <!--  <param name="sensor_frame" type="string" value="base_link" /> -->
-	  <!-- Minimum distance to sensor (for point not to be considered inside) -->
-	  <param name="min_sensor_dist" type="double" value="0.01" />
-	  <!-- The padding to be added for the body parts the robot can see -->
-	  <param name="self_see_padd" type="double" value="0.02" />
-	  <!-- The scaling to be added for the body parts the robot can see -->
-	  <param name="self_see_scale" type="double" value="1.0" />
+	<!-- Convert laser scan to pointclouds -->
+		<node pkg="laser_filters" type="scan_to_cloud_filter_chain" output="screen" name="scan_to_cloud_filter_chain_tilt_laser">
+		<remap from="scan" to="scan"/>
+		<remap from="cloud_filtered" to="tilt_scan_cloud"/>
+		<param name="target_frame" type="string" value="base_link"/>
 	</node>
 
-	<!-- Laser Assembler - Converts laser scans to a PointCloud2 message using the tilt unit -->
-  	<node type="laser_scan_assembler" pkg="laser_assembler" name="laser_scan_assembler" output="screen">
-    		<param name="max_scans" type="int" value="100" />
-    		<param name="fixed_frame" type="string" value="base_link" />
-  	</node>
+	<node name="robot_self_filter" pkg="robot_self_filter" type="self_filter" respawn="true" output="screen">
+		<remap from="cloud_in" to="tilt_scan_cloud" />
+		<remap from="cloud_out" to="tilt_scan_cloud_filtered" />
+		<!-- Minimum distance to sensor (for point not to be considered inside) -->
+		<param name="min_sensor_dist" type="double" value="0.01" />
+		<!-- The padding to be added for the body parts the robot can see -->
+ 		<param name="self_see_padd" type="double" value="0.1" />
+		<!-- The scaling to be added for the body parts the robot can see -->
+ 		<param name="self_see_scale" type="double" value="1.0" />
+		<rosparam command="load" file="$(find hratc2015_framework)/settings/links.yaml" />
+	</node>
 
-	<!-- PointCloud Generator - Tilts the laser and generates PointCloids -->
+	<node pkg="laser_assembler" type="point_cloud2_assembler" output="screen"  name="point_cloud_assembler">
+	    <remap from="cloud" to="/tilt_scan_cloud_filtered"/>
+	    <param name="tf_cache_time_secs" type="double" value="10.0" />
+	    <param name="tf_tolerance_secs" type="double" value="0.01" />
+	    <param name="max_clouds" type="int" value="1500" />
+	    <param name="ignore_laser_skew" type="bool" value="true" />
+	    <param name="fixed_frame" type="string" value="base_link" />
+	</node>
+
   	<node type="pointcloud_generator_node" pkg="hratc2015_framework" name="pointcloud_generator" output="screen">
-		<remap from="cloud" to="/tilt_scan_cloud"/>
-		<param name="lower_tilt" value="-1.0" />
-		<param name="upper_tilt" value="-0.4" />
+		<remap from="cloud" to="cloud_assembled"/>
+		<param name="lower_tilt" value="-1.5" />
+		<param name="upper_tilt" value="0.0" />
 		<param name="tilt_speed" value="0.4" />
 	</node>
 

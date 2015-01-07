@@ -272,8 +272,8 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
     <axis
       xyz="0.397068061333986 -0.865669276483222 -0.30488302416088" />
 	<limit
-      lower="-0.5236"
-      upper="0.16"
+      lower="-1.0"
+      upper="1.0"
       effort="35"
       velocity="2" />
   </joint>

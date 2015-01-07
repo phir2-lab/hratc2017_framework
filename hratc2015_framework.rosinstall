@@ -23,7 +23,8 @@
     uri: https://github.com/brNX/navigation.git
     local-name: robot_pose_ekf_cp
     version: robot_pose_ekf
-  
-
-
-
+ 
+- git:
+    uri:https://github.com/brNX/robot_self_filter.git
+    local-name: robot_self_filter
+    version: master
