@@ -1,0 +1,13 @@
+self_see_links:
+  - name: metal_detector_antenna
+    padding: .3
+  - name: metal_detector_arm
+    padding: .1
+  - name: upper_arm
+    padding: .1
+  - name: lower_arm
+    padding: .1
+  - name: arm_axel
+    padding: .1
+  - name: base_arm_link
+    padding: .1
