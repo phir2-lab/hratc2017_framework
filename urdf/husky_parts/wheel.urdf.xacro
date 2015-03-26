@@ -107,7 +107,6 @@ This program contains the description of the robot wheel model for Clearpath Hus
 			  <hardwareInterface>EffortJointInterface</hardwareInterface>
 			  </joint>
 			<actuator name="joint_${fb}_${lr}_wheel_motor">
-			  <hardwareInterface>EffortJointInterface</hardwareInterface>
 			  <mechanicalReduction>1</mechanicalReduction>
 			  <motorTorqueConstant>1</motorTorqueConstant>
 			</actuator>

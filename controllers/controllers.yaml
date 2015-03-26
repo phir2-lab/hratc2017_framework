@@ -37,12 +37,12 @@
       - arm_axel_joint
     gains:
       upper_arm_joint:
-        p: 100.0
-        i: 0.01
+        p: 95000.0
+        i: 940.0
         d: 10.0
       arm_axel_joint:
-        p: 100.0
-        i: 0.01
+        p: 95000.0
+        i: 940.0
         d: 10.0
     joint_trajectory_node:
       joints:
