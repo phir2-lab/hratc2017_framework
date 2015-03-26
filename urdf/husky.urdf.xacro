@@ -77,15 +77,15 @@ Husky A200 file and modified by the ISR University of Coimbra
     <property name="base_z_size" value="0.24750000" />
 
     <!--Weight of the base-->
-    <property name="base_mass" value="3.345489000" /> <!-- in kg-->
+    <property name="base_mass" value="33.45489000" /> <!-- in kg-->
 
     <!--Inertial values for the base at center of mass, aligned with coordinate system. Units are kg*m^2-->
-    <property name="base_ixx_com_cs" value="6.0216370" />
-    <property name="base_ixy_com_cs" value="0.0" />
-    <property name="base_ixz_com_cs" value="0.0" />
-    <property name="base_iyy_com_cs" value="17.3859574" />
-    <property name="base_iyz_com_cs" value="0.0" />
-    <property name="base_izz_com_cs" value="20.2955229" />
+    <property name="base_ixx_com_cs" value="0.60216370" />
+    <property name="base_ixy_com_cs" value="-0.02364198" />
+    <property name="base_ixz_com_cs" value="-0.11972132" />
+    <property name="base_iyy_com_cs" value="1.73859574" />
+    <property name="base_iyz_com_cs" value="-0.00154437" />
+    <property name="base_izz_com_cs" value="2.02955229" />
 
     <!-- BASE-FOOTPRINT -->
     <!-- base_footprint is a fictitious link(frame) that is on the ground right below base_link origin, navigation stack depends on this frame -->
@@ -208,7 +208,7 @@ Husky A200 file and modified by the ISR University of Coimbra
     <front_cover parent="base_footprint" x="0" y="0" z="${base_z_size}" rx="0" ry="0" rz="0" />
 
     <!-- MTi macro -->
-    <mti parent="husky_bridge" x="-0.10" y="0.17" z="-0.15" rx="1.57" ry="0" rz="0" />
+    <mti parent="top_cover" x="0.2295" y="0.0" z="0.157" rx="0" ry="0" rz="0" />
 
     <!-- CAMERA macros -->
     <pointgrey_flea3 prefix="right" parent="husky_bridge" base_offset="-0.145" camera_offset="-0.00" camera_r="0" camera_p="0" camera_y="0" />
