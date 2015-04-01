@@ -458,6 +458,7 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
       <hardwareInterface>EffortJointInterface</hardwareInterface>
     </joint>
     <actuator name="lift_motor">
+      <hardwareInterface>EffortJointInterface</hardwareInterface>
       <mechanicalReduction>1</mechanicalReduction>
     </actuator>
   </transmission>
@@ -468,6 +469,7 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
       <hardwareInterface>EffortJointInterface</hardwareInterface>
     </joint>
     <actuator name="mimic_lift_motor">
+      <hardwareInterface>EffortJointInterface</hardwareInterface>
       <mechanicalReduction>1</mechanicalReduction>
     </actuator>
   </transmission>
@@ -478,6 +480,7 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
       <hardwareInterface>EffortJointInterface</hardwareInterface>
     </joint>
     <actuator name="mirror_lift_motor">
+      <hardwareInterface>EffortJointInterface</hardwareInterface>
       <mechanicalReduction>1</mechanicalReduction>
     </actuator>
   </transmission>
@@ -488,6 +491,7 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
       <hardwareInterface>EffortJointInterface</hardwareInterface>
     </joint>
     <actuator name="sweep_motor">
+      <hardwareInterface>EffortJointInterface</hardwareInterface>
       <mechanicalReduction>1</mechanicalReduction>
     </actuator>
   </transmission>
