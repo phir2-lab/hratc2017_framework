@@ -1,6 +1,11 @@
 #ifndef CONFIG_H
 #define CONFIG_H
 
+#include <ros/ros.h>
+#include <ros/package.h>
+#include <tf/transform_broadcaster.h>
+#include <tf/transform_listener.h>
+
 #include <vector>
 #include <iostream>
 
@@ -9,7 +14,7 @@ using namespace std;
 class Position2D
 {
     public:
-        Position2D(float a, float b)
+        Position2D(double a, double b)
         {
             x=a; y=b;
         }
@@ -20,7 +25,7 @@ class Position2D
             return os;
         }
 
-        float x, y;
+        double x, y;
 
 };
 
@@ -28,26 +33,36 @@ class Position2D
 class Config
 {
     public:
-        Config(string name);
+        Config(ros::NodeHandle *nh);
 
         bool hasEnded();
 
-        // MAP_DIMENSIONS
-        float width;
-        float height;
-        float resolution;
+        // MAP INFO
+        vector<tf::Vector3> minefieldCorners;
+        tf::Vector3 lowerBound;
+        tf::Vector3 upperBound;
+
+        double width;
+        double height;
+        double resolution;
         int numCellsInX;
         int numCellsInY;
 
-        // MINES
+        // MINES INFO
         int numMines;
         bool randomMines;
-        float detectionMinDist;
-        float explosionMaxDist;
+        double detectionMinDist;
+        double explosionMaxDist;
         vector<Position2D> minesPositions;
 
     private:
-        string filename;
+        ros::NodeHandle* n;
+        tf::TransformListener listener;
+
+        tf::Vector3 getMinefieldOrigin();
+        void readMinefieldCorners();
+        void readJudgeInformation();
+        void readMinesPositions();
 };
 
 #endif /* CONFIG_H */

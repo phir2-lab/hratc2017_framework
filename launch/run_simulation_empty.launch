@@ -37,7 +37,6 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
       <arg name="startz" value="0" />
     </include>
     
-    
     <!-- Load the controllers -->
     <rosparam file="$(find hratc2015_framework)/controllers/controllers.yaml" command="load"/>
 
@@ -73,6 +72,7 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
     <!-- The minefield frame -->
     <node name="minefield_static_tf_publisher" pkg="hratc2015_framework" type="minefield_static_tf_publisher" output="screen">
       <rosparam file="$(find hratc2015_framework)/settings/minefield.yaml" command="load" />
+<!--      <rosparam file="$(find hratc2015_framework)/settings/minefield_not_rectangular.yaml" command="load" />-->
     </node>
     
     <!-- The coil signal simulator - required when not using the real robot -->
@@ -81,15 +81,19 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
     <!-- The HRATC judge -->
     <node name="judge" pkg="hratc2015_framework"  type="judge"
       output="screen">
-     <param name="~config" value="$(find hratc2015_framework)/src/config/config.ini"/>    
-     <param name="~isSimulation" value="true"/>    
+      <rosparam file="$(find hratc2015_framework)/settings/minefield.yaml" command="load" />
+<!--      <rosparam file="$(find hratc2015_framework)/settings/minefield_not_rectangular.yaml" command="load" />-->
+      <rosparam file="$(find hratc2015_framework)/settings/judge.yaml" command="load" />
+      <param name="~isSimulation" value="false"/>    
     </node>
 
     <!-- The minefield viewer - updates an occupancy grid displaying the covered area -->
     <node name="mineFieldViewer" pkg="hratc2015_framework"  type="mineFieldViewer"
       output="screen">
-     <param name="~config" value="$(find hratc2015_framework)/src/config/config.ini"/>    
-     <param name="~isSimulation" value="true"/>    
+      <rosparam file="$(find hratc2015_framework)/settings/minefield.yaml" command="load" />
+<!--      <rosparam file="$(find hratc2015_framework)/settings/minefield_not_rectangular.yaml" command="load" />-->
+      <rosparam file="$(find hratc2015_framework)/settings/judge.yaml" command="load" />
+      <param name="~isSimulation" value="true"/>    
     </node>
 
     <!-- Visualization in RVIZ -->

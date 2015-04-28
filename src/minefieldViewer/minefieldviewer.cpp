@@ -3,10 +3,10 @@
 #include <std_msgs/Float32.h>
 #include <geometry_msgs/Twist.h>
 #include <iostream>
-using std::cout;
-using std::endl;
-using std::cerr;
+#include <sstream>
+#include <queue>
 
+using namespace std;
 
 minefieldViewer::minefieldViewer() :
     mapNodeHandler(new ros::NodeHandle("~")),
@@ -37,13 +37,14 @@ minefieldViewer::minefieldViewer() :
     }
     cout << "Done" << endl;
 
-    // loading config file at $(hratc201X_framework)/src/config/config.ini)
-    string filename;
-    if(mapNodeHandler->getParam("config", filename)==false)
-    {
-        ROS_ERROR("Failed to get param 'config'");
-    }
-    config = new Config(filename);
+//    // loading config file at $(hratc201X_framework)/src/config/config.ini)
+//    string filename;
+//    if(mapNodeHandler->getParam("config", filename)==false)
+//    {
+//        ROS_ERROR("Failed to get param 'config'");
+//    }
+//    config = new Config(filename);
+    config = new Config(mapNodeHandler);
 
     // Loading grid with config file data 
     grid.info.resolution = config->resolution;  // float32
@@ -52,16 +53,100 @@ minefieldViewer::minefieldViewer() :
     // 0-100 -> selecting gray (50)
     grid.data.resize(grid.info.width*grid.info.height, 50);
     // setting origin 
-    grid.info.origin.position.x = -config->numCellsInX/2.0*grid.info.resolution;    // uint32
-    grid.info.origin.position.y = -config->numCellsInY/2.0*grid.info.resolution;   // uint32
+//    grid.info.origin.position.x = -config->numCellsInX/2.0*grid.info.resolution;    // uint32
+//    grid.info.origin.position.y = -config->numCellsInY/2.0*grid.info.resolution;   // uint32
+    grid.info.origin.position.x = config->lowerBound.x();    // uint32
+    grid.info.origin.position.y = config->lowerBound.y();    // uint32
+
+    initializeGrid();
+
     // detection radius in cells
     cellRadius = config->detectionMinDist/grid.info.resolution;
 
     // start tf listeners -- one per coil
     for(int i=0; i<3;++i)
         listeners.push_back(new tf::TransformListener);
+
+    ROS_INFO("Minefieldviewer -- Done");
 }
 
+void minefieldViewer::initializeGrid()
+{
+    int h = grid.info.height;
+    int w = grid.info.width;
+    int count=0;
+
+    // Rasterize boundaries of the minefield -- DDA algorithm
+    for(int c=0; c<config->minefieldCorners.size(); ++c){
+        int begin = c;
+        int end = (c+1)%config->minefieldCorners.size();
+
+        int x0 = round((config->minefieldCorners[begin].x() - grid.info.origin.position.x)/grid.info.resolution);
+        int y0 = round((config->minefieldCorners[begin].y() - grid.info.origin.position.y)/grid.info.resolution);
+        int x1 = round((config->minefieldCorners[end].x()   - grid.info.origin.position.x)/grid.info.resolution);
+        int y1 = round((config->minefieldCorners[end].y()   - grid.info.origin.position.y)/grid.info.resolution);
+
+        double difX = x1-x0;
+        double difY = y1-y0;
+        double dist = max(fabs(difX),fabs(difY));
+
+        double deltaX = difX/dist;
+        double deltaY = difY/dist;
+
+        double i=x0;
+        double j=y0;
+        for(int k=0;k<(int)dist;k++){
+            i+=deltaX;
+            j+=deltaY;
+
+            if(grid.data[(int)i+(int)j*w] != 100)
+                count++;
+
+            grid.data[(int)i+(int)j*w] = 100;
+        }
+    }
+
+    // Mark area outside minefield -- floodfill
+    queue<pair<int,int> > cellsQueue;
+    cellsQueue.push(pair<int,int>(0,0));
+    grid.data[0+0*w] = 100;
+
+    while(!cellsQueue.empty()){
+        int i=cellsQueue.front().first;
+        int j=cellsQueue.front().second;
+        cellsQueue.pop();
+
+        count++;
+
+        if(i>0){
+            if(grid.data[(i-1)+j*w] != 100){
+                grid.data[(i-1)+j*w] = 100;
+                cellsQueue.push(pair<int,int>(i-1,j));
+            }
+        }
+        if(i<w-1){
+            if(grid.data[(i+1)+j*w] != 100){
+                grid.data[(i+1)+j*w] = 100;
+                cellsQueue.push(pair<int,int>(i+1,j));
+            }
+        }
+        if(j>0){
+            if(grid.data[i+(j-1)*w] != 100){
+                grid.data[i+(j-1)*w] = 100;
+                cellsQueue.push(pair<int,int>(i,j-1));
+            }
+        }
+        if(j<h-1){
+            if(grid.data[i+(j+1)*w] != 100){
+                grid.data[i+(j+1)*w] = 100;
+                cellsQueue.push(pair<int,int>(i,j+1));
+            }
+        }
+
+    }
+
+    totalValidCells = h*w - count;
+}
 
 void minefieldViewer::checkStart(const std_msgs::Bool::ConstPtr &flag)
 {
@@ -93,7 +178,8 @@ void minefieldViewer::run()
         grid.header.frame_id = "/minefield";
         grid.header.stamp = ros::Time::now();
         //plain grid height is set to the last coil z position
-        grid.info.origin.position.z = transform.getOrigin().z()-0.30; 
+//        grid.info.origin.position.z = 0;
+        grid.info.origin.position.z = transform.getOrigin().z()-0.30;
         // Publish the view of the coverage area
         map_pub.publish(grid);
 
@@ -101,7 +187,8 @@ void minefieldViewer::run()
 
         //publish the rate of coverage area
         std_msgs::Float32 rate;
-        rate.data = coverage/float(grid.info.width*grid.info.height);
+//        rate.data = coverage/float(grid.info.width*grid.info.height);
+        rate.data = coverage/totalValidCells;
         cover_pub.publish( rate );
 
         r.sleep();
@@ -132,8 +219,10 @@ void minefieldViewer::fillGrid()
     
 
     // get origin in cells
-    double w = round(transform.getOrigin().x()/grid.info.resolution + grid.info.width/ 2.0);
-    double h = round(transform.getOrigin().y()/grid.info.resolution + grid.info.height/2.0);
+//    double w = round(transform.getOrigin().x()/grid.info.resolution + grid.info.width/ 2.0);
+//    double h = round(transform.getOrigin().y()/grid.info.resolution + grid.info.height/2.0);
+    double w = round((transform.getOrigin().x()-grid.info.origin.position.x)/grid.info.resolution);
+    double h = round((transform.getOrigin().y()-grid.info.origin.position.y)/grid.info.resolution);
 
     for(int x=-cellRadius; x<+cellRadius; ++x)
     {
@@ -148,6 +237,9 @@ void minefieldViewer::fillGrid()
                 // setting color to scanned (white)
                 if( sqrt(x*x+y*y) <= cellRadius )
                 {
+                    if(grid.data[(h+y)*grid.info.width + w+x]==100)
+                        continue;
+
                     // count new cell
                     if(grid.data[(h+y)*grid.info.width + w+x]!=0)
                         coverage+=1;

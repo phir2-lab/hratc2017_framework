@@ -1,57 +1,184 @@
 #include "config.h"
 
-#include <ros/ros.h>
-#include <ros/package.h>
-#include <errno.h>
-#include <string.h>
 #include <sstream>
-#include <iostream>
-
-#include <boost/property_tree/ptree.hpp>
-#include <boost/property_tree/ini_parser.hpp>
-#include <boost/algorithm/string.hpp>
+#include <angles/angles.h>
+#include <UTMConverter/UTMConverter.h>
 
 using namespace std;
 
-Config::Config(string name)
+Config::Config(ros::NodeHandle *nh) : n(nh)
 {
-    // Get full path of the config file
-//    string filename = ros::package::getPath("hratc2015_framework");
-//    filename += "/src/config/" + name;
-    cout << "Config: " << name << endl;
+    tf::Vector3 pos = getMinefieldOrigin();
+    ROS_INFO("Config -- Minefield Center x:%lf y:%lf z:%lf", pos.x(), pos.y(), pos.z());
 
-    // Open .ini file
-    boost::property_tree::ptree pt;
-    boost::property_tree::ini_parser::read_ini(name.c_str(), pt);
+    readMinefieldCorners();
 
-    // Read map dimensions
-    width = pt.get<float>("MapDimensions.width");
-    height = pt.get<float>("MapDimensions.height");
-    resolution = pt.get<float>("MapDimensions.resolution");
-    numCellsInX = width/resolution;
-    numCellsInY = height/resolution;
+    readMinesPositions();
 
-    // Read mines information
-    numMines = pt.get<int>("Mines.nummines");
-    randomMines = pt.get<bool>("Mines.randommines");
-    detectionMinDist = pt.get<float>("Mines.detectionmindist");
-    explosionMaxDist = pt.get<float>("Mines.explosionmaxdist");
-
-    if(randomMines == false){
-        // Read mines positions
-        string input = pt.get<string>("Mines.minespositions");
-        string delimiters("|,:");
-        vector<string> parts;
-        boost::split(parts, input, boost::is_any_of(delimiters));
-        for(int i=0; i<parts.size(); i+=2)
-            minesPositions.push_back(Position2D(atof(parts[i].c_str()),atof(parts[i+1].c_str())));
-
-        cout << "Mines Positions ";
-        for(int i=0; i<minesPositions.size(); i++){
-            cout << minesPositions[i] << ' ';
-        }
-        cout << endl;
-    }
-
+    readJudgeInformation();
 }
 
+tf::Vector3 Config::getMinefieldOrigin()
+{
+    tf::StampedTransform transform;
+    tf::Vector3 origin;
+
+    bool success;
+    while(!success){
+        try{
+            success=true;
+            // faster lookup transform so far
+            listener.lookupTransform("/odom", "/minefield", ros::Time(0), transform);
+
+        }
+        catch (tf::TransformException &ex) {
+            success=false;
+            ros::Duration(0.05).sleep();
+        }
+    }
+
+    origin[0] = transform.getOrigin().x();
+    origin[1] = transform.getOrigin().y();
+    origin[2] = transform.getOrigin().z();
+    return origin;
+}
+
+void Config::readMinefieldCorners()
+{
+    string s, s1, s2, s3;
+    stringstream ss;
+
+    // Get minefield corners
+    int count=1;
+    while(true){
+        ss.str("");
+        ss << count;
+        s = "minefield/corner"+ss.str();
+
+        if(!n->hasParam(s))
+            break;
+
+        // Convert the GPS coordinates into UTM coordinates
+        UTMCoordinates utm;
+        sensor_msgs::NavSatFix fix;
+
+        s1 = s+"/latitude";
+        s2 = s+"/longitude";
+        s3 = s+"/altitude";
+
+        if(!n->hasParam(s1) && !n->hasParam(s2) && !n->hasParam(s3))
+        {
+            ROS_FATAL("Config -- Unable to start without the 4 corners of the minefield!!!");
+            ROS_BREAK();
+        }
+        n->getParam(s1, fix.latitude);
+        n->getParam(s2, fix.longitude);
+        n->getParam(s3, fix.altitude);
+
+        UTMConverter::latitudeAndLongitudeToUTMCoordinates(fix, utm);
+        minefieldCorners.push_back(tf::Vector3(utm.easting, utm.northing, fix.altitude));
+
+        count++;
+    }
+
+//    ROS_INFO("Config -- Minefield Corners in /odom frame");
+//    for(int i=0; i<minefieldCorners.size(); i++)
+//        ROS_INFO("Config -- Corner%d x:%lf y:%lf z:%lf", i+1, minefieldCorners[i].x(), minefieldCorners[i].y(), minefieldCorners[i].z());
+
+    // Convert minefield corners in relation to tf/minefield frame
+    for(int i=0; i<minefieldCorners.size(); i++){
+        geometry_msgs::PointStamped pointIn, pointOut;
+        pointIn.header.frame_id = "/odom";
+        pointIn.point.x = minefieldCorners[i].x();
+        pointIn.point.y = minefieldCorners[i].y();
+        pointIn.point.z = minefieldCorners[i].z();
+
+        try
+        {
+            listener.transformPoint("/minefield", pointIn, pointOut);
+        }
+        catch (tf::TransformException &ex)
+        {
+            ROS_WARN("Failure %s\n", ex.what());
+        }
+
+        minefieldCorners[i][0] = pointOut.point.x;
+        minefieldCorners[i][1] = pointOut.point.y;
+        minefieldCorners[i][2] = pointOut.point.z;
+    }
+
+    ROS_INFO("Config -- Minefield Corners in /minefield frame");
+    for(int i=0; i<minefieldCorners.size(); i++)
+        ROS_INFO("Config -- Corner%d x:%lf y:%lf z:%lf", i+1, minefieldCorners[i].x(), minefieldCorners[i].y(), minefieldCorners[i].z());
+
+    // Find boundaries
+    lowerBound=upperBound=minefieldCorners[0];
+    for(int i=1; i<minefieldCorners.size(); ++i){
+        lowerBound[0] = min(minefieldCorners[i].x(),lowerBound.x());
+        lowerBound[1] = min(minefieldCorners[i].y(),lowerBound.y());
+        lowerBound[2] = min(minefieldCorners[i].z(),lowerBound.z());
+        upperBound[0] = max(minefieldCorners[i].x(),upperBound.x());
+        upperBound[1] = max(minefieldCorners[i].y(),upperBound.y());
+        upperBound[2] = max(minefieldCorners[i].z(),upperBound.z());
+    }
+    lowerBound[0] -= 0.2;
+    lowerBound[1] -= 0.2;
+    upperBound[0] += 0.2;
+    upperBound[1] += 0.2;
+
+    width = upperBound.x()-lowerBound.x();
+    height = upperBound.y()-lowerBound.y();
+    ROS_INFO("Config -- Minefield xi:%lf xf:%lf yi:%lf yf:%lf = w:%lf h:%lf",
+             lowerBound.x(), upperBound.x(), lowerBound.y(), upperBound.y(), width, height);
+}
+
+void Config::readMinesPositions()
+{
+    if(!n->hasParam("judge/num_mines") && !n->hasParam("judge/mines_positions"))
+    {
+        ROS_FATAL("Config -- Unable to start without the positions of the mines!!!");
+        ROS_BREAK();
+    }
+
+    // Read mines information
+    n->getParam("judge/num_mines", numMines);
+
+    if(randomMines == false){
+        string s;
+        stringstream ss;
+        double x, y;
+
+        // Read mines positions
+        for(int i=1; i<=numMines; i++){
+            ss.str("");
+            ss << i;
+            s="judge/mines_positions/mine"+ss.str()+"/x";
+            n->getParam(s.c_str(), x);
+            s="judge/mines_positions/mine"+ss.str()+"/y";
+            n->getParam(s.c_str(), y);
+            minesPositions.push_back(Position2D(x,y));
+        }
+
+//        ROS_INFO("Config -- Mines positions in /minefield frame");
+//        for(int i=0; i<minesPositions.size(); i++)
+//            ROS_INFO("Config -- Mine%d x:%lf y:%lf", i+1, minesPositions[i].x, minesPositions[i].y);
+    }
+}
+
+void Config::readJudgeInformation()
+{
+    string s;
+
+    // Read judge information - use default if not available
+    s = "judge/map_resolution";
+    n->param<double>(s, resolution, 0.05);
+    s = "judge/random_mines";
+    n->param<bool>(s, randomMines, false);
+    s = "judge/detection_min_dist";
+    n->param<double>(s, detectionMinDist, 0.5);
+    s = "judge/explosion_max_dist";
+    n->param<double>(s, explosionMaxDist, 0.3);
+
+    numCellsInX = width/resolution;
+    numCellsInY = height/resolution;
+}

@@ -16,7 +16,7 @@ using namespace std;
 #include "robotPose.h"
 #include "../config/config.h"
 
-enum mineType { PROPERLY_DETECTED, WRONGLY_DETECTED, KNOWN_EXPLODED, UNKNOWN_EXPLODED};
+enum mineType { PROPERLY_DETECTED, WRONGLY_DETECTED, KNOWN_EXPLODED, UNKNOWN_EXPLODED, VISITED_UNDETECTED, NOTVISITED_UNDETECTED};
 
 class Judge
 {
@@ -47,14 +47,19 @@ class Judge
         ros::Publisher pub_wronglyDetectedMinesMarker;
         ros::Publisher pub_knownExplodedMinesMarker;
         ros::Publisher pub_unknownExplodedMinesMarker;
+        ros::Publisher pub_visitedUndetectedMinesMarker;
+        ros::Publisher pub_notVisitedUndetectedMinesMarker;
         visualization_msgs::MarkerArray trueMines;
         visualization_msgs::MarkerArray properlyDetectedMines;
         visualization_msgs::MarkerArray wronglyDetectedMines;
         visualization_msgs::MarkerArray knownExplodedMines;
         visualization_msgs::MarkerArray unknownExplodedMines;
+        visualization_msgs::MarkerArray visitedUndetectedMines;
+        visualization_msgs::MarkerArray notVisitedUndetectedMines;
         vector<bool> detected;
         vector<bool> exploded;
         vector<int> unresolved;
+
 
         ros::Publisher pub_robotPath;
         visualization_msgs::Marker robotpath;
@@ -64,11 +69,17 @@ class Judge
         ros::Publisher pub_textWronglyDetectedMines;
         ros::Publisher pub_textKnownExplodedMines;
         ros::Publisher pub_textUnknownExplodedMines;
+        ros::Publisher pub_textVisitedUndetectedMines;
+        ros::Publisher pub_textNotVisitedUndetectedMines;
+        ros::Publisher pub_textCoverage;
+        visualization_msgs::Marker textCoverage;
         visualization_msgs::Marker textElapsedTime;
         visualization_msgs::Marker textProperlyDetectedMines;
         visualization_msgs::Marker textWronglyDetectedMines;
         visualization_msgs::Marker textKnownExplodedMines;
         visualization_msgs::Marker textUnknownExplodedMines;
+        visualization_msgs::Marker textVisitedUndetectedMines;
+        visualization_msgs::Marker textNotVisitedUndetectedMines;
 
         ros::WallTime start, last, current;
 

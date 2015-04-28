@@ -4,6 +4,7 @@
 #include <nav_msgs/OccupancyGrid.h>
 #include <tf/transform_listener.h>
 #include <geometry_msgs/Twist.h>
+#include <visualization_msgs/Marker.h>
 #include <std_msgs/Bool.h>
 #include "../config/config.h"
 
@@ -36,6 +37,8 @@ private:
     void fillGrid();
     tf::StampedTransform transform;
     vector< tf::TransformListener* > listeners;
+
+    void initializeGrid();
     
     // radius in cells
     float cellRadius;
@@ -45,6 +48,7 @@ private:
 
     // coverage rate
     float coverage;
+    float totalValidCells;
 
     void checkStart(const std_msgs::Bool::ConstPtr &flag);
     bool canStart;

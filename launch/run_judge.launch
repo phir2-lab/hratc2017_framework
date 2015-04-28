@@ -1,0 +1,26 @@
+<launch>
+
+    <!-- The minefield frame -->
+    <node name="minefield_static_tf_publisher" pkg="hratc2015_framework" type="minefield_static_tf_publisher" output="screen">
+      <rosparam file="$(find hratc2015_framework)/settings/minefield.yaml" command="load" />
+    </node>
+
+    <!-- The HRATC judge -->
+    <node name="judge" pkg="hratc2015_framework" type="judge" output="screen">
+      <rosparam file="$(find hratc2015_framework)/settings/minefield.yaml" command="load" />
+      <rosparam file="$(find hratc2015_framework)/settings/judge.yaml" command="load" />
+      <param name="~isSimulation" value="false"/>    
+    </node>
+
+    <!-- The minefield viewer - updates an occupancy grid displaying the covered area -->
+    <node name="mineFieldViewer" pkg="hratc2015_framework"  type="mineFieldViewer"
+      output="screen">
+      <rosparam file="$(find hratc2015_framework)/settings/minefield.yaml" command="load" />
+      <rosparam file="$(find hratc2015_framework)/settings/judge.yaml" command="load" />
+      <param name="~isSimulation" value="false"/>    
+    </node>
+
+    <!-- Visualization in RVIZ -->
+    <node name="rviz" pkg="rviz" type="rviz" args="-d $(find hratc2015_framework)/hratc.rviz" /> 
+    
+</launch>

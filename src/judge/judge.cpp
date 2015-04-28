@@ -11,6 +11,7 @@ using namespace std;
 
 Judge::Judge()
 {
+
     n = new ros::NodeHandle("~");
     canStart = false;
 
@@ -36,14 +37,15 @@ Judge::Judge()
         ros::spinOnce();
         rate->sleep();
     }
-    cout << "Done" << endl;
+    cout << "Done" << endl; cout.flush();
 
-    string filename;
-    if(n->getParam("config", filename)==false)
-    {
-        ROS_ERROR("Failed to get param 'config'");
-    }
-    config = new Config(filename);
+//    string filename;
+//    if(n->getParam("config", filename)==false)
+//    {
+//        ROS_ERROR("Failed to get param 'config'");
+//    }
+//    config = new Config(filename);
+    config = new Config(n);
 
     robotPose = new RobotPose("/minefield","/robot_pose_ekf/odom");
 
@@ -121,6 +123,8 @@ void Judge::initializeMinesMarkers()
     pub_wronglyDetectedMinesMarker = n->advertise<visualization_msgs::MarkerArray>("wronglyDetectedMines_marker", 1);
     pub_knownExplodedMinesMarker = n->advertise<visualization_msgs::MarkerArray>("knownExplodedMines_marker", 1);
     pub_unknownExplodedMinesMarker = n->advertise<visualization_msgs::MarkerArray>("unknownExplodedMines_marker", 1);
+    pub_visitedUndetectedMinesMarker = n->advertise<visualization_msgs::MarkerArray>("visitedUndetectedMines_marker", 1);
+    pub_notVisitedUndetectedMinesMarker = n->advertise<visualization_msgs::MarkerArray>("notVisitedUndetectedMines_marker", 1);
 
     // Initialize true mines markers
     trueMines.markers.resize(config->numMines);
@@ -242,6 +246,27 @@ void Judge::addMineMarker(mineType mtype, Position2D pos)
             mine.color.g = 0.3f;
             mine.color.b = 0.0f;
             mine.color.a = 1.0;
+            break;
+        case VISITED_UNDETECTED:
+            array = &visitedUndetectedMines;
+            // Set the namespace.
+            mine.ns = "VUMines";
+            // Set the color -- YELLOW!
+            mine.color.r = 1.0f;
+            mine.color.g = 1.0f;
+            mine.color.b = 0.0f;
+            mine.color.a = 1.0;
+            break;
+        case NOTVISITED_UNDETECTED:
+            array = &notVisitedUndetectedMines;
+            // Set the namespace.
+            mine.ns = "NUMines";
+            // Set the color -- DARK YELLOW!
+            mine.color.r = 0.4f;
+            mine.color.g = 0.4f;
+            mine.color.b = 0.0f;
+            mine.color.a = 1.0;
+            break;
     }
 
     // Set the id for this marker.  This serves to create a unique ID
@@ -257,17 +282,17 @@ void Judge::updateMinesMarkers()
 
     for(int i=0; i<trueMines.markers.size(); i++){
         trueMines.markers[i].header.stamp = ros::Time::now();
-        trueMines.markers[i].pose.position.z = robotZ-0.2;
+        trueMines.markers[i].pose.position.z = robotZ-0.4;
     }
 
     for(int i=0; i<properlyDetectedMines.markers.size(); i++){
         properlyDetectedMines.markers[i].header.stamp = ros::Time::now();
-        properlyDetectedMines.markers[i].pose.position.z = robotZ-0.1;
+        properlyDetectedMines.markers[i].pose.position.z = robotZ-0.2;
     }
 
     for(int i=0; i<wronglyDetectedMines.markers.size(); i++){
         wronglyDetectedMines.markers[i].header.stamp = ros::Time::now();
-        wronglyDetectedMines.markers[i].pose.position.z = robotZ-0.1;
+        wronglyDetectedMines.markers[i].pose.position.z = robotZ-0.2;
     }
 
     for(int i=0; i<knownExplodedMines.markers.size(); i++){
@@ -280,11 +305,23 @@ void Judge::updateMinesMarkers()
         unknownExplodedMines.markers[i].pose.position.z = robotZ-0.1;
     }
 
+    for(int i=0; i<visitedUndetectedMines.markers.size(); i++){
+        visitedUndetectedMines.markers[i].header.stamp = ros::Time::now();
+        visitedUndetectedMines.markers[i].pose.position.z = robotZ-0.3;
+    }
+
+    for(int i=0; i<notVisitedUndetectedMines.markers.size(); i++){
+        notVisitedUndetectedMines.markers[i].header.stamp = ros::Time::now();
+        notVisitedUndetectedMines.markers[i].pose.position.z = robotZ-0.35;
+    }
+
     pub_trueMinesMarker.publish(trueMines);
     pub_properlyDetectedMinesMarker.publish(properlyDetectedMines);
     pub_wronglyDetectedMinesMarker.publish(wronglyDetectedMines);
     pub_knownExplodedMinesMarker.publish(knownExplodedMines);
     pub_unknownExplodedMinesMarker.publish(unknownExplodedMines);
+    pub_visitedUndetectedMinesMarker.publish(visitedUndetectedMines);
+    pub_notVisitedUndetectedMinesMarker.publish(notVisitedUndetectedMines);
 }
 
 void Judge::checkMineDetection(const geometry_msgs::PoseStamped::ConstPtr & guess)
@@ -354,15 +391,16 @@ void Judge::checkUnresolvedMines(const nav_msgs::OccupancyGrid::ConstPtr & grid)
         cout << w << ' ' << h << endl;
         for(int i=0; i<unresolved.size();i++){
             // check if region containing mine was visited
-            cout << grid->info.origin.position.x << ' ' << grid->info.origin.position.y << endl;
+//            cout << grid->info.origin.position.x << ' ' << grid->info.origin.position.y << endl;
 
-            int x = (-grid->info.origin.position.x + trueMines.markers[unresolved[i]].pose.position.x)/grid->info.resolution;
-            int y = (-grid->info.origin.position.y + trueMines.markers[unresolved[i]].pose.position.y)/grid->info.resolution;
-            int occ = grid->data[x + y*w];
+//            int x = (-grid->info.origin.position.x + trueMines.markers[unresolved[i]].pose.position.x)/grid->info.resolution;
+//            int y = (-grid->info.origin.position.y + trueMines.markers[unresolved[i]].pose.position.y)/grid->info.resolution;
+//            int occ = grid->data[x + y*w];
 
-            cout << "x:" << x << " y:" << y << " occ:" << occ << endl;
+//            cout << "x:" << x << " y:" << y << " occ:" << occ << endl;
 
-            if(occ==0){ // visited
+            if(detected[unresolved[i]]){ // detected
+//            if(occ==0){ // visited
                 cout << "Exploded Known Mine!!!!" << endl;
                 addMineMarker(KNOWN_EXPLODED,Position2D(trueMines.markers[unresolved[i]].pose.position.x,trueMines.markers[unresolved[i]].pose.position.y));
             }else{
@@ -372,6 +410,27 @@ void Judge::checkUnresolvedMines(const nav_msgs::OccupancyGrid::ConstPtr & grid)
         }
 
         unresolved.clear();
+    }
+
+    int w = grid->info.width;
+    int h = grid->info.height;
+
+    // check undetected
+    visitedUndetectedMines.markers.clear();
+    notVisitedUndetectedMines.markers.clear();
+
+    for(int i=0; i<detected.size();i++){
+        if(detected[i]==false){
+            int x = (-grid->info.origin.position.x + trueMines.markers[i].pose.position.x)/grid->info.resolution;
+            int y = (-grid->info.origin.position.y + trueMines.markers[i].pose.position.y)/grid->info.resolution;
+            int occ = grid->data[x + y*w];
+
+            if(occ==0){ // visited
+                addMineMarker(VISITED_UNDETECTED,Position2D(trueMines.markers[i].pose.position.x,trueMines.markers[i].pose.position.y));
+            }else{
+                addMineMarker(NOTVISITED_UNDETECTED,Position2D(trueMines.markers[i].pose.position.x,trueMines.markers[i].pose.position.y));
+            }
+        }
     }
 }
 
@@ -387,7 +446,10 @@ void Judge::initializeScoreboard()
     pub_textWronglyDetectedMines = n->advertise<visualization_msgs::Marker>("scoreboard_wronglyDetectedMines", 1);
     pub_textKnownExplodedMines = n->advertise<visualization_msgs::Marker>("scoreboard_knownExplodedMines", 1);
     pub_textUnknownExplodedMines = n->advertise<visualization_msgs::Marker>("scoreboard_unknownExplodedMines", 1);
+    pub_textVisitedUndetectedMines = n->advertise<visualization_msgs::Marker>("scoreboard_visitedUndetectedMines", 1);
+    pub_textNotVisitedUndetectedMines = n->advertise<visualization_msgs::Marker>("scoreboard_notVisitedUndetectedMines", 1);
     pub_textElapsedTime = n->advertise<visualization_msgs::Marker>("scoreboard_elapsedTime", 1);
+    pub_textCoverage = n->advertise<visualization_msgs::Marker>("scoreboard_coverage", 1);
 
     // Initialize default text marker
     visualization_msgs::Marker tempMarker;
@@ -396,8 +458,10 @@ void Judge::initializeScoreboard()
     tempMarker.id = 0;
     tempMarker.type = visualization_msgs::Marker::TEXT_VIEW_FACING;
     tempMarker.action = visualization_msgs::Marker::ADD;
-    tempMarker.pose.position.x = 0.0;
-    tempMarker.pose.position.y = config->height/2.0;
+//    tempMarker.pose.position.x = 0.0;
+//    tempMarker.pose.position.y = config->height/2.0;
+    tempMarker.pose.position.x = (config->lowerBound.x()+config->upperBound.x())/2.0;
+    tempMarker.pose.position.y = config->upperBound.y();
     tempMarker.pose.position.z = 0.0;
     tempMarker.pose.orientation.x = 0.0;
     tempMarker.pose.orientation.y = 0.0;
@@ -414,6 +478,9 @@ void Judge::initializeScoreboard()
     textWronglyDetectedMines = tempMarker;
     textKnownExplodedMines = tempMarker;
     textUnknownExplodedMines = tempMarker;
+    textVisitedUndetectedMines = tempMarker;
+    textNotVisitedUndetectedMines = tempMarker;
+    textCoverage = tempMarker;
 
     // Initialize elapsed mine texts -- GREEN!
     textElapsedTime.ns = "scoreboard_ElapsedTime";
@@ -421,7 +488,18 @@ void Judge::initializeScoreboard()
     textElapsedTime.color.g = 0.0f;
     textElapsedTime.color.b = 0.0f;
 //    textElapsedTime.pose.position.x -= 3.0;
-    textElapsedTime.pose.position.y = -config->height/2.0 - 1.2;
+    textElapsedTime.pose.position.y = config->lowerBound.y() - 1.2;
+
+    // Initialize coverage texts -- GREEN!
+    textCoverage.color.r = 0.0f;
+    textCoverage.color.g = 0.0f;
+    textCoverage.color.b = 0.0f;
+//    textCoverage.pose.position.x -= 3.0;
+    textCoverage.pose.position.y = config->lowerBound.y() - 2.0;
+
+    // PD --- WD
+    // VU --- NU
+    // KE --- UE
 
     // Initialize properly detected mines texts -- GREEN!
     textProperlyDetectedMines.ns = "scoreboard_PDMines";
@@ -429,30 +507,46 @@ void Judge::initializeScoreboard()
     textProperlyDetectedMines.color.g = 0.7f;
     textProperlyDetectedMines.color.b = 0.0f;
     textProperlyDetectedMines.pose.position.x -= 3.0;
-    textProperlyDetectedMines.pose.position.y += 1.2;
+    textProperlyDetectedMines.pose.position.y += 1.8;
 
     // Initialize wrongly detected mines texts -- MAGENTA!
     textWronglyDetectedMines.ns = "scoreboard_WDMines";
     textWronglyDetectedMines.color.r = 0.701f;
     textWronglyDetectedMines.color.g = 0.0f;
     textWronglyDetectedMines.color.b = 0.909f;
-    textWronglyDetectedMines.pose.position.x -= 3.0;
-    textWronglyDetectedMines.pose.position.y += 0.6;
+    textWronglyDetectedMines.pose.position.x += 3.0;
+    textWronglyDetectedMines.pose.position.y += 1.8;
+
+    // Initialize visited undetected mines texts -- YELLOW!
+    textVisitedUndetectedMines.ns = "scoreboard_VUMines";
+    textVisitedUndetectedMines.color.r = 1.0f;
+    textVisitedUndetectedMines.color.g = 1.0f;
+    textVisitedUndetectedMines.color.b = 0.0f;
+    textVisitedUndetectedMines.pose.position.x -= 3.0;
+    textVisitedUndetectedMines.pose.position.y += 1.2;
+
+    // Initialize not visited undetected mines texts -- DARK YELLOW!
+    textNotVisitedUndetectedMines.ns = "scoreboard_NUMines";
+    textNotVisitedUndetectedMines.color.r = 0.6f;
+    textNotVisitedUndetectedMines.color.g = 0.6f;
+    textNotVisitedUndetectedMines.color.b = 0.0f;
+    textNotVisitedUndetectedMines.pose.position.x += 3.0;
+    textNotVisitedUndetectedMines.pose.position.y += 1.2;
 
     // Initialize known exploded mines texts -- RED!
     textKnownExplodedMines.ns = "scoreboard_KEMines";
     textKnownExplodedMines.color.r = 1.0f;
     textKnownExplodedMines.color.g = 0.0f;
     textKnownExplodedMines.color.b = 0.0f;
-    textKnownExplodedMines.pose.position.x += 3.5;
-    textKnownExplodedMines.pose.position.y += 1.2;
+    textKnownExplodedMines.pose.position.x -= 3.0;
+    textKnownExplodedMines.pose.position.y += 0.6;
 
     // Initialize unknown exploded mines texts -- ORANGE!
     textUnknownExplodedMines.ns = "scoreboard_UEMines";
     textUnknownExplodedMines.color.r = 1.0f;
     textUnknownExplodedMines.color.g = 0.3f;
     textUnknownExplodedMines.color.b = 0.0f;
-    textUnknownExplodedMines.pose.position.x += 3.21;
+    textUnknownExplodedMines.pose.position.x += 3.0;
     textUnknownExplodedMines.pose.position.y += 0.6;
 }
 
@@ -466,6 +560,12 @@ void Judge::updateScoreboard()
     int mins = elapsed/60;
     ss << "Time: " << setfill('0') << setw(2) << mins << ':' << setfill('0') << setw(2) << secs;
     textElapsedTime.text=ss.str();
+    ss.str("");
+
+    textCoverage.header.stamp = ros::Time::now();
+    ss << "Coverage: " << setfill('0') << setw(3) << coverageRate*100.0 << "%";
+    textCoverage.text=ss.str();
+    pub_textCoverage.publish(textCoverage);
     ss.str("");
 
     textProperlyDetectedMines.header.stamp = ros::Time::now();
@@ -488,13 +588,25 @@ void Judge::updateScoreboard()
     textUnknownExplodedMines.text=ss.str();
     ss.str("");
 
+    textVisitedUndetectedMines.header.stamp = ros::Time::now();
+    ss << "Visited Undetected: " << visitedUndetectedMines.markers.size();
+    textVisitedUndetectedMines.text=ss.str();
+    ss.str("");
+
+    textNotVisitedUndetectedMines.header.stamp = ros::Time::now();
+    ss << "Not Visited Undetected: " << notVisitedUndetectedMines.markers.size();
+    textNotVisitedUndetectedMines.text=ss.str();
+    ss.str("");
+
     pub_textElapsedTime.publish(textElapsedTime);
+    pub_textCoverage.publish(textCoverage);
     pub_textProperlyDetectedMines.publish(textProperlyDetectedMines);
     pub_textWronglyDetectedMines.publish(textWronglyDetectedMines);
     pub_textKnownExplodedMines.publish(textKnownExplodedMines);
     pub_textUnknownExplodedMines.publish(textUnknownExplodedMines);
+    pub_textVisitedUndetectedMines.publish(textVisitedUndetectedMines);
+    pub_textNotVisitedUndetectedMines.publish(textNotVisitedUndetectedMines);
 }
-
 
 void Judge::initializeRobotPath()
 {
@@ -531,6 +643,8 @@ void Judge::saveLog()
     logFile << "wronglyDetectedMines: " << wronglyDetectedMines.markers.size() << endl;
     logFile << "knownExplodedMines: " << knownExplodedMines.markers.size() << endl;
     logFile << "unknownExplodedMines: " << unknownExplodedMines.markers.size() << endl;
+    logFile << "visitedUndetectedMines: " << visitedUndetectedMines.markers.size() << endl;
+    logFile << "notVisitedUndetectedMines: " << notVisitedUndetectedMines.markers.size() << endl;
     logFile << "coverageRate: " << coverageRate << endl;
     logFile << endl;
 }
