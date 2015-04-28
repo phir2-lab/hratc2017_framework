@@ -2,7 +2,7 @@
 *
 * Software License Agreement (BSD License)
 *
-*  Copyright (c) 2014, ISR University of Coimbra.
+*  Copyright (c) 2015, ISR University of Coimbra.
 *  All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without
@@ -33,6 +33,7 @@
 *  POSSIBILITY OF SUCH DAMAGE.
 *
 * Author: Goncalo Cabrita on 21/04/2014
+* Updated: Baptiste Gil on 16/04/2015
 *
 * This software publishes a static transform between the world frame
 * and the minefield frame.
@@ -57,6 +58,7 @@
 #include <ros/ros.h>
 #include <tf/transform_broadcaster.h>
 #include <angles/angles.h>
+#include <visualization_msgs/MarkerArray.h>
 
 #include <UTMConverter/UTMConverter.h>
 
@@ -153,8 +155,54 @@ int main(int argc, char** argv)
     tf::Transform transform;
     transform.setOrigin( tf::Vector3(center.x(), center.y(), center.z()) );
     tf::Quaternion q;
-    q.setRPY(0.0, 0.0, atan2((corner4.y()+corner3.y())/2.0 - center.y(), (corner4.x()+corner3.x())/2.0 - center.x()));
+//    q.setRPY(0.0, 0.0, atan2((corner4.y()+corner3.y())/2.0 - center.y(), (corner4.x()+corner3.x())/2.0 - center.x()));
+    q.setRPY(0.0, 0.0, atan2((corner3.y()-corner2.y()),(corner3.x()-corner2.x())));
     transform.setRotation(q);
+
+    //Publish the corners
+    ros::Publisher corner_pub = n.advertise<visualization_msgs::MarkerArray>("corners", 10, true);
+
+    visualization_msgs::MarkerArray marker_corner_array;
+    int num_corners=4;
+    //Resize corners array
+    marker_corner_array.markers.resize(num_corners);
+
+    for (int count=0; count<num_corners; count++){
+
+        //Corners defintion
+        marker_corner_array.markers.at(count).header.frame_id=parent_frame;
+        marker_corner_array.markers.at(count).id = count;
+        marker_corner_array.markers.at(count).header.stamp = ros::Time::now();
+        marker_corner_array.markers.at(count).ns = "minefield_corners";
+        marker_corner_array.markers.at(count).action = visualization_msgs::Marker::ADD;
+        marker_corner_array.markers.at(count).pose.orientation.w = 1.0;
+        marker_corner_array.markers.at(count).type = visualization_msgs::Marker::CYLINDER;
+        // Corners size
+        marker_corner_array.markers.at(count).scale.x = 0.1;
+        marker_corner_array.markers.at(count).scale.y = 0.1;
+        marker_corner_array.markers.at(count).scale.z = 0.1;
+        // Corners color
+        marker_corner_array.markers.at(count).color.r = 1.0;
+        marker_corner_array.markers.at(count).color.g = 1.0;
+        marker_corner_array.markers.at(count).color.b = 1.0;
+        marker_corner_array.markers.at(count).color.a = 1.0;
+        marker_corner_array.markers.at(count).pose.position.z = center.z();
+    }
+    // Corners position
+    //Corner 1
+    marker_corner_array.markers.at(0).pose.position.x = corner1.x();
+    marker_corner_array.markers.at(0).pose.position.y = corner1.y();
+    //Corner 2
+    marker_corner_array.markers.at(1).pose.position.x = corner2.x();
+    marker_corner_array.markers.at(1).pose.position.y = corner2.y();
+    //Corner 3
+    marker_corner_array.markers.at(2).pose.position.x = corner3.x();
+    marker_corner_array.markers.at(2).pose.position.y = corner3.y();
+    //Corner 4
+    marker_corner_array.markers.at(3).pose.position.x = corner4.x();
+    marker_corner_array.markers.at(3).pose.position.y = corner4.y();
+
+    corner_pub.publish(marker_corner_array);
 
     // Publish the transformation at the desired rate!
     ros::Rate loop(rate);
@@ -162,6 +210,7 @@ int main(int argc, char** argv)
     {
         br.sendTransform(tf::StampedTransform(transform, ros::Time::now(), parent_frame, child_frame));
         ros::spinOnce();
+
         loop.sleep();
     }
     return 0;
