@@ -95,7 +95,7 @@ void minefieldViewer::initializeGrid()
 
         double i=x0;
         double j=y0;
-        for(int k=0;k<(int)dist;k++){
+        for(int k=0;k<=(int)dist;k++){
             i+=deltaX;
             j+=deltaY;
 
@@ -146,6 +146,7 @@ void minefieldViewer::initializeGrid()
     }
 
     totalValidCells = h*w - count;
+    cout << "h:" << h << " w:" << w << " count:" << count << "total: " << totalValidCells << endl;
 }
 
 void minefieldViewer::checkStart(const std_msgs::Bool::ConstPtr &flag)

@@ -5,6 +5,7 @@
 #include <ros/package.h>
 #include <tf/transform_broadcaster.h>
 #include <tf/transform_listener.h>
+#include <visualization_msgs/MarkerArray.h>
 
 #include <vector>
 #include <iostream>
@@ -42,6 +43,7 @@ class Config
         tf::Vector3 lowerBound;
         tf::Vector3 upperBound;
 
+
         double width;
         double height;
         double resolution;
@@ -61,8 +63,13 @@ class Config
 
         tf::Vector3 getMinefieldOrigin();
         void readMinefieldCorners();
+        void readMinefieldCornersFromTopic(const visualization_msgs::MarkerArray::ConstPtr & corners);
         void readJudgeInformation();
         void readMinesPositions();
+
+        bool canStart;
+        ros::Subscriber sub_corners;
+
 };
 
 #endif /* CONFIG_H */

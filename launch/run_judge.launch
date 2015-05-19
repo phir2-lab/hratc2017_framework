@@ -1,10 +1,5 @@
 <launch>
 
-    <!-- The minefield frame -->
-    <node name="minefield_static_tf_publisher" pkg="hratc2015_framework" type="minefield_static_tf_publisher" output="screen">
-      <rosparam file="$(find hratc2015_framework)/settings/minefield.yaml" command="load" />
-    </node>
-
     <!-- The HRATC judge -->
     <node name="judge" pkg="hratc2015_framework" type="judge" output="screen">
       <rosparam file="$(find hratc2015_framework)/settings/minefield.yaml" command="load" />

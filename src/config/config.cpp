@@ -3,19 +3,90 @@
 #include <sstream>
 #include <angles/angles.h>
 #include <UTMConverter/UTMConverter.h>
+#include <visualization_msgs/Marker.h>
 
 using namespace std;
 
 Config::Config(ros::NodeHandle *nh) : n(nh)
 {
+    canStart=false;
+    sub_corners = n->subscribe("/corners", 100, &Config::readMinefieldCornersFromTopic, this);
+
     tf::Vector3 pos = getMinefieldOrigin();
     ROS_INFO("Config -- Minefield Center x:%lf y:%lf z:%lf", pos.x(), pos.y(), pos.z());
 
-    readMinefieldCorners();
+    ros::Rate* rate = new ros::Rate(20);
+
+//    readMinefieldCorners();
+    while(!canStart){
+        ros::spinOnce();
+        rate->sleep();
+    }
 
     readMinesPositions();
 
     readJudgeInformation();
+}
+
+void Config::readMinefieldCornersFromTopic(const visualization_msgs::MarkerArray::ConstPtr & corners)
+{
+    if(canStart)
+        return;
+
+//    cout << corners->markers.size()<< endl;
+
+    for(int i=0; i<corners->markers.size(); i++){
+//        visualization_msgs::Marker& m = corners->markers[i];
+        minefieldCorners.push_back(tf::Vector3(corners->markers[i].pose.position.x, corners->markers[i].pose.position.y, corners->markers[i].pose.position.z));
+    }
+
+    // Convert minefield corners in relation to tf/minefield frame
+    for(int i=0; i<minefieldCorners.size(); i++){
+        geometry_msgs::PointStamped pointIn, pointOut;
+        pointIn.header.frame_id = "/odom";
+        pointIn.point.x = minefieldCorners[i].x();
+        pointIn.point.y = minefieldCorners[i].y();
+        pointIn.point.z = minefieldCorners[i].z();
+
+        try
+        {
+            listener.transformPoint("/minefield", pointIn, pointOut);
+        }
+        catch (tf::TransformException &ex)
+        {
+            ROS_WARN("Failure %s\n", ex.what());
+        }
+
+        minefieldCorners[i][0] = pointOut.point.x;
+        minefieldCorners[i][1] = pointOut.point.y;
+        minefieldCorners[i][2] = pointOut.point.z;
+    }
+
+    ROS_INFO("Config -- Minefield Corners in /minefield frame");
+    for(int i=0; i<minefieldCorners.size(); i++)
+        ROS_INFO("Config -- Corner%d x:%lf y:%lf z:%lf", i+1, minefieldCorners[i].x(), minefieldCorners[i].y(), minefieldCorners[i].z());
+
+    // Find boundaries
+    lowerBound=upperBound=minefieldCorners[0];
+    for(int i=1; i<minefieldCorners.size(); ++i){
+        lowerBound[0] = min(minefieldCorners[i].x(),lowerBound.x());
+        lowerBound[1] = min(minefieldCorners[i].y(),lowerBound.y());
+        lowerBound[2] = min(minefieldCorners[i].z(),lowerBound.z());
+        upperBound[0] = max(minefieldCorners[i].x(),upperBound.x());
+        upperBound[1] = max(minefieldCorners[i].y(),upperBound.y());
+        upperBound[2] = max(minefieldCorners[i].z(),upperBound.z());
+    }
+    lowerBound[0] -= 0.2;
+    lowerBound[1] -= 0.2;
+    upperBound[0] += 0.2;
+    upperBound[1] += 0.2;
+
+    width = upperBound.x()-lowerBound.x();
+    height = upperBound.y()-lowerBound.y();
+    ROS_INFO("Config -- Minefield xi:%lf xf:%lf yi:%lf yf:%lf = w:%lf h:%lf",
+             lowerBound.x(), upperBound.x(), lowerBound.y(), upperBound.y(), width, height);
+
+    canStart = true;
 }
 
 tf::Vector3 Config::getMinefieldOrigin()
