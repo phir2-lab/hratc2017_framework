@@ -49,14 +49,14 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
     			<visual>
       				<origin xyz="0 0 0" rpy="0 0 0" />
       				<geometry>
-					<mesh filename="package://hratc2015_framework/models/fsr_husky_parts/tilt_base_link.STL" />
+					<mesh filename="package://hratc2016_framework/models/fsr_husky_parts/tilt_base_link.STL" />
      	 			</geometry>
       				<material name="Black" />
     			</visual>
     			<collision>
       				<origin xyz="0 0 0" rpy="0 0 0" />
       				<geometry>
-					<mesh filename="package://hratc2015_framework/models/fsr_husky_parts/tilt_base_link.STL" />
+					<mesh filename="package://hratc2016_framework/models/fsr_husky_parts/tilt_base_link.STL" />
       				</geometry>
     			</collision>
   		</link>
@@ -86,14 +86,14 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
     			<visual>
       				<origin xyz="0 0 0" rpy="0 0 0" />
       				<geometry>
-					<mesh filename="package://hratc2015_framework/models/fsr_husky_parts/tilt_link.STL" />
+					<mesh filename="package://hratc2016_framework/models/fsr_husky_parts/tilt_link.STL" />
       				</geometry>
       				<material name="DarkGray" />
     			</visual>
     			<collision>
       				<origin xyz="0 0 0" rpy="0 0 0" />
       				<geometry>
-					<mesh filename="package://hratc2015_framework/models/fsr_husky_parts/tilt_link.STL" />
+					<mesh filename="package://hratc2016_framework/models/fsr_husky_parts/tilt_link.STL" />
       				</geometry>
     			</collision>
   		</link>

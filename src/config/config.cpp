@@ -228,6 +228,7 @@ void Config::readMinesPositions()
             s="judge/mines_positions/mine"+ss.str()+"/y";
             n->getParam(s.c_str(), y);
             minesPositions.push_back(Position2D(x,y));
+
         }
 
 //        ROS_INFO("Config -- Mines positions in /minefield frame");

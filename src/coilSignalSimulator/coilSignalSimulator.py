@@ -7,7 +7,7 @@ from std_msgs.msg import Bool
 from metal_detector_msgs.msg._Coil import Coil
 import random, tf, rospy, rospkg
 
-defaultpath = rospkg.RosPack().get_path("hratc2015_framework") + "/src/config/"
+defaultpath = rospkg.RosPack().get_path("hratc2016_framework") + "/src/config/"
 print defaultpath
 
 class CoilSimulator(object):

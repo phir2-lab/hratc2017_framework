@@ -1,12 +1,12 @@
-#HRATC2015
-http://www.isr.uc.pt/~embedded/events/HRATC2015
+#HRATC2016
+http://www.isr.uc.pt/~embedded/events/HRATC2016
 ###Call for Participation
-According to the UN Mine Action Service, landmines kill 15,000-20,000 people every year (mostly children) and maim countless more across 78 countries. Demining efforts cost US$ 300-1000 per mine, and, for every 5000 mines cleared, one person is killed and two are injured. Thus, clearing post-combat regions of landmines has proven to be a difficult, risky, dangerous and expensive task with enormous social implications for civilians. Motivated by these considerations, the IEEE Robotics & Automation Society – Special Interest Group on Humanitarian Technology (RAS–SIGHT) is inviting the academic and non-academic community to participate in the first Humanitarian Robotics and Automation Technology Challenge (HRATC) 2015 International Conference on Robotics and Automation (ICRA’15).
+According to the UN Mine Action Service, landmines kill 15,000-20,000 people every year (mostly children) and maim countless more across 78 countries. Demining efforts cost US$ 300-1000 per mine, and, for every 5000 mines cleared, one person is killed and two are injured. Thus, clearing post-combat regions of landmines has proven to be a difficult, risky, dangerous and expensive task with enormous social implications for civilians. Motivated by these considerations, the IEEE Robotics & Automation Society – Special Interest Group on Humanitarian Technology (RAS–SIGHT) is inviting the academic and non-academic community to participate in the first Humanitarian Robotics and Automation Technology Challenge (HRATC) 2016 International Conference on Robotics and Automation (ICRA’15).
 
 This edition will focus on promoting the development of new strategies for autonomous landmine detection using a mobile (ground) robot. These strategies will be evaluated according to the following criteria: exploration time and environmental coverage; detection and classification quality, i.e., when a metallic object is detected, it should be classified correctly as a landmine or non-landmine; landmine avoidance, i.e., while navigating, the robot should not go over landmines.
 
 ###How To Participate in the Challenge
-All potential participants should submit a paper (2-3 pages maximum) in the standard IEEE format including figures that describes the motivation, previous experiences and research (if any), and the main techniques that will be used during the Challenge. The organizers will then evaluate this paper and an acceptance notification containing further steps would follow. All submissions should be sent to hratc2015@gmail.com.
+All potential participants should submit a paper (2-3 pages maximum) in the standard IEEE format including figures that describes the motivation, previous experiences and research (if any), and the main techniques that will be used during the Challenge. The organizers will then evaluate this paper and an acceptance notification containing further steps would follow. All submissions should be sent to hratc2016@gmail.com.
 
 All teams will use the same robot that will be available before (for remote practice runs) and during the Challenge. Furthermore, participants will have access to a simulator to develop their code before testing it remotely on the real robot.
 

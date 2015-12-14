@@ -39,7 +39,7 @@
         <collision name="landscape_collision">
           <geometry>
             <mesh>
-	      <uri>file://scenario1.dae</uri>
+	      <uri>file://scenario.dae</uri>
               <scale>1 1 0.4</scale>
             </mesh>
           </geometry>
@@ -47,7 +47,7 @@
         <visual name="landscape">
           <geometry>
             <mesh>
-	      <uri>file://scenario1.dae</uri>
+	      <uri>file://scenario.dae</uri>
               <scale>1 1 0.4</scale>
             </mesh>
           </geometry>
@@ -58,29 +58,6 @@
     </model>
     
     <!-- Trees!!! -->
-    <model name="tree1">
-      <static>true</static>
-      <link name="tree1_link">
-	  <pose>3 3 0.6 0 0 0</pose>
-	  <collision name="tree1_collision">
-	      <geometry>
-		  <mesh>
-		    <uri>file://OliveTree1.dae</uri>
-		    <scale>1 1 1</scale>
-		  </mesh>
-	      </geometry>
-	  </collision>
-	  <visual name="tree1_visual">
-	      <geometry>
-		<mesh>
-		  <uri>file://OliveTree1.dae</uri>
-		  <scale>1 1 1</scale>
-		</mesh>
-	      </geometry>
-	      <cast_shadows>false</cast_shadows>
-	  </visual>
-      </link>
-    </model>
     
     <model name="tree2">
       <static>true</static>

@@ -398,7 +398,6 @@ void Judge::checkUnresolvedMines(const nav_msgs::OccupancyGrid::ConstPtr & grid)
 //            int occ = grid->data[x + y*w];
 
 //            cout << "x:" << x << " y:" << y << " occ:" << occ << endl;
-
             if(detected[unresolved[i]]){ // detected
 //            if(occ==0){ // visited
                 cout << "Exploded Known Mine!!!!" << endl;

@@ -1,23 +1,25 @@
 <?xml version="1.0"?>
 <package>
   
-  <name>hratc2015_framework</name>
+  <name>hratc2016_framework</name>
   <version>0.0.0</version>
-  <description>The hratc2015_framework package.</description>
+  <description>The hratc2016_framework package.</description>
 
   <maintainer email="goncabrita@gmail.com">Gonçalo Cabrita</maintainer>
   <maintainer email="reneuland@gmail.com">Renata das Chagas Neuland</maintainer>
   <maintainer email="rqmaffei@gmail.com">Renan de Queiros Maffei</maintainer>
   <maintainer email="vitor_mj@yahoo.com">Vitor Augusto Machado Jorge</maintainer>
   <maintainer email="guilhermefrancosi@gmail.com">Guilherme Schvarcz Franco</maintainer>
+  <maintainer email="mathiasfassini@gmail.com">Mathias Fassini Mantelli</maintainer>
 
   <license>BSD</license>
-  <url type="website">http://www.isr.uc.pt/~embedded/events/HRATC2015</url>
+  <url type="website">http://www.isr.uc.pt/~embedded/events/HRATC2016</url>
   <author email="goncabrita@gmail.com">Gonçalo Cabrita</author>
   <author email="reneuland@gmail.com">Renata das Chagas Neuland</author>
   <author email="rqmaffei@gmail.com">Renan de Queiros Maffei</author>
   <author email="vitor_mj@yahoo.com">Vitor Augusto Machado Jorge</author>
   <author email="guilhermefrancosi@gmail.com">Guilherme Schvarcz Franco</author>
+  <maintainer email="mathiasfassini@gmail.com">Mathias Fassini Mantelli</maintainer>
 
   <buildtool_depend>catkin</buildtool_depend>
   <build_depend>cmake_modules</build_depend>

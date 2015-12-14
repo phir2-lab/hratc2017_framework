@@ -33,7 +33,7 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 	<!-- GPS Antenna -->
 
-	<xacro:include filename="$(find hratc2015_framework)/urdf/fsr_husky_parts/common.xacro" />
+	<xacro:include filename="$(find hratc2016_framework)/urdf/fsr_husky_parts/common.xacro" />
 
 	<xacro:property name="alfa_length" value="0.132" />
 	<xacro:property name="alfa_radius" value="0.019" />
@@ -56,7 +56,7 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
     			<visual>
       				<origin xyz="-0.035 0 0" rpy="1.5708 0 0" />
       				<geometry>
-					<mesh filename="package://hratc2015_framework/models/fsr_husky_parts/gps_antenna.stl" />
+					<mesh filename="package://hratc2016_framework/models/fsr_husky_parts/gps_antenna.stl" />
       				</geometry>
       				<material name="White">
         				<color rgba="1 1 1 1"/>
@@ -65,7 +65,7 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
     			<collision>
       				<origin xyz="-0.035 0 0" rpy="1.5708 0 0" />
       				<geometry>
-					<mesh filename="package://hratc2015_framework/models/fsr_husky_parts/gps_antenna.stl" />
+					<mesh filename="package://hratc2016_framework/models/fsr_husky_parts/gps_antenna.stl" />
      			 	</geometry>
     			</collision>
   		</link>

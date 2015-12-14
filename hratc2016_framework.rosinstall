@@ -1,0 +1,30 @@
+##############################################################################
+#
+# Source installation for the HRATC2016 framework
+#
+##############################################################################
+
+- git:
+    uri: https://github.com/ras-sight/hratc2016_framework
+    local-name: hratc2016_framework
+    version: master
+
+- git:
+    uri: https://github.com/ras-sight/metal_detector_msgs.git
+    local-name: metal_detector_msgs
+    version: master
+
+- git:
+    uri: https://github.com/ras-sight/hratc2016_entry_template.git
+    local-name:  hratc2016_entry_template
+    version: master
+
+- git:
+    uri: https://github.com/brNX/navigation.git
+    local-name: robot_pose_ekf_cp
+    version: robot_pose_ekf
+ 
+- git:
+    uri: https://github.com/brNX/robot_self_filter.git
+    local-name: robot_self_filter
+    version: master

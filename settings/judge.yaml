@@ -8,18 +8,46 @@ judge:
 
   explosion_max_dist: 0.3
 
-  num_mines: 3
+  num_mines: 10
 
   mines_positions:
 
-    mine1:
-      x: -2.44
-      y: 0.99
+    mine1: 
+      x: -5
+      y: 4.5
 
-    mine2:
-      x: -0.11
-      y: 1.15
+    mine2: 
+      x: -6
+      y: 1
 
-    mine3:
-      x: 3.7
-      y: -1.44
+    mine3: 
+      x: -3
+      y: 0.5
+
+    mine4: 
+      x: 6
+      y: -4.5
+
+    mine5: 
+      x: 0
+      y: -4.5
+
+    mine6: 
+      x: 7
+      y: 3
+
+    mine7: 
+      x: -5
+      y: -1.5
+
+    mine8: 
+      x: 5
+      y: -2.5
+
+    mine9: 
+      x: -2
+      y: 0.5
+
+    mine10: 
+      x: -5
+      y: 4
