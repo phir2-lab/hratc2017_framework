@@ -67,6 +67,13 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
         <param name="debug" value="false"/>
         <param name="self_diagnose" value="false"/>
     </node>
+
+    <node name="update_configINI" pkg="hratc2016_framework"  type="update_configINI"
+      output="screen">
+      <rosparam file="$(find hratc2016_framework)/settings/minefield.yaml" command="load" />
+      <rosparam file="$(find hratc2016_framework)/settings/judge.yaml" command="load" />
+      <param name="~isSimulation" value="false"/>    
+    </node>
     
     <!-- The minefield frame -->
     <node name="minefield_static_tf_publisher" pkg="hratc2016_framework" type="minefield_static_tf_publisher" output="screen">

@@ -12,11 +12,21 @@ print defaultpath
 
 class CoilSimulator(object):
 
+    canStart = False
+
     def __init__(self):
+	rospy.Subscriber("/configFirst",Bool,self.checkStart)
+        r = rospy.Rate(10)
+	#while self.canStart == False:
+	#    r.sleep()
         self.load()
         self.listener = tf.TransformListener()
         self.pubMineDetection = rospy.Publisher("/coils", Coil)
         self.pubStartEveryone = rospy.Publisher("/configDone", Bool)
+
+    def checkStart(self,data):
+	if data.data == True:
+	    self.canStart = True
 
     def load(self,path=defaultpath+"config.ini"):
         configFile = ConfigParser()
@@ -37,7 +47,7 @@ class CoilSimulator(object):
 
         self.minesFixedPos = configFile.get("Mines","MinesPositions")
         self.generateMines()
-        self.save(path)
+        #self.save(path)
 
     def save(self,path):
         cfile = open(path,"w")
@@ -76,20 +86,22 @@ class CoilSimulator(object):
             self.mines = []
 
         for i in arange(self.numMines-len(self.mines)):
-            self.mines.append([ random.randrange(self.mapWidth)  - self.mapWidth/2., random.randrange(self.mapHeight) - self.mapHeight/2.])
+            self.mines.append([ random.uniform(0.0,self.mapWidth)  - self.mapWidth/2., random.uniform(0.0,self.mapHeight) - self.mapHeight/2.])
 
-        mWidth, mHeight = self.mapWidth/self.resolution,self.mapHeight/self.resolution
+        mWidth, mHeight = int(self.mapWidth/self.resolution),int(self.mapHeight/self.resolution)
         mines = [ [mWidth/2. + m[0]/self.resolution, mHeight/2. - m[1]/self.resolution] for m in self.mines]
+	print "SELF:",self.mines
+	print "MINES:",mines
 
         metals1 = []
         for i in arange(0.25*self.numMines):
-            metals1.append([ random.randrange(self.mapWidth)  - self.mapWidth/2., random.randrange(self.mapHeight) - self.mapHeight/2.])
+            metals1.append([ random.uniform(0.0,self.mapWidth)  - self.mapWidth/2., random.uniform(0.0,self.mapHeight) - self.mapHeight/2.])
 
         metals2 = []
         for i in arange(0.25*self.numMines):
             metals2.append([
-                                random.randrange(self.mapWidth)  - self.mapWidth/2.,
-                                random.randrange(self.mapHeight) - self.mapHeight/2.])
+                                random.uniform(0.0,self.mapWidth)  - self.mapWidth/2.,
+                                random.uniform(0.0,self.mapHeight) - self.mapHeight/2.])
 
         metals1 = [ [mWidth/2. + m[0]/self.resolution, mHeight/2. - m[1]/self.resolution] for m in metals1]
         metals2 = [ [mWidth/2. + m[0]/self.resolution, mHeight/2. - m[1]/self.resolution] for m in metals2]
@@ -102,7 +114,7 @@ class CoilSimulator(object):
     def pubCoilsonMinefield(self):
         if self.listener == None:
             return
-
+	
         # Lookup for the coils using tf
         try:
             (trans,rot) = self.listener.lookupTransform('minefield', 'left_coil', rospy.Time(0))
@@ -111,13 +123,15 @@ class CoilSimulator(object):
         leftCoilX = trans[0]/self.resolution + self.numCellsX/2.0
         leftCoilY = -trans[1]/self.resolution + self.numCellsY/2.0
 
+	print leftCoilX, leftCoilY
+	
         try:
             (trans,rot) = self.listener.lookupTransform('minefield', 'middle_coil', rospy.Time(0))
         except (tf.LookupException, tf.ConnectivityException, tf.ExtrapolationException):
           return
         middleCoilX = trans[0]/self.resolution + self.numCellsX/2.0
         middleCoilY = -trans[1]/self.resolution + self.numCellsY/2.0
-
+	
         try:
             (trans,rot) = self.listener.lookupTransform('minefield', 'right_coil', rospy.Time(0))
         except (tf.LookupException, tf.ConnectivityException, tf.ExtrapolationException):
@@ -129,6 +143,8 @@ class CoilSimulator(object):
         coils.append([middleCoilX, middleCoilY])
         coils.append([rightCoilX, rightCoilY])
 
+	print self.mineMap.shape
+
         co = 0
         for x,y in coils:
             coil = Coil()
@@ -137,12 +153,13 @@ class CoilSimulator(object):
                 for ch in range(3):
                     coil.channel.append(self.mineMap[3*co+ch,y,x] + random.random()*100)
                     coil.zero.append(self.zeroChannel[3*co+ch])
-
+		
                 self.pubMineDetection.publish(coil)
+            
             co += 1
 
 if __name__=='__main__':
-        
+    print "CHEGOU\n\n"
     rospy.init_node('coilSignalSimulator')
     coilSimulator = CoilSimulator()
 

@@ -5,6 +5,7 @@
 #include <iostream>
 #include <string>
 #include <sstream>
+#include <math.h>
 
 #include <vector>
 
@@ -78,9 +79,12 @@ int main(int argc, char *argv[])
         printf("Problems to open file %s\n",adress.c_str());
     }
 
-    float percentualMinasTrilha= float(atoi(argv[3]));	
-    int value_in = int(atoi(argv[2]) * (percentualMinasTrilha/100.));
-    int value_out = atoi(argv[2]) - value_in;
+
+//    float percentualMinasTrilha= float(atoi(argv[3]));	
+//    int value_in = int(atoi(argv[2]) * (percentualMinasTrilha/100.));
+//    int value_out = atoi(argv[2]) - value_in;
+    int value_in = 3;
+    int value_out = 2;
 
 
     vector<float> x_in, x_out;
@@ -108,11 +112,99 @@ int main(int argc, char *argv[])
         //return;
     }
 
+
+    srand(time(NULL));
+    vector<double> Xpoints;
+    vector<double> Ypoints;
+    vector<float> copy_x_in = x_in;
+    vector<float> copy_x_out = x_out;
+    vector<float> copy_y_in = y_in;
+    vector<float> copy_y_out = y_out;
+    int checkCoordDist=0;
+    int i;
+    int inTrail;
+    int limit;
+    if(atoi(argv[1]) == 2){
+        limit = 4;
+    }else{
+        limit = 5; 
+    }
+    do{
+        Xpoints.clear();
+        Ypoints.clear();
+        x_in = copy_x_in;
+        x_out = copy_x_out;
+        y_in = copy_y_in;
+        y_out = copy_y_out;
+
+        for(i = 0; i < value_in; i++){
+            if(x_in.size()>0){
+                int pos=rand() % x_in.size();            
+                double xi=x_in.at(pos);x_in.erase(x_in.begin()+pos);
+                double yi=y_in.at(pos);y_in.erase(y_in.begin()+pos);
+        	    if(Xpoints.size()==0){
+                    Xpoints.push_back(xi);
+        		    Ypoints.push_back(yi);
+        	    }
+                else{
+                    for(int c=0; c<Xpoints.size();c++){
+                        //double dist=sqrt(pow(Xpoints.at(c)-xi,2)+pow(Ypoints.at(c)-yi,2));
+        			    double distX=sqrt(pow((Xpoints.at(c)-xi),2));
+                        double distY=sqrt(pow((Ypoints.at(c)-yi),2));
+        			    if(distX<1.5 || distY<1.5){
+                            checkCoordDist=1;
+                        }
+        		    }
+        		    if(checkCoordDist==0){
+        			    Xpoints.push_back(xi);
+        			    Ypoints.push_back(yi);
+        		    }else{
+        			    checkCoordDist=0;
+        			    i=i-1;
+        		    }
+        	    }
+            }
+        }
+
+        inTrail=Xpoints.size();
+
+        for(int j = 0; j < value_out+(value_in-inTrail); j++){
+            if(x_out.size()>0){
+                int pos=rand() % x_out.size();
+                double xi=x_out.at(pos);x_out.erase(x_out.begin()+pos);
+                double yi=y_out.at(pos);y_out.erase(y_out.begin()+pos);
+
+    	        if(Xpoints.size()==0){
+                    Xpoints.push_back(xi);
+                    Ypoints.push_back(yi);
+                }else{
+                    for(int c=0; c<Xpoints.size();c++){
+                        //double dist=sqrt(pow(Xpoints.at(c)-xi,2)+pow(Ypoints.at(c)-yi,2));
+                        double distX=sqrt(pow(Xpoints.at(c)-xi,2));
+                        double distY=sqrt(pow(Ypoints.at(c)-yi,2));
+                        if(distX<1.5 || distY<1.5){
+                            checkCoordDist=1;
+                            //cout<<xi<<" "<<yi<<endl;
+                        }
+                    }
+                    if(checkCoordDist==0){
+                        Xpoints.push_back(xi);
+                        Ypoints.push_back(yi);
+                    }else{
+                        checkCoordDist=0;
+                        j=j-1;
+                    }
+                }
+            }
+        }
+    }while(Xpoints.size() < limit);
+
     strcpy(Str,"judge: \n\n  map_resolution: 0.05\n\n  random_mines: false\n\n  detection_min_dist: 0.5\n\n  explosion_max_dist: 0.3\n\n  num_mines: ");
     result = fputs(Str, arq);
     if (result == EOF)
         printf("ERROR\n");
-    strcpy(Str,to_str(value_in+value_out).c_str());
+    int numM = Xpoints.size();
+    strcpy(Str,to_str(numM).c_str());
     result = fputs(Str, arq);
     if (result == EOF)
         printf("ERROR\n");
@@ -121,43 +213,23 @@ int main(int argc, char *argv[])
     if (result == EOF)
         printf("ERROR\n");
 
-    srand(time(NULL));
-    int i;
-    for(i = 0; i < value_in; i++){
-        int pos=rand() % x_in.size();
-        double xi=x_in.at(pos);x_in.erase(x_in.begin()+pos);
-        double yi=y_in.at(pos);y_in.erase(y_in.begin()+pos);
+
+    for(int i=0;i<Xpoints.size();i++){
         strcpy(Str, "\n\n    mine");
         fputs(Str, arq);
         strcpy(Str, to_str(i+1).c_str());
         fputs(Str, arq);
         strcpy(Str, ": \n      x: ");
         fputs(Str, arq);
-        strcpy(Str, to_str(xi).c_str());
+        strcpy(Str, to_str(Xpoints.at(i)).c_str());
         fputs(Str, arq);
         strcpy(Str, "\n      y: ");
         fputs(Str, arq);
-        strcpy(Str, to_str(yi).c_str());
+        strcpy(Str, to_str(Ypoints.at(i)).c_str());
         fputs(Str, arq);
     }
-    i++;
-    for(int j = 0; j < value_out; j++){
-        int pos=rand() % x_out.size();
-        double xi=x_out.at(pos);x_out.erase(x_out.begin()+pos);
-        double yi=y_out.at(pos);y_out.erase(y_out.begin()+pos);
-        strcpy(Str, "\n\n    mine");
-        fputs(Str, arq);
-        strcpy(Str, to_str(j+i).c_str());
-        fputs(Str, arq);
-        strcpy(Str, ": \n      x: ");
-        fputs(Str, arq);
-        strcpy(Str, to_str(xi).c_str());
-        fputs(Str, arq);
-        strcpy(Str, "\n      y: ");
-        fputs(Str, arq);
-        strcpy(Str, to_str(yi).c_str());
-        fputs(Str, arq);
-    }
+
+    cout<<inTrail<<" trail mines, "<<(Xpoints.size()-inTrail)<<" mines out of the trail"<<endl;
 
     fclose(arq);
 
