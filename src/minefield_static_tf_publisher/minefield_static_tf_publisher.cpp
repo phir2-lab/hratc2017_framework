@@ -62,6 +62,11 @@
 
 #include <UTMConverter/UTMConverter.h>
 
+#include <vector>
+#include <iostream>
+
+using namespace std;
+
 int main(int argc, char** argv)
 {
     ros::init(argc, argv, "minefield_static_tf_publisher");
@@ -69,75 +74,56 @@ int main(int argc, char** argv)
     ros::NodeHandle n;
     ros::NodeHandle pn("~");
 
-    // Convert the GPS coordinates into UTM coordinates
-    UTMCoordinates utm;
-    sensor_msgs::NavSatFix fix;
+    string s, s1, s2, s3;
+    stringstream ss;
 
-    if(!pn.hasParam("minefield/corner1/latitude") && !pn.hasParam("minefield/corner1/longitude") && !pn.hasParam("minefield/corner1/altitude"))
-    {
-        ROS_FATAL("Minefield static tf broadcaster -- Unable to start without the 4 corners of the minefield!!!");
-        ROS_BREAK();
+    vector<tf::Vector3> minefieldCorners;
+
+    // Get minefield corners
+    int count=1;
+    while(true){
+        ss.str("");
+        ss << count;
+        s = "minefield/corner"+ss.str();
+
+        if(!pn.hasParam(s))
+            break;
+
+        // Convert the GPS coordinates into UTM coordinates
+        UTMCoordinates utm;
+        sensor_msgs::NavSatFix fix;
+
+        s1 = s+"/latitude";
+        s2 = s+"/longitude";
+        s3 = s+"/altitude";
+
+        if(!pn.hasParam(s1) && !pn.hasParam(s2) && !pn.hasParam(s3))
+        {
+            ROS_FATAL("Config -- Unable to start without the 4 corners of the minefield!!!");
+            ROS_BREAK();
+        }
+        pn.getParam(s1, fix.latitude);
+        pn.getParam(s2, fix.longitude);
+        pn.getParam(s3, fix.altitude);
+
+        UTMConverter::latitudeAndLongitudeToUTMCoordinates(fix, utm);
+        minefieldCorners.push_back(tf::Vector3(utm.easting, utm.northing, fix.altitude));
+
+
+    	ROS_INFO("Minefield static tf broadcaster -- Corner%d lat:%lf long:%lf alt:%lf - x:%lf y:%lf z:%lf", count, fix.latitude, fix.longitude, fix.altitude, minefieldCorners.back().x(), minefieldCorners.back().y(), minefieldCorners.back().z());
+
+        count++;
     }
-    pn.getParam("minefield/corner1/latitude", fix.latitude);
-    pn.getParam("minefield/corner1/longitude", fix.longitude);
-    pn.getParam("minefield/corner1/altitude", fix.altitude);
 
-    UTMConverter::latitudeAndLongitudeToUTMCoordinates(fix, utm);
-    tf::Vector3 corner1 = tf::Vector3(utm.easting, utm.northing, fix.altitude);
-
-    ROS_INFO("Minefield static tf broadcaster -- Corner1 lat:%lf long:%lf alt:%lf - x:%lf y:%lf z:%lf", fix.latitude, fix.longitude, fix.altitude, corner1.x(), corner1.y(), corner1.z());
-
-    if(!pn.hasParam("minefield/corner2/latitude") && !pn.hasParam("minefield/corner2/longitude") && !pn.hasParam("minefield/corner2/altitude"))
-    {
-        ROS_FATAL("Minefield static tf broadcaster -- Unable to start without the 4 corners of the minefield!!!");
-        ROS_BREAK();
-    }
-    pn.getParam("minefield/corner2/latitude", fix.latitude);
-    pn.getParam("minefield/corner2/longitude", fix.longitude);
-    pn.getParam("minefield/corner2/altitude", fix.altitude);
-
-    UTMConverter::latitudeAndLongitudeToUTMCoordinates(fix, utm);
-    tf::Vector3 corner2 = tf::Vector3(utm.easting, utm.northing, fix.altitude);
-
-    ROS_INFO("Minefield static tf broadcaster -- Corner2 lat:%lf long:%lf alt:%lf - x:%lf y:%lf z:%lf", fix.latitude, fix.longitude, fix.altitude, corner2.x(), corner2.y(), corner2.z());
-
-    if(!pn.hasParam("minefield/corner3/latitude") && !pn.hasParam("minefield/corner3/longitude") && !pn.hasParam("minefield/corner3/altitude"))
-    {
-        ROS_FATAL("Minefield static tf broadcaster -- Unable to start without the 4 corners of the minefield!!!");
-        ROS_BREAK();
-    }
-    pn.getParam("minefield/corner3/latitude", fix.latitude);
-    pn.getParam("minefield/corner3/longitude", fix.longitude);
-    pn.getParam("minefield/corner3/altitude", fix.altitude);
-
-    UTMConverter::latitudeAndLongitudeToUTMCoordinates(fix, utm);
-    tf::Vector3 corner3 = tf::Vector3(utm.easting, utm.northing, fix.altitude);
-
-    ROS_INFO("Minefield static tf broadcaster -- Corner3 lat:%lf long:%lf alt:%lf - x:%lf y:%lf z:%lf", fix.latitude, fix.longitude, fix.altitude, corner3.x(), corner3.y(), corner3.z());
-
-    if(!pn.hasParam("minefield/corner4/latitude") && !pn.hasParam("minefield/corner4/longitude") && !pn.hasParam("minefield/corner4/altitude"))
-    {
-        ROS_FATAL("Minefield static tf broadcaster -- Unable to start without the 4 corners of the minefield!!!");
-        ROS_BREAK();
-    }
-    pn.getParam("minefield/corner4/latitude", fix.latitude);
-    pn.getParam("minefield/corner4/longitude", fix.longitude);
-    pn.getParam("minefield/corner4/altitude", fix.altitude);
-
-    UTMConverter::latitudeAndLongitudeToUTMCoordinates(fix, utm);
-    tf::Vector3 corner4 = tf::Vector3(utm.easting, utm.northing, fix.altitude);
-
-    ROS_INFO("Minefield static tf broadcaster -- Corner4 lat:%lf long:%lf alt:%lf - x:%lf y:%lf z:%lf", fix.latitude, fix.longitude, fix.altitude, corner4.x(), corner4.y(), corner4.z());
 
     // Find the center of the minefield, this will be the origin of the minefield frame
-    tf::Vector3 center = tf::Vector3((corner1.x() + corner2.x() + corner3.x() + corner4.x()) / 4.0, (corner1.y() + corner2.y() + corner3.y() + corner4.y()) / 4.0, (corner1.z() + corner2.z() + corner3.z() + corner4.z()) / 4.0);
+    tf::Vector3 center(0,0,0);
+    for(int i=0; i<minefieldCorners.size(); i++){
+	center += minefieldCorners[i];
+    }
+    center /= minefieldCorners.size();
 
     ROS_INFO("Minefield static tf broadcaster -- The center of the minefield is x:%lf y:%lf z:%lf (m)", center.x(), center.y(), center.z());
-
-    double w =  ( sqrt(pow(corner4.x()-corner1.x(), 2) + pow(corner4.y()-corner1.y(), 2) + pow(corner4.z()-corner1.z(), 2)) + sqrt(pow(corner3.x()-corner2.x(), 2) + pow(corner3.y()-corner2.y(), 2) + pow(corner3.z()-corner2.z(), 2)) ) / 2.0;
-    double h =  ( sqrt(pow(corner2.x()-corner1.x(), 2) + pow(corner2.y()-corner1.y(), 2) + pow(corner2.z()-corner1.z(), 2)) + sqrt(pow(corner4.x()-corner3.x(), 2) + pow(corner4.y()-corner3.y(), 2) + pow(corner4.z()-corner3.z(), 2)) ) / 2.0;
-
-    ROS_INFO("Minefield static tf broadcaster -- The minefield is %lfx%lf (m)", w, h);
 
     double rate;
     pn.param("rate", rate, 20.0);
@@ -156,14 +142,14 @@ int main(int argc, char** argv)
     transform.setOrigin( tf::Vector3(center.x(), center.y(), center.z()) );
     tf::Quaternion q;
 //    q.setRPY(0.0, 0.0, atan2((corner4.y()+corner3.y())/2.0 - center.y(), (corner4.x()+corner3.x())/2.0 - center.x()));
-    q.setRPY(0.0, 0.0, atan2((corner3.y()-corner2.y()),(corner3.x()-corner2.x())));
+    q.setRPY(0.0, 0.0, atan2((minefieldCorners[2].y()-minefieldCorners[1].y()),(minefieldCorners[2].x()-minefieldCorners[1].x())));
     transform.setRotation(q);
 
     //Publish the corners
     ros::Publisher corner_pub = n.advertise<visualization_msgs::MarkerArray>("corners", 10, true);
 
     visualization_msgs::MarkerArray marker_corner_array;
-    int num_corners=4;
+    int num_corners=minefieldCorners.size();
     //Resize corners array
     marker_corner_array.markers.resize(num_corners);
 
@@ -186,22 +172,12 @@ int main(int argc, char** argv)
         marker_corner_array.markers.at(count).color.g = 1.0;
         marker_corner_array.markers.at(count).color.b = 1.0;
         marker_corner_array.markers.at(count).color.a = 1.0;
+	// Corners position
+        marker_corner_array.markers.at(count).pose.position.x = minefieldCorners[count].x();
+        marker_corner_array.markers.at(count).pose.position.y = minefieldCorners[count].y();
         marker_corner_array.markers.at(count).pose.position.z = center.z();
     }
-    // Corners position
-    //Corner 1
-    marker_corner_array.markers.at(0).pose.position.x = corner1.x();
-    marker_corner_array.markers.at(0).pose.position.y = corner1.y();
-    //Corner 2
-    marker_corner_array.markers.at(1).pose.position.x = corner2.x();
-    marker_corner_array.markers.at(1).pose.position.y = corner2.y();
-    //Corner 3
-    marker_corner_array.markers.at(2).pose.position.x = corner3.x();
-    marker_corner_array.markers.at(2).pose.position.y = corner3.y();
-    //Corner 4
-    marker_corner_array.markers.at(3).pose.position.x = corner4.x();
-    marker_corner_array.markers.at(3).pose.position.y = corner4.y();
-
+    
     corner_pub.publish(marker_corner_array);
 
     // Publish the transformation at the desired rate!
@@ -215,3 +191,4 @@ int main(int argc, char** argv)
     }
     return 0;
 }
+
