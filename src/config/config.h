@@ -53,6 +53,7 @@ class Config
         // MINES INFO
         int numMines;
         bool randomMines;
+	bool GPS_coordinate;
         double detectionMinDist;
         double explosionMaxDist;
         vector<Position2D> minesPositions;
@@ -65,7 +66,8 @@ class Config
         void readMinefieldCorners();
         void readMinefieldCornersFromTopic(const visualization_msgs::MarkerArray::ConstPtr & corners);
         void readJudgeInformation();
-        void readMinesPositions();
+        void readMinesPositions_Cartesian();
+	void readMinesPositions_GPS();
 
         bool canStart;
         ros::Subscriber sub_corners;

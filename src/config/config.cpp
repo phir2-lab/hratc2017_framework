@@ -22,8 +22,13 @@ Config::Config(ros::NodeHandle *nh) : n(nh)
 //        ros::spinOnce();
 //        rate->sleep();
 //    }
-
-    readMinesPositions();
+    bool gpsCoordinate;
+    n->getParam("judge/GPS_coordinate", gpsCoordinate);
+    if(!gpsCoordinate){
+	    readMinesPositions_Cartesian();
+    }else{
+	    readMinesPositions_GPS();
+    }     
 
     readJudgeInformation();
 }
@@ -203,7 +208,7 @@ void Config::readMinefieldCorners()
              lowerBound.x(), upperBound.x(), lowerBound.y(), upperBound.y(), width, height);
 }
 
-void Config::readMinesPositions()
+void Config::readMinesPositions_Cartesian()
 {
     if(!n->hasParam("judge/num_mines") && !n->hasParam("judge/mines_positions"))
     {
@@ -237,11 +242,74 @@ void Config::readMinesPositions()
     }
 }
 
+void Config::readMinesPositions_GPS()
+{
+
+    if(!n->hasParam("judge/num_mines") && !n->hasParam("judge/mines_positions"))
+    {
+        ROS_FATAL("Config -- Unable to start without the positions of the mines!!!");
+        ROS_BREAK();
+    }
+
+    // Read mines information
+    n->getParam("judge/num_mines", numMines);
+
+    if(randomMines == false){
+        string s;
+        stringstream ss;
+        double z;
+
+        // Read mines positions
+        for(int i=1; i<=numMines; i++){
+	    UTMCoordinates utm;
+            sensor_msgs::NavSatFix fix;
+	    z = 0;
+            ss.str("");
+            ss << i;
+
+            s="judge/mines_positions/mine"+ss.str()+"/x";
+            n->getParam(s.c_str(), fix.longitude);
+            s="judge/mines_positions/mine"+ss.str()+"/y";
+            n->getParam(s.c_str(), fix.latitude);
+	    fix.altitude = z;
+	    UTMConverter::latitudeAndLongitudeToUTMCoordinates(fix, utm);
+	    minesPositions.push_back(Position2D(utm.easting, utm.northing));
+        }
+
+		    // Convert minefield corners in relation to tf/minefield frame
+    for(int i=0; i<minesPositions.size(); i++){
+        geometry_msgs::PointStamped pointIn, pointOut;
+        pointIn.header.frame_id = "/odom";
+        pointIn.point.x = minesPositions[i].x;
+        pointIn.point.y = minesPositions[i].y;
+
+        try
+        {
+            listener.transformPoint("/minefield", pointIn, pointOut);
+        }
+        catch (tf::TransformException &ex)
+        {
+            ROS_WARN("Failure %s\n", ex.what());
+        }
+
+        minesPositions[i].x = pointOut.point.x;
+        minesPositions[i].y = pointOut.point.y;
+    }
+
+//        ROS_INFO("Config -- Mines positions in /minefield frame");
+//        for(int i=0; i<minesPositions.size(); i++)
+//            ROS_INFO("Config -- Mine%d x:%lf y:%lf", i+1, minesPositions[i].x, minesPositions[i].y);
+    }
+}
+
+
 void Config::readJudgeInformation()
 {
     string s;
 
     // Read judge information - use default if not available
+    s = "judge/GPS_coordinate";
+    n->param<bool>(s, GPS_coordinate, false);
     s = "judge/map_resolution";
     n->param<double>(s, resolution, 0.05);
     s = "judge/random_mines";
