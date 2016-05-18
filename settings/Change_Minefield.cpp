@@ -199,7 +199,7 @@ int main(int argc, char *argv[])
         }
     }while(Xpoints.size() < limit);
 
-    strcpy(Str,"judge: \n\n  map_resolution: 0.05\n\n  random_mines: false\n\n  detection_min_dist: 0.5\n\n  explosion_max_dist: 0.3\n\n  num_mines: ");
+    strcpy(Str,"judge: \n\n  GPS_coordinate: false\n\n  map_resolution: 0.05\n\n  random_mines: false\n\n  detection_min_dist: 0.5\n\n  explosion_max_dist: 0.3\n\n  num_mines: ");
     result = fputs(Str, arq);
     if (result == EOF)
         printf("ERROR\n");
