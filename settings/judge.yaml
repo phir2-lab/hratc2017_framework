@@ -1,5 +1,7 @@
 judge: 
 
+  GPS_coordinate: true
+
   map_resolution: 0.05
 
   random_mines: false
@@ -8,26 +10,24 @@ judge:
 
   explosion_max_dist: 0.3
 
-  num_mines: 5
+  num_mines: 4
 
   mines_positions:
 
     mine1: 
-      x: -4
-      y: 0
+      x: -8.41563316981
+      y: 40.1846049945
 
     mine2: 
-      x: 5
-      y: -1.5
+      x: -8.41561050415
+      y: 40.1845931689
 
     mine3: 
-      x: -1.5
-      y: -3
+      x: -8.41558116277
+      y: 40.1846061707
 
     mine4: 
-      x: 3
-      y: 1.5
+      x: -8.41560484568
+      y: 40.1846501668
 
-    mine5: 
-      x: -6
-      y: 3
+
