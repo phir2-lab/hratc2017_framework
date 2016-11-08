@@ -33,7 +33,7 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 	<!-- SICK LMS100-->
 
-	<xacro:include filename="$(find hratc2016_framework)/urdf/fsr_husky_parts/common.xacro" />
+	<xacro:include filename="$(find hratc2017_framework)/urdf/fsr_husky_parts/common.xacro" />
 
 	<xacro:property name="scale_factor" value="0.001" />
 
@@ -48,14 +48,14 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 			<visual>
 				<origin xyz="-0.121 -0.075 -0.064" rpy="0 -1.5708 -1.5708" />
 				<geometry>
-					<mesh filename="package://hratc2016_framework/models/fsr_husky_parts/tim55x.STL" scale="${scale_factor} ${scale_factor} ${scale_factor}" />
+					<mesh filename="package://hratc2017_framework/models/fsr_husky_parts/tim55x.STL" scale="${scale_factor} ${scale_factor} ${scale_factor}" />
 				</geometry>
 				<material name="DarkGray" />
   			</visual>
     			<collision>
 				<origin xyz="-0.121 -0.075 -0.064" rpy="0 -1.5708 -1.5708" />
       				<geometry>
-					<mesh filename="package://hratc2016_framework/models/fsr_husky_parts/tim55x.STL" scale="${scale_factor} ${scale_factor} ${scale_factor}" />
+					<mesh filename="package://hratc2017_framework/models/fsr_husky_parts/tim55x.STL" scale="${scale_factor} ${scale_factor} ${scale_factor}" />
         				<!-- <box size="${laser_x} ${laser_y} ${laser_z}" /> -->
       				</geometry>
     			</collision>

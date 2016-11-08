@@ -52,7 +52,7 @@ int main(int argc, char *argv[])
     //copiar cena diferente para o gazebo
     from = argv[1]; 
     to = "../Media/models/scenario.dae";// em 
-    from = "../Media/models/scenarioDAE/"+from+"scenario.dae";//hratc2016_workspace/src/hratc2016_framework/Media/models/scenarioDAE
+    from = "../Media/models/scenarioDAE/"+from+"scenario.dae";//hratc2017_workspace/src/hratc2017_framework/Media/models/scenarioDAE
 
     //copy files "minefields".
     std::ifstream srcScenario(from.c_str(), std::ios::binary);

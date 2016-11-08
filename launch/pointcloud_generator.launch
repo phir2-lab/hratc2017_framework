@@ -16,7 +16,7 @@
  		<param name="self_see_padd" type="double" value="0.1" />
 		<!-- The scaling to be added for the body parts the robot can see -->
  		<param name="self_see_scale" type="double" value="1.0" />
-		<rosparam command="load" file="$(find hratc2016_framework)/settings/links.yaml" />
+		<rosparam command="load" file="$(find hratc2017_framework)/settings/links.yaml" />
 	</node>
 
 	<node pkg="laser_assembler" type="point_cloud2_assembler" output="screen"  name="point_cloud_assembler">
@@ -28,7 +28,7 @@
 	    <param name="fixed_frame" type="string" value="base_link" />
 	</node>
 
-  	<node type="pointcloud_generator_node" pkg="hratc2016_framework" name="pointcloud_generator" output="screen">
+  	<node type="pointcloud_generator_node" pkg="hratc2017_framework" name="pointcloud_generator" output="screen">
 		<remap from="cloud" to="cloud_assembled"/>
 		<param name="lower_tilt" value="-1.5" />
 		<param name="upper_tilt" value="0.0" />

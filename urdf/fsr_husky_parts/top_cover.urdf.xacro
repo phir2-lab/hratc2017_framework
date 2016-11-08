@@ -52,14 +52,14 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 			<visual>
       				<origin xyz="0.07 ${-husky_width/2-0.0025} -0.10" rpy="1.5708 0 1.5708" />
       				<geometry>
-					<mesh filename="package://hratc2016_framework/models/fsr_husky_parts/top_cover.STL" scale="${scale_factor} ${scale_factor} ${scale_factor}" />
+					<mesh filename="package://hratc2017_framework/models/fsr_husky_parts/top_cover.STL" scale="${scale_factor} ${scale_factor} ${scale_factor}" />
       				</geometry>
       				<material name="Yellow" />
     			</visual>
 			<collision>
       				<origin xyz="0.0 ${-husky_width/2-0.0025} -0.10" rpy="1.5708 0 1.5708" />
       				<geometry>
-					<mesh filename="package://hratc2016_framework/models/fsr_husky_parts/top_cover.STL" scale="${scale_factor} ${scale_factor} ${scale_factor}" />
+					<mesh filename="package://hratc2017_framework/models/fsr_husky_parts/top_cover.STL" scale="${scale_factor} ${scale_factor} ${scale_factor}" />
       				</geometry>
     			</collision>
 		</link>

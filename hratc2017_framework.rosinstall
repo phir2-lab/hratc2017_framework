@@ -1,12 +1,12 @@
 ##############################################################################
 #
-# Source installation for the HRATC2016 framework
+# Source installation for the HRATC2017 framework
 #
 ##############################################################################
 
 - git:
-    uri: https://github.com/ras-sight/hratc2016_framework
-    local-name: hratc2016_framework
+    uri: https://github.com/ras-sight/hratc2017_framework
+    local-name: hratc2017_framework
     version: master
 
 - git:
@@ -15,8 +15,8 @@
     version: master
 
 - git:
-    uri: https://github.com/ras-sight/hratc2016_entry_template.git
-    local-name:  hratc2016_entry_template
+    uri: https://github.com/ras-sight/hratc2017_entry_template.git
+    local-name:  hratc2017_entry_template
     version: master
 
 - git:

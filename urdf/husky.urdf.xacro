@@ -26,7 +26,7 @@ ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
 (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
 SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
-This program contains the description of the HRATC2016 Husky robot based on the original Clearpath 
+This program contains the description of the HRATC2017 Husky robot based on the original Clearpath 
 Husky A200 file and modified by the ISR University of Coimbra
 -->
 
@@ -47,19 +47,19 @@ Husky A200 file and modified by the ISR University of Coimbra
     xmlns:xacro="http://ros.org/wiki/xacro" name="husky">
        
     <!-- Included URDF/XACRO Files -->
-    <xacro:include filename="$(find hratc2016_framework)/urdf/husky_parts/materials.urdf.xacro" />
-    <xacro:include filename="$(find hratc2016_framework)/urdf/husky_parts/wheel.urdf.xacro" />
-    <xacro:include filename="$(find hratc2016_framework)/urdf/husky_parts/parts.urdf.xacro" />
-    <xacro:include filename="$(find hratc2016_framework)/urdf/fsr_husky_parts/husky_bridge.urdf.xacro" />
-    <xacro:include filename="$(find hratc2016_framework)/urdf/fsr_husky_parts/tim55x.urdf.xacro" />
-    <xacro:include filename="$(find hratc2016_framework)/urdf/fsr_husky_parts/alfa_tube2h.urdf.xacro" />
-    <xacro:include filename="$(find hratc2016_framework)/urdf/fsr_husky_parts/pointgrey_flea3.urdf.xacro" />
-    <xacro:include filename="$(find hratc2016_framework)/urdf/fsr_husky_parts/gps_antenna.urdf.xacro" />
-    <xacro:include filename="$(find hratc2016_framework)/urdf/fsr_husky_parts/tilt.urdf.xacro" />
-    <xacro:include filename="$(find hratc2016_framework)/urdf/fsr_husky_parts/mti.urdf.xacro" />
-    <xacro:include filename="$(find hratc2016_framework)/urdf/arm/fsr_husky_arm.urdf.xacro" />
-    <xacro:include filename="$(find hratc2016_framework)/urdf/fsr_husky_parts/front_cover.urdf.xacro" />
-    <xacro:include filename="$(find hratc2016_framework)/urdf/fsr_husky_parts/top_cover.urdf.xacro" />
+    <xacro:include filename="$(find hratc2017_framework)/urdf/husky_parts/materials.urdf.xacro" />
+    <xacro:include filename="$(find hratc2017_framework)/urdf/husky_parts/wheel.urdf.xacro" />
+    <xacro:include filename="$(find hratc2017_framework)/urdf/husky_parts/parts.urdf.xacro" />
+    <xacro:include filename="$(find hratc2017_framework)/urdf/fsr_husky_parts/husky_bridge.urdf.xacro" />
+    <xacro:include filename="$(find hratc2017_framework)/urdf/fsr_husky_parts/tim55x.urdf.xacro" />
+    <xacro:include filename="$(find hratc2017_framework)/urdf/fsr_husky_parts/alfa_tube2h.urdf.xacro" />
+    <xacro:include filename="$(find hratc2017_framework)/urdf/fsr_husky_parts/pointgrey_flea3.urdf.xacro" />
+    <xacro:include filename="$(find hratc2017_framework)/urdf/fsr_husky_parts/gps_antenna.urdf.xacro" />
+    <xacro:include filename="$(find hratc2017_framework)/urdf/fsr_husky_parts/tilt.urdf.xacro" />
+    <xacro:include filename="$(find hratc2017_framework)/urdf/fsr_husky_parts/mti.urdf.xacro" />
+    <xacro:include filename="$(find hratc2017_framework)/urdf/arm/fsr_husky_arm.urdf.xacro" />
+    <xacro:include filename="$(find hratc2017_framework)/urdf/fsr_husky_parts/front_cover.urdf.xacro" />
+    <xacro:include filename="$(find hratc2017_framework)/urdf/fsr_husky_parts/top_cover.urdf.xacro" />
 
     <!-- PROPERTY LIST -->
     <!--All units in m-kg-s-radians unit system -->
@@ -131,7 +131,7 @@ Husky A200 file and modified by the ISR University of Coimbra
         <visual>
             <origin xyz="0 0 0" rpy="0 0 0" />
             <geometry>
-		<mesh filename="package://hratc2016_framework/models/husky_parts/base_link.stl" />
+		<mesh filename="package://hratc2017_framework/models/husky_parts/base_link.stl" />
             </geometry>
             <material name="Black" />
         </visual>

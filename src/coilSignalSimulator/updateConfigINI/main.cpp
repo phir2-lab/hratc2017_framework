@@ -25,7 +25,7 @@ int main( int argc, char** argv )
     cout << config->width << ' ' << config->height << endl;
 
     // Update config.ini
-    string path = ros::package::getPath("hratc2016_framework");
+    string path = ros::package::getPath("hratc2017_framework");
     path += "/src/config/config.ini";
     cout<<"PATH: "<<path<<endl;
     FILE *arqIn;

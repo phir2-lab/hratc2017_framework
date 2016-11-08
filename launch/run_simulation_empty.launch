@@ -33,12 +33,12 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
      <include file="$(find gazebo_ros)/launch/empty_world.launch"/> 
      
     <!-- Spawn the Husky robot -->
-    <include file="$(find hratc2016_framework)/launch/husky.launch">
+    <include file="$(find hratc2017_framework)/launch/husky.launch">
       <arg name="startz" value="0" />
     </include>
     
     <!-- Load the controllers -->
-    <rosparam file="$(find hratc2016_framework)/controllers/controllers.yaml" command="load"/>
+    <rosparam file="$(find hratc2017_framework)/controllers/controllers.yaml" command="load"/>
 
     <node name="controller_spawner" pkg="controller_manager" type="spawner" respawn="false"
       output="screen" args="joint_state_controller arm_controller tilt_controller"/>
@@ -50,7 +50,7 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
     
        
     <!-- GPS to Odom msg -->
-    <node pkg="hratc2016_framework" type="gps_to_odom" name="gps_to_odom" />
+    <node pkg="hratc2017_framework" type="gps_to_odom" name="gps_to_odom" />
 
     <!-- EKF for absolute localization (clearpath) -->
     <node pkg="robot_pose_ekf_cp" type="robot_pose_ekf_cp" name="robot_pose_ekf" output="screen">
@@ -70,33 +70,33 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
     </node>  
     
     <!-- The minefield frame -->
-    <node name="minefield_static_tf_publisher" pkg="hratc2016_framework" type="minefield_static_tf_publisher" output="screen">
-      <rosparam file="$(find hratc2016_framework)/settings/minefield.yaml" command="load" />
-<!--      <rosparam file="$(find hratc2016_framework)/settings/minefield_not_rectangular.yaml" command="load" />-->
+    <node name="minefield_static_tf_publisher" pkg="hratc2017_framework" type="minefield_static_tf_publisher" output="screen">
+      <rosparam file="$(find hratc2017_framework)/settings/minefield.yaml" command="load" />
+<!--      <rosparam file="$(find hratc2017_framework)/settings/minefield_not_rectangular.yaml" command="load" />-->
     </node>
     
     <!-- The coil signal simulator - required when not using the real robot -->
-    <node name="coilSignalSimulator" pkg="hratc2016_framework" type="coilSignalSimulator.py"/>
+    <node name="coilSignalSimulator" pkg="hratc2017_framework" type="coilSignalSimulator.py"/>
 
     <!-- The HRATC judge -->
-    <node name="judge" pkg="hratc2016_framework"  type="judge"
+    <node name="judge" pkg="hratc2017_framework"  type="judge"
       output="screen">
-      <rosparam file="$(find hratc2016_framework)/settings/minefield.yaml" command="load" />
-<!--      <rosparam file="$(find hratc2016_framework)/settings/minefield_not_rectangular.yaml" command="load" />-->
-      <rosparam file="$(find hratc2016_framework)/settings/judge.yaml" command="load" />
+      <rosparam file="$(find hratc2017_framework)/settings/minefield.yaml" command="load" />
+<!--      <rosparam file="$(find hratc2017_framework)/settings/minefield_not_rectangular.yaml" command="load" />-->
+      <rosparam file="$(find hratc2017_framework)/settings/judge.yaml" command="load" />
       <param name="~isSimulation" value="false"/>    
     </node>
 
     <!-- The minefield viewer - updates an occupancy grid displaying the covered area -->
-    <node name="mineFieldViewer" pkg="hratc2016_framework"  type="mineFieldViewer"
+    <node name="mineFieldViewer" pkg="hratc2017_framework"  type="mineFieldViewer"
       output="screen">
-      <rosparam file="$(find hratc2016_framework)/settings/minefield.yaml" command="load" />
-<!--      <rosparam file="$(find hratc2016_framework)/settings/minefield_not_rectangular.yaml" command="load" />-->
-      <rosparam file="$(find hratc2016_framework)/settings/judge.yaml" command="load" />
+      <rosparam file="$(find hratc2017_framework)/settings/minefield.yaml" command="load" />
+<!--      <rosparam file="$(find hratc2017_framework)/settings/minefield_not_rectangular.yaml" command="load" />-->
+      <rosparam file="$(find hratc2017_framework)/settings/judge.yaml" command="load" />
       <param name="~isSimulation" value="true"/>    
     </node>
 
     <!-- Visualization in RVIZ -->
-    <node name="rviz" pkg="rviz" type="rviz" args="-d $(find hratc2016_framework)/hratc.rviz" /> 
+    <node name="rviz" pkg="rviz" type="rviz" args="-d $(find hratc2017_framework)/hratc.rviz" /> 
   
 </launch>

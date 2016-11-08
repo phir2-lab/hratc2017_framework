@@ -1,9 +1,9 @@
 <?xml version="1.0"?>
 <package>
   
-  <name>hratc2016_framework</name>
+  <name>hratc2017_framework</name>
   <version>0.0.0</version>
-  <description>The hratc2016_framework package.</description>
+  <description>The hratc2017_framework package.</description>
 
   <maintainer email="goncabrita@gmail.com">Gonçalo Cabrita</maintainer>
   <maintainer email="reneuland@gmail.com">Renata das Chagas Neuland</maintainer>
@@ -13,7 +13,7 @@
   <maintainer email="mathiasfassini@gmail.com">Mathias Fassini Mantelli</maintainer>
 
   <license>BSD</license>
-  <url type="website">http://www.isr.uc.pt/~embedded/events/HRATC2016</url>
+  <url type="website">http://www.isr.uc.pt/~embedded/events/HRATC2017</url>
   <author email="goncabrita@gmail.com">Gonçalo Cabrita</author>
   <author email="reneuland@gmail.com">Renata das Chagas Neuland</author>
   <author email="rqmaffei@gmail.com">Renan de Queiros Maffei</author>

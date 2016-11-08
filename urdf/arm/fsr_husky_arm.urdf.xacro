@@ -54,7 +54,7 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
         rpy="0 0 0" />
       <geometry>
         <mesh
-          filename="package://hratc2016_framework/models/arm/base_arm_link.STL" />
+          filename="package://hratc2017_framework/models/arm/base_arm_link.STL" />
       </geometry>
       <material name="Black" />
     </visual>
@@ -64,7 +64,7 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
         rpy="0 0 0" />
       <geometry>
         <mesh
-          filename="package://hratc2016_framework/models/arm/base_arm_link.STL" />
+          filename="package://hratc2017_framework/models/arm/base_arm_link.STL" />
       </geometry>
     </collision>
   </link>
@@ -102,7 +102,7 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
         rpy="0 0 0" />
       <geometry>
         <mesh
-          filename="package://hratc2016_framework/models/arm/arm_axel.STL" />
+          filename="package://hratc2017_framework/models/arm/arm_axel.STL" />
       </geometry>
       <material
         name="DarkGray">
@@ -116,7 +116,7 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
         rpy="0 0 0" />
       <geometry>
         <mesh
-          filename="package://hratc2016_framework/models/arm/arm_axel.STL" />
+          filename="package://hratc2017_framework/models/arm/arm_axel.STL" />
       </geometry>
     </collision>
   </link>
@@ -167,7 +167,7 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
         rpy="0 0 0" />
       <geometry>
         <mesh
-          filename="package://hratc2016_framework/models/arm/upper_arm.STL" />
+          filename="package://hratc2017_framework/models/arm/upper_arm.STL" />
       </geometry>
       <material
         name="DarkGray">
@@ -181,7 +181,7 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
         rpy="0 0 0" />
       <geometry>
         <mesh
-          filename="package://hratc2016_framework/models/arm/upper_arm.STL" />
+          filename="package://hratc2017_framework/models/arm/upper_arm.STL" />
       </geometry>
     </collision>
   </link>
@@ -232,7 +232,7 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
         rpy="-1.865 -0.1 -1" />
       <geometry>
         <mesh
-          filename="package://hratc2016_framework/models/arm/metal_detector_arm.STL" />
+          filename="package://hratc2017_framework/models/arm/metal_detector_arm.STL" />
       </geometry>
       <material
         name="DarkGray">
@@ -246,7 +246,7 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
         rpy="-1.865 -0.1 -1" />
       <geometry>
         <mesh
-          filename="package://hratc2016_framework/models/arm/metal_detector_arm.STL" />
+          filename="package://hratc2017_framework/models/arm/metal_detector_arm.STL" />
       </geometry>
     </collision>
   </link>
@@ -300,7 +300,7 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
         rpy="-1.9 -0.45 -1.45" />
       <geometry>
         <mesh
-          filename="package://hratc2016_framework/models/arm/metal_detector_antenna.STL" />
+          filename="package://hratc2017_framework/models/arm/metal_detector_antenna.STL" />
       </geometry>
       <material
         name="ArmyGreen">
@@ -314,7 +314,7 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
         rpy="-1.9 -0.45 -1.45" />
       <geometry>
         <mesh
-          filename="package://hratc2016_framework/models/arm/metal_detector_antenna.STL" />
+          filename="package://hratc2017_framework/models/arm/metal_detector_antenna.STL" />
       </geometry>
     </collision>
   </link>
@@ -406,7 +406,7 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
         rpy="0 0 0" />
       <geometry>
         <mesh
-          filename="package://hratc2016_framework/models/arm/lower_arm.STL" />
+          filename="package://hratc2017_framework/models/arm/lower_arm.STL" />
       </geometry>
       <material
         name="DarkGray">
@@ -420,7 +420,7 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
         rpy="0 0 0" />
       <geometry>
         <mesh
-          filename="package://hratc2016_framework/models/arm/lower_arm.STL" />
+          filename="package://hratc2017_framework/models/arm/lower_arm.STL" />
       </geometry>
     </collision>
   </link>
