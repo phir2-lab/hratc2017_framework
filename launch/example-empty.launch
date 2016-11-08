@@ -1,0 +1,58 @@
+<launch>
+
+<!--  <env name="GAZEBO_MODEL_PATH" value="$GAZEBO_MODEL_PATH:$(find hratc2017_framework)/description" />-->
+<!--  <env name="GAZEBO_RESOURCE_PATH" value="$GAZEBO_RESOURCE_PATH:$(find hratc2017_framework)/description" />-->
+
+  <arg name="paused" default="false"/>
+  <arg name="use_sim_time" default="true"/>
+  <arg name="gui" default="true"/>
+  <arg name="headless" default="false"/>
+  <arg name="debug" default="false"/>
+  <arg name="verbose" default="true"/>
+  <arg name="world" default="worlds/empty.world" />
+  <arg name="urdf" default="$(find hratc2017_framework)/description/urdf/pioneer3at.urdf.xacro" />
+  <arg name="joint_state_gui" default="false" />
+  <arg name="joint_state_rate" default="1000" />
+
+  <param name="robot_description" command="$(find xacro)/xacro.py $(arg urdf)" />
+  <param name="use_gui" value="$(arg joint_state_gui)"/>
+  <param name="rate" value="$(arg joint_state_rate)"/>
+  <node name="spawn_urdf" pkg="gazebo_ros" type="spawn_model" args="-param robot_description -urdf -model pioneer3at_robot" />
+  <node name="robot_state_publisher" pkg="robot_state_publisher" type="robot_state_publisher" />
+  <node name="joint_state_publisher" pkg="joint_state_publisher" type="joint_state_publisher"></node>
+
+  <!-- Load the controllers -->
+<!--  <rosparam file="$(find hratc2017_framework)/controllers/controllers.yaml" command="load"/>-->
+<!--  <node name="controller_spawner" pkg="controller_manager" type="spawner" respawn="false" output="screen" args="joint_state_controller"/>-->
+
+  <!-- set use_sim_time flag -->
+  <group if="$(arg use_sim_time)">
+    <param name="/use_sim_time" value="true" />
+  </group>
+
+  <!-- set command arguments -->
+  <arg unless="$(arg paused)" name="command_arg1" value=""/>
+  <arg     if="$(arg paused)" name="command_arg1" value="-u"/>
+  <arg unless="$(arg headless)" name="command_arg2" value=""/>
+  <arg     if="$(arg headless)" name="command_arg2" value="-r"/>
+  <arg unless="$(arg verbose)" name="command_arg3" value=""/>
+  <arg     if="$(arg verbose)" name="command_arg3" value="--verbose"/>
+  <arg unless="$(arg debug)" name="script_type" value="gzserver"/>
+  <arg     if="$(arg debug)" name="script_type" value="debug"/>
+
+  <!-- start gazebo server-->
+  <node name="gazebo" pkg="gazebo_ros" type="$(arg script_type)" respawn="false" output="screen"
+	args="$(arg command_arg1) $(arg command_arg2) $(arg command_arg3) $(arg world)" />
+	
+  <group if="$(arg gui)">
+    <!-- start gazebo client -->
+    <node name="gazebo_gui" pkg="gazebo_ros" type="gzclient" respawn="false" output="screen"/>
+    <!-- start rviz -->
+<!--    <node name="rviz" pkg="rviz" type="rviz" args="-d $(find amr_robots_description)/urdf/display_urdf.rviz" required="true" />-->
+    <node name="rviz" pkg="rviz" type="rviz"/>
+  </group>
+
+
+
+</launch>
+
