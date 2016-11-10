@@ -1,0 +1,19 @@
+<launch>
+  <arg name="startz" default="0.9" />
+  <arg name="urdf" default="$(find hratc2017_framework)/description/urdf/pioneer3at.urdf.xacro" />
+
+  <param name="robot_description" command="$(find xacro)/xacro.py $(arg urdf)" />
+
+  <!-- Spawn robot in gazebo -->
+  <node name="spawn_urdf" pkg="gazebo_ros" type="spawn_model" args="-x 0 -y 0 -z $(arg startz) -param robot_description -urdf -model pioneer3at_robot" />
+
+  <arg name="joint_state_gui" default="false" />
+  <arg name="joint_state_rate" default="1000" />
+
+  <param name="use_gui" value="$(arg joint_state_gui)"/>
+  <param name="rate" value="$(arg joint_state_rate)"/>
+  <node name="robot_state_publisher" pkg="robot_state_publisher" type="robot_state_publisher" />
+  <node name="joint_state_publisher" pkg="joint_state_publisher" type="joint_state_publisher"></node>
+
+</launch>
+

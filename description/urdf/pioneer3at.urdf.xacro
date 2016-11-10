@@ -7,10 +7,15 @@
 name="pioneer3at">
 
 <!-- Included URDF/XACRO Files -->
-<xacro:include filename="$(find p3at_phi_framework)/description/urdf/common.xacro" />
-<xacro:include filename="$(find p3at_phi_framework)/description/urdf/sick_lms100.urdf.xacro" />
-<xacro:include filename="$(find p3at_phi_framework)/description/urdf/pointgrey_flea3.urdf.xacro" />
-<xacro:include filename="$(find p3at_phi_framework)/description/urdf/p3at_sonar.urdf.xacro" />
+<xacro:include filename="$(find hratc2017_framework)/description/urdf/common.xacro" />
+<xacro:include filename="$(find hratc2017_framework)/description/urdf/sick_lms100.urdf.xacro" />
+<xacro:include filename="$(find hratc2017_framework)/description/urdf/sick_tim55x.urdf.xacro" />
+<xacro:include filename="$(find hratc2017_framework)/description/urdf/sick_tim.urdf.xacro" />
+<xacro:include filename="$(find hratc2017_framework)/description/urdf/pointgrey_flea3.urdf.xacro" />
+<xacro:include filename="$(find hratc2017_framework)/description/urdf/p3at_sonar.urdf.xacro" />
+<xacro:include filename="$(find hratc2017_framework)/description/urdf/gps_antenna.urdf.xacro" />
+<xacro:include filename="$(find metal_detector_msgs)/model/gazebo/metal_detector.urdf.xacro" />
+<xacro:include filename="$(find hratc2017_robot)/model/gazebo/Bridge.urdf.xacro" />
 
 <!-- Chassis -->
     <link name="base_link">
@@ -29,7 +34,7 @@ name="pioneer3at">
         <visual name="base_visual">
             <origin xyz="0 0 0.177" rpy="0 0 0"/>
             <geometry name="pioneer_geom">
-                <mesh filename="package://p3at_phi_framework/description/p3at_meshes/chassis.stl"/>
+                <mesh filename="package://hratc2017_framework/description/p3at_meshes/chassis.stl"/>
             </geometry>
             <material name="ChassisRed">
                 <color rgba="0.851 0.0 0.0 1.0"/>
@@ -38,7 +43,7 @@ name="pioneer3at">
         <collision>
             <origin xyz="0 0 0.177" rpy="0 0 0"/>
             <geometry>
-                <mesh filename="package://p3at_phi_framework/description/p3at_meshes/chassis.stl"/>
+                <mesh filename="package://hratc2017_framework/description/p3at_meshes/chassis.stl"/>
             </geometry>
         </collision>
     </link>
@@ -58,7 +63,7 @@ name="pioneer3at">
         <visual name="base_visual">
             <origin xyz="0 0 0" rpy="0 0 0"/>
             <geometry name="pioneer_geom">
-                <mesh filename="package://p3at_phi_framework/description/p3at_meshes/top.stl"/>
+                <mesh filename="package://hratc2017_framework/description/p3at_meshes/top.stl"/>
             </geometry>
             <material name="TopBlack">
                 <color rgba="0.038 0.038 0.038 1.0"/>
@@ -83,26 +88,26 @@ name="pioneer3at">
 
 <!-- Front + Back Sonar -->
     <link name="front_sonar">
-        <inertial>
-            <mass value="0.1"/>    
-            <origin xyz="0 0 0"/>
-            <inertia ixx="1.0" ixy="0.0" ixz="0.0" iyy="1.0" iyz="0.0" izz="1.0"/>
-        </inertial>
-        <visual name="base_visual">
-            <origin xyz="0 0 0" rpy="0 0 0"/>
-            <geometry name="pioneer_geom">
-                <mesh filename="package://p3at_phi_framework/description/p3at_meshes/front_sonar.stl"/>
-            </geometry>
-            <material name="SonarYellow">
-                <color rgba="0.715 0.583 0.210 1.0"/>
-            </material>
-        </visual>
-        <collision>
-            <origin xyz="0 0 0" rpy="0 0 0"/>
-            <geometry>
-                <box size="0 0 0"/>
-            </geometry>
-        </collision>
+<!--        <inertial>-->
+<!--            <mass value="0.1"/>    -->
+<!--            <origin xyz="0 0 0"/>-->
+<!--            <inertia ixx="1.0" ixy="0.0" ixz="0.0" iyy="1.0" iyz="0.0" izz="1.0"/>-->
+<!--        </inertial>-->
+<!--        <visual name="base_visual">-->
+<!--            <origin xyz="0 0 0" rpy="0 0 0"/>-->
+<!--            <geometry name="pioneer_geom">-->
+<!--                <mesh filename="package://hratc2017_framework/description/p3at_meshes/front_sonar.stl"/>-->
+<!--            </geometry>-->
+<!--            <material name="SonarYellow">-->
+<!--                <color rgba="0.715 0.583 0.210 1.0"/>-->
+<!--            </material>-->
+<!--        </visual>-->
+<!--        <collision>-->
+<!--            <origin xyz="0 0 0" rpy="0 0 0"/>-->
+<!--            <geometry>-->
+<!--                <box size="0 0 0"/>-->
+<!--            </geometry>-->
+<!--        </collision>-->
     </link>
     <gazebo reference="front_sonar">
         <material value="Gazebo/Yellow"/>
@@ -115,26 +120,26 @@ name="pioneer3at">
     </joint>
 
     <link name="back_sonar">
-        <inertial>
-            <mass value="0.1"/>    
-            <origin xyz="0 0 0"/>
-            <inertia ixx="1.0" ixy="0.0" ixz="0.0" iyy="1.0" iyz="0.0" izz="1.0"/>
-        </inertial>
-        <visual name="base_visual">
-            <origin xyz="0 0 0" rpy="0 0 0"/>
-            <geometry name="pioneer_geom">
-                <mesh filename="package://p3at_phi_framework/description/p3at_meshes/back_sonar.stl"/>
-            </geometry>
-            <material name="SonarYellow">
-                <color rgba="0.715 0.583 0.210 1.0"/>
-            </material>
-        </visual>
-        <collision>
-            <origin xyz="0 0 0" rpy="0 0 0"/>
-            <geometry>
-                <box size="0 0 0"/>
-            </geometry>
-        </collision>
+<!--        <inertial>-->
+<!--            <mass value="0.1"/>    -->
+<!--            <origin xyz="0 0 0"/>-->
+<!--            <inertia ixx="1.0" ixy="0.0" ixz="0.0" iyy="1.0" iyz="0.0" izz="1.0"/>-->
+<!--        </inertial>-->
+<!--        <visual name="base_visual">-->
+<!--            <origin xyz="0 0 0" rpy="0 0 0"/>-->
+<!--            <geometry name="pioneer_geom">-->
+<!--                <mesh filename="package://hratc2017_framework/description/p3at_meshes/back_sonar.stl"/>-->
+<!--            </geometry>-->
+<!--            <material name="SonarYellow">-->
+<!--                <color rgba="0.715 0.583 0.210 1.0"/>-->
+<!--            </material>-->
+<!--        </visual>-->
+<!--        <collision>-->
+<!--            <origin xyz="0 0 0" rpy="0 0 0"/>-->
+<!--            <geometry>-->
+<!--                <box size="0 0 0"/>-->
+<!--            </geometry>-->
+<!--        </collision>-->
     </link>
     <gazebo reference="back_sonar">
         <material value="Gazebo/Yellow"/>
@@ -158,7 +163,7 @@ name="pioneer3at">
         <visual name="base_visual">
             <origin xyz="0 0 0" rpy="0 0 0"/>
             <geometry name="pioneer_geom">
-                <mesh filename="package://p3at_phi_framework/description/p3at_meshes/axle.stl"/>
+                <mesh filename="package://hratc2017_framework/description/p3at_meshes/axle.stl"/>
             </geometry>
             <material name="AxleGrey">
                 <color rgba="0.5 0.5 0.5 1"/>
@@ -190,7 +195,7 @@ name="pioneer3at">
         <visual name="base_visual">
             <origin xyz="0 0 0" rpy="0 0 0"/>
             <geometry name="pioneer_geom">
-                <mesh filename="package://p3at_phi_framework/description/p3at_meshes/${side}_hubcap.stl"/>
+                <mesh filename="package://hratc2017_framework/description/p3at_meshes/${side}_hubcap.stl"/>
             </geometry>
             <material name="HubcapYellow">
                 <color rgba="1.0 0.811 0.151 1.0"/>
@@ -222,7 +227,7 @@ name="pioneer3at">
         <visual name="base_visual">
             <origin xyz="0 0 0" rpy="0 0 0"/>
             <geometry name="pioneer_geom">
-                <mesh filename="package://p3at_phi_framework/description/p3at_meshes/wheel.stl"/>
+                <mesh filename="package://hratc2017_framework/description/p3at_meshes/wheel.stl"/>
             </geometry>
             <material name="WheelBlack">
                 <color rgba="0.117 0.117 0.117 1"/>
@@ -231,7 +236,7 @@ name="pioneer3at">
         <collision>
             <origin xyz="0 0 0" rpy="${-3.1415927/2} 0 0"/>
             <geometry>
-                <!--mesh filename="package://p3at_phi_framework/description/p3at_meshes/wheel.stl"/-->
+                <!--mesh filename="package://hratc2017_framework/description/p3at_meshes/wheel.stl"/-->
                 <cylinder radius="0.111" length="0.075"/>
             </geometry>
         </collision>
@@ -260,7 +265,7 @@ name="pioneer3at">
         <visual name="base_visual">
             <origin xyz="0 0 0" rpy="0 0 0"/>
             <geometry name="pioneer_geom">
-                <mesh filename="package://p3at_phi_framework/description/p3at_meshes/axle.stl"/>
+                <mesh filename="package://hratc2017_framework/description/p3at_meshes/axle.stl"/>
             </geometry>
             <material name="AxleGrey">
                 <color rgba="0.5 0.5 0.5 1"/>
@@ -269,7 +274,7 @@ name="pioneer3at">
         <collision>
             <origin xyz="0 0 0" rpy="0 0 0"/>
             <geometry>
-                <mesh filename="package://p3at_phi_framework/description/p3at_meshes/axle.stl"/>
+                <mesh filename="package://hratc2017_framework/description/p3at_meshes/axle.stl"/>
             </geometry>
         </collision>
     </link>
@@ -292,14 +297,14 @@ name="pioneer3at">
         <visual name="base_visual">
             <origin xyz="0 0 0" rpy="0 0 0"/>
             <geometry name="pioneer_geom">
-                <mesh filename="package://p3at_phi_framework/description/p3at_meshes/${side}_hubcap.stl"/>
+                <mesh filename="package://hratc2017_framework/description/p3at_meshes/${side}_hubcap.stl"/>
             </geometry>
             <material name="HubcapYellow"/>
         </visual>
         <collision>
             <origin xyz="0 0 0" rpy="0 0 0"/>
             <geometry>
-                <mesh filename="package://p3at_phi_framework/description/p3at_meshes/${side}_hubcap.stl"/>
+                <mesh filename="package://hratc2017_framework/description/p3at_meshes/${side}_hubcap.stl"/>
             </geometry>
         </collision>
     </link>
@@ -322,14 +327,14 @@ name="pioneer3at">
         <visual name="base_visual">
             <origin xyz="0 0 0" rpy="0 0 0"/>
             <geometry name="pioneer_geom">
-                <mesh filename="package://p3at_phi_framework/description/p3at_meshes/wheel.stl"/>
+                <mesh filename="package://hratc2017_framework/description/p3at_meshes/wheel.stl"/>
             </geometry>
             <material name="WheelBlack"/>
         </visual>
         <collision>
             <origin xyz="0 0 0" rpy="${-3.1415927/2} 0 0"/>
             <geometry>
-            <!--mesh filename="package://p3at_phi_framework/description/p3at_meshes/wheel.stl"/-->
+            <!--mesh filename="package://hratc2017_framework/description/p3at_meshes/wheel.stl"/-->
             <cylinder radius="0.111" length="0.075"/>
             </geometry>
         </collision>
@@ -415,8 +420,23 @@ name="pioneer3at">
 <xacro:p3at_drive_side side="right" reflect="-1"/>
 <xacro:p3at_gazebo_ext/>
 
+<!-- metal detector macro -->
+<metal_detector parent="front_sonar">
+    <origin xyz="0.0 0.09 -0.16" rpy="0 0 ${-90*M_PI/180}"/>
+</metal_detector>
+
+<!-- robot bridge macro -->
+<robot_bridge parent="top_plate">
+    <origin xyz="-0.14 -0.14 0.0" rpy="0 0 0"/>
+</robot_bridge>
+
 <!-- SICK macro -->
-<sick_lms100 parent="base_link" x="0.2" y="0.0" z="0.4" rx="0.0" ry="${0*M_PI/180}" rz="0.0" />
+<!--<sick_lms100 parent="robot_bridge_top" x="0.15" y="0.05" z="0.12" rx="0.0" ry="0.0" rz="${90*M_PI/180}" />-->
+<sick_tim_55x parent="robot_bridge_top" x="0.095" y="0.0" z="0.07" rx="${-90*M_PI/180}" ry="0.0" rz="0.0" />
+<!--<sick_tim310 name="laser" ros_topic="scan" parent="base_link" x="0.2" y="0.0" z="0.4" rx="0.0" ry="${0*M_PI/180}" rz="0.0" />-->
+
+<!-- GPS macro -->
+<gps_antenna parent="robot_bridge_top" x="0" y="-0.07" z="0.0" rx="0" ry="0" rz="0" />
 
 <!-- CAMERA macros -->
 <!--<pointgrey_flea3 prefix="right" parent="base_link" base_offset="-0.3" camera_offset="-0.05" camera_r="0" camera_p="0" camera_y="0" />-->

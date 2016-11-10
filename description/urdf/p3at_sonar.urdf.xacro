@@ -2,8 +2,8 @@
 
 <robot xmlns:xacro="http://www.ros.org/wiki/xacro">
 
-    <xacro:include filename="$(find p3at_phi_framework)/description/urdf/common.xacro" />
-    <xacro:include filename="$(find p3at_phi_framework)/description/urdf/sonar_sensor.urdf.xacro" />
+    <xacro:include filename="$(find hratc2017_framework)/description/urdf/common.xacro" />
+    <xacro:include filename="$(find hratc2017_framework)/description/urdf/sonar_sensor.urdf.xacro" />
 
 	<xacro:property name="update_rate" value="10" />
 	<xacro:property name="min_range" value="0.15" />

@@ -6,21 +6,11 @@
   <arg name="paused" default="false"/>
   <arg name="use_sim_time" default="true"/>
   <arg name="gui" default="true"/>
+  <arg name="simple_rviz" default="true"/>
   <arg name="headless" default="false"/>
   <arg name="debug" default="false"/>
   <arg name="verbose" default="true"/>
   <arg name="world" default="$(find hratc2017_framework)/description/worlds/scenario1.world" />
-  <arg name="urdf" default="$(find hratc2017_framework)/description/urdf/pioneer3at.urdf.xacro" />
-  <arg name="joint_state_gui" default="false" />
-  <arg name="joint_state_rate" default="1000" />
-  <arg name="startz" default="0.9" />
-
-  <param name="robot_description" command="$(find xacro)/xacro.py $(arg urdf)" />
-  <param name="use_gui" value="$(arg joint_state_gui)"/>
-  <param name="rate" value="$(arg joint_state_rate)"/>
-  <node name="spawn_urdf" pkg="gazebo_ros" type="spawn_model" args="-x 0 -y 0 -z $(arg startz) -param robot_description -urdf -model pioneer3at_robot" />
-  <node name="robot_state_publisher" pkg="robot_state_publisher" type="robot_state_publisher" />
-  <node name="joint_state_publisher" pkg="joint_state_publisher" type="joint_state_publisher"></node>
 
   <!-- set use_sim_time flag -->
   <group if="$(arg use_sim_time)">
@@ -44,12 +34,12 @@
   <group if="$(arg gui)">
     <!-- start gazebo client -->
     <node name="gazebo_gui" pkg="gazebo_ros" type="gzclient" respawn="false" output="screen"/>
-    <!-- start rviz -->
-<!--    <node name="rviz" pkg="rviz" type="rviz" args="-d $(find amr_robots_description)/urdf/display_urdf.rviz" required="true" />-->
-    <node name="rviz" pkg="rviz" type="rviz" args="-d $(find hratc2017_framework)/description/p3at.rviz" />/>
+
+    <group if="$(arg simple_rviz)">
+        <!-- start rviz -->
+        <node name="rviz" pkg="rviz" type="rviz" args="-d $(find hratc2017_framework)/description/p3at.rviz" />/>
+    </group>
   </group>
-
-
 
 </launch>
 

@@ -18,7 +18,7 @@
 <!--      <visual>-->
 <!--        <origin xyz="0 0 0" rpy="0 0 0" />-->
 <!--        <geometry>-->
-<!--          <mesh filename="package://p3at_phi_framework/description/sensors_meshes/max_sonar_ez4.dae"/>-->
+<!--          <mesh filename="package://hratc2017_framework/description/sensors_meshes/max_sonar_ez4.dae"/>-->
 <!--        </geometry>-->
 <!--      </visual>-->
 <!--      <collision>-->
