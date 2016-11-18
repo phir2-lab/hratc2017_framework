@@ -34,7 +34,7 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 	<!-- PointGrey Flea 3 -->
 
-	<xacro:include filename="$(find p3at_phi_framework)/description/urdf/common.xacro" />
+	<xacro:include filename="$(find hratc2017_framework)/description/urdf/common.xacro" />
 
 	<xacro:property name="base_x" value="0.040" />
 	<xacro:property name="base_y" value="0.150" />

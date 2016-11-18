@@ -44,14 +44,14 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
             <visual>
                 <origin xyz="0 0 0" rpy="0 0 0" />
                 <geometry>
-                    <mesh filename="package://p3at_phi_framework/description/sensors_meshes/ptu_d46_base_link.stl" />
+                    <mesh filename="package://hratc2017_framework/description/sensors_meshes/ptu_d46_base_link.stl" />
                 </geometry>
                 <material name="DarkGray" />
             </visual>
             <collision>
                 <origin xyz="0 0 0" rpy="0 0 0" />
                 <geometry>
-                    <mesh filename="package://p3at_phi_framework/description/sensors_meshes/ptu_d46_base_link.stl" />
+                    <mesh filename="package://hratc2017_framework/description/sensors_meshes/ptu_d46_base_link.stl" />
                 </geometry>
             </collision>
         </link>
@@ -75,14 +75,14 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
             <visual>
                 <origin xyz="0 0 0" rpy="0 0 0" />
                 <geometry>
-                    <mesh filename="package://p3at_phi_framework/description/sensors_meshes/ptu_d46_pan_link.stl" />
+                    <mesh filename="package://hratc2017_framework/description/sensors_meshes/ptu_d46_pan_link.stl" />
                 </geometry>
                 <material name="DarkGray" />
             </visual>
             <collision>
                 <origin xyz="0 0 0" rpy="0 0 0" />
                 <geometry>
-                    <mesh filename="package://p3at_phi_framework/description/sensors_meshes/ptu_d46_pan_link.stl" />
+                    <mesh filename="package://hratc2017_framework/description/sensors_meshes/ptu_d46_pan_link.stl" />
                 </geometry>
             </collision>
         </link>
@@ -109,14 +109,14 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
             <visual>
                 <origin xyz="0 0 0" rpy="0 0 0" />
                 <geometry>
-                    <mesh filename="package://p3at_phi_framework/description/sensors_meshes/ptu_d46_tilt_link.stl" />
+                    <mesh filename="package://hratc2017_framework/description/sensors_meshes/ptu_d46_tilt_link.stl" />
                 </geometry>
                 <material name="DarkGray" />
             </visual>
             <collision>
                 <origin xyz="0 0 0" rpy="0 0 0" />
                 <geometry>
-                    <mesh filename="package://p3at_phi_framework/description/sensors_meshes/ptu_d46_tilt_link.stl" />
+                    <mesh filename="package://hratc2017_framework/description/sensors_meshes/ptu_d46_tilt_link.stl" />
                 </geometry>
             </collision>
         </link>
