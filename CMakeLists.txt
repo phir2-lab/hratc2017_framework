@@ -103,12 +103,12 @@ catkin_package(
 link_directories(${GAZEBO_LIBRARY_DIRS})
 include_directories(include ${Boost_INCLUDE_DIR} ${catkin_INCLUDE_DIRS} ${GAZEBO_INCLUDE_DIRS})
 
-## Declare a cpp library
-# add_library(fsr_husky_gazebo
-#   src/${PROJECT_NAME}/fsr_husky_gazebo.cpp
-# )
-add_library(gazebo_mimic_plugin src/gazebo_mimic_plugin/mimic_plugin.cpp)
-add_library(gazebo_gps_plugin src/gazebo_gps_plugin/gazebo_ros_gps.cpp src/UTMConverter/UTMConverter.cpp)
+### Declare a cpp library
+## add_library(fsr_husky_gazebo
+##   src/${PROJECT_NAME}/fsr_husky_gazebo.cpp
+## )
+#add_library(gazebo_mimic_plugin src/gazebo_mimic_plugin/mimic_plugin.cpp)
+#add_library(gazebo_gps_plugin src/gazebo_gps_plugin/gazebo_ros_gps.cpp src/UTMConverter/UTMConverter.cpp)
 
 ## Declare a cpp executable
 #add_executable(arm_controller src/arm_controller.cpp)
@@ -117,10 +117,10 @@ add_library(gazebo_gps_plugin src/gazebo_gps_plugin/gazebo_ros_gps.cpp src/UTMCo
 ## as an example, message headers may need to be generated before nodes
 # add_dependencies(fsr_husky_gazebo_node fsr_husky_gazebo_generate_messages_cpp)
 
-## Specify libraries to link a library or executable target against
-#target_link_libraries(arm_controller ${catkin_LIBRARIES})
-target_link_libraries(gazebo_mimic_plugin ${catkin_LIBRARIES} ${GAZEBO_LIBRARIES})
-target_link_libraries(gazebo_gps_plugin ${GAZEBO_LIBRARIES})
+### Specify libraries to link a library or executable target against
+##target_link_libraries(arm_controller ${catkin_LIBRARIES})
+#target_link_libraries(gazebo_mimic_plugin ${catkin_LIBRARIES} ${GAZEBO_LIBRARIES})
+#target_link_libraries(gazebo_gps_plugin ${GAZEBO_LIBRARIES})
 
 add_executable(gps_to_odom src/gps_to_odom/gps_to_odom.cpp src/UTMConverter/UTMConverter.cpp)
 target_link_libraries(gps_to_odom ${catkin_LIBRARIES})
