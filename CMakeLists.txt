@@ -134,9 +134,6 @@ target_link_libraries(judge ${catkin_LIBRARIES})
 add_executable(mineFieldViewer src/minefieldViewer/main.cpp src/minefieldViewer/minefieldviewer.cpp src/config/config.cpp src/UTMConverter/UTMConverter.cpp)
 target_link_libraries(mineFieldViewer ${catkin_LIBRARIES})
 
-add_executable(pointcloud_generator_node src/pcl_generator/pointcloud_generator.cpp)
-target_link_libraries(pointcloud_generator_node ${catkin_LIBRARIES})
-
 add_executable(update_configINI src/coilSignalSimulator/updateConfigINI/main.cpp src/config/config.cpp src/UTMConverter/UTMConverter.cpp)
 target_link_libraries(update_configINI ${catkin_LIBRARIES})
 
