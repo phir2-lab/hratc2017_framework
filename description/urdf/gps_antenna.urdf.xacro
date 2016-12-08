@@ -40,34 +40,32 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 	<xacro:property name="antenna_length" value="0.45" />
 	<xacro:property name="antenna_radius" value="0.008" />
 
-	<xacro:macro name="gps_antenna" params="parent x y z rx ry rz"> 
+    <xacro:macro name="gps_antenna" params="parent x y z rx ry rz"> 
   		<link name="gps_antenna">
-    			<inertial>
-      				<origin xyz="0.035 1.27350000005198E-07 0.084899" rpy="0 0 0" />
-      				<mass value="0.28321" />
-      				<inertia
-        				ixx="0.000632544028273332"
-        				ixy="-4.4923388876054E-20"
-        				ixz="1.07422508310795E-20"
-        				iyy="1.26609361466704E-09"
-        				iyz="-0.000632544028277925"
-        				izz="-1.26609361462022E-09" />
-    			</inertial>
-    			<visual>
-      				<origin xyz="-0.035 0 0" rpy="1.5708 0 0" />
-      				<geometry>
-					<mesh filename="package://hratc2017_framework/description/sensors_meshes/gps_antenna.stl" />
-      				</geometry>
-      				<material name="White">
-        				<color rgba="1 1 1 1"/>
-      				</material>
-    			</visual>
-    			<collision>
-      				<origin xyz="-0.035 0 0" rpy="1.5708 0 0" />
-      				<geometry>
-					<mesh filename="package://hratc2017_framework/description/sensors_meshes/gps_antenna.stl" />
-     			 	</geometry>
-    			</collision>
+            <inertial>
+                <origin xyz="0.035 1.27350000005198E-07 0.084899" rpy="0 0 0" />
+                <mass value="0.28321" />
+                <inertia
+                ixx="0.000632544028273332"
+                ixy="-4.4923388876054E-20"
+                ixz="1.07422508310795E-20"
+                iyy="1.26609361466704E-09"
+                iyz="-0.000632544028277925"
+                izz="-1.26609361462022E-09" />
+            </inertial>
+            <visual>
+                <origin xyz="0 0 0" rpy="0 0 0" />
+                <geometry>
+                    <box size="0.045 0.042 0.0135"/>
+                </geometry>
+                <material name="Black"/>
+            </visual>
+            <collision>
+                <origin xyz="0 0 0" rpy="0 0 0" />
+                <geometry>
+                    <box size="0.045 0.042 0.0135"/>
+                </geometry>
+            </collision>
   		</link>
 		
 		<joint name="gps_antenna_joint" type="fixed">
@@ -77,24 +75,28 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 		</joint>
 		
 		<gazebo reference="gps_antenna">
-        		<material>Gazebo/White</material>
-        		<turnGravityOff>false</turnGravityOff>
+            <material>Gazebo/Black</material>
+            <turnGravityOff>false</turnGravityOff>
 		</gazebo>
 		
-		<gazebo>
-			<plugin name="gazebo_ros_gps" filename="libgazebo_gps_plugin.so">
-			  <updateRate>4.0</updateRate>
-			  <bodyName>gps_antenna</bodyName>
-			  <frameId>gps_antenna</frameId>
-			  <topicName>/gps/fix</topicName>
-			  <velocityTopicName>/gps/fix_velocity</velocityTopicName>
-			  <offset>0 0 0</offset>
-			  <drift>0.001 0.001 0.001</drift>
-			  <gaussianNoise>0.01 0.01 0.01</gaussianNoise>
-			  <velocityDrift>0 0 0</velocityDrift>
-			  <velocityGaussianNoise>0.05 0.05 0.05</velocityGaussianNoise>
-			</plugin>
-    		</gazebo>
+        <gazebo>
+            <plugin name="gazebo_ros_gps" filename="libhector_gazebo_ros_gps.so">
+                <updateRate>4.0</updateRate>
+                <bodyName>gps_antenna</bodyName>
+                <frameId>gps_antenna</frameId>
+                <topicName>/gps/fix</topicName>
+                <velocityTopicName>/gps/fix_velocity</velocityTopicName>
+                <referenceLatitude>40.184680128</referenceLatitude>
+                <referenceLongitude>-8.414337443</referenceLongitude>
+<!--                <referenceHeading>0</referenceHeading>-->
+                <referenceAltitude>119.4501</referenceAltitude>
+                <offset>0 0 0</offset>
+                <drift>0.001 0.001 0.001</drift>
+                <gaussianNoise>0.01 0.01 0.01</gaussianNoise>
+                <velocityDrift>0 0 0</velocityDrift>
+                <velocityGaussianNoise>0.05 0.05 0.05</velocityGaussianNoise>
+            </plugin>
+        </gazebo>
 		
 	</xacro:macro>
 </robot>
