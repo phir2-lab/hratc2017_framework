@@ -5,26 +5,17 @@
 ##############################################################################
 
 - git:
-    uri: https://github.com/ras-sight/hratc2017_framework
+    uri: https://github.com/lsa-pucrs/hratc2017_framework.git
     local-name: hratc2017_framework
     version: master
 
 - git:
-    uri: https://github.com/ras-sight/metal_detector_msgs.git
+    uri: https://github.com/lsa-pucrs/metal_detector_msgs.git
     local-name: metal_detector_msgs
     version: master
 
 - git:
-    uri: https://github.com/ras-sight/hratc2017_entry_template.git
-    local-name:  hratc2017_entry_template
+    uri: https://github.com/lsa-pucrs/hratc2017_robot.git
+    local-name: hratc2017_robot
     version: master
 
-- git:
-    uri: https://github.com/brNX/navigation.git
-    local-name: robot_pose_ekf_cp
-    version: robot_pose_ekf
- 
-- git:
-    uri: https://github.com/brNX/robot_self_filter.git
-    local-name: robot_self_filter
-    version: master
