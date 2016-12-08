@@ -37,7 +37,6 @@
   <run_depend>roscpp</run_depend>
   <run_depend>std_msgs</run_depend>
   <run_depend>control_msgs</run_depend>
-  <run_depend>husky_gazebo_plugins</run_depend>
   <run_depend>gazebo_ros_control</run_depend>
   <run_depend>rospy</run_depend>
   <run_depend>tf</run_depend>
