@@ -12,7 +12,7 @@
 - git:
     uri: https://github.com/lsa-pucrs/metal_detector_msgs.git
     local-name: metal_detector_msgs
-    version: master
+    version: lsa-metal-detector
 
 - git:
     uri: https://github.com/lsa-pucrs/hratc2017_robot.git
