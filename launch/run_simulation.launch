@@ -42,6 +42,7 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
     <node pkg="robot_pose_ekf" type="robot_pose_ekf" name="robot_pose_ekf" output="screen">
 <!--        <param name="base_footprint_frame" value="base_link"/>-->
 <!--        <remap from="odom" to="irobot/odom"/>-->
+        <remap from="robot_pose_ekf/odom_combined" to="robot_pose_ekf/odom"/>
         <remap from="imu_data" to="imu/data"/>
         <remap from="gps" to="gps/odom"/>
         <param name="output_frame" value="odom"/>

@@ -433,8 +433,8 @@ name="pioneer3at">
             <robotBaseFrame>base_link</robotBaseFrame>
             <MaxForce>5.0</MaxForce>
             <torque>200</torque>
-            <commandTopic>cmd_vel</commandTopic>
-            <odometryTopic>odom</odometryTopic>
+            <commandTopic>/p3at/cmd_vel</commandTopic>
+            <odometryTopic>/p3at/odom</odometryTopic>
             <odometryFrame>odom</odometryFrame>
             <broadcastTF>1</broadcastTF>
         </plugin>
