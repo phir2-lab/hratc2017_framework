@@ -56,12 +56,12 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
         <param name="self_diagnose" value="false"/>
     </node>
 
-    <node name="update_configINI" pkg="hratc2017_framework"  type="update_configINI"
-      output="screen">
-      <rosparam file="$(find hratc2017_framework)/settings/minefield.yaml" command="load" />
-      <rosparam file="$(find hratc2017_framework)/settings/judge.yaml" command="load" />
-      <param name="~isSimulation" value="false"/>    
-    </node>
+<!--    <node name="update_configINI" pkg="hratc2017_framework"  type="update_configINI"-->
+<!--      output="screen">-->
+<!--      <rosparam file="$(find hratc2017_framework)/settings/minefield.yaml" command="load" />-->
+<!--      <rosparam file="$(find hratc2017_framework)/settings/judge.yaml" command="load" />-->
+<!--      <param name="~isSimulation" value="false"/>    -->
+<!--    </node>-->
     
     <!-- The minefield frame -->
     <node name="minefield_static_tf_publisher" pkg="hratc2017_framework" type="minefield_static_tf_publisher" output="screen">
@@ -69,7 +69,13 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
     </node>
 
     <!-- The coil signal simulator - required when not using the real robot -->
-    <node name="coilSignalSimulator" pkg="hratc2017_framework" type="coilSignalSimulator.py"/>
+<!--    <node name="coilSignalSimulator" pkg="hratc2017_framework" type="coilSignalSimulator.py"/>-->
+    <node name="coilSignalSimulator" pkg="hratc2017_framework" type="coilSignalSimulator">
+      <rosparam file="$(find hratc2017_framework)/settings/minefield.yaml" command="load" />
+      <rosparam file="$(find hratc2017_framework)/settings/judge.yaml" command="load" />
+      <param name="~isSimulation" value="true"/>  
+<!--      <remap from="coilSignalSimulator/coils" to="coils"/>-->
+    </node>
 
     <!-- The HRATC judge -->
     <node name="judge" pkg="hratc2017_framework"  type="judge"

@@ -1,6 +1,6 @@
 judge: 
 
-  GPS_coordinate: true
+  GPS_coordinate: false
 
   map_resolution: 0.05
 
@@ -15,19 +15,19 @@ judge:
   mines_positions:
 
     mine1: 
-      x: -8.41563316981
-      y: 40.1846049945
+      x: -3.8
+      y: 2.3
 
     mine2: 
-      x: -8.41561050415
-      y: 40.1845931689
+      x: 4.1
+      y: -0.9
 
     mine3: 
-      x: -8.41558116277
-      y: 40.1846061707
+      x: -0.5
+      y: -3.2
 
     mine4: 
-      x: -8.41560484568
-      y: 40.1846501668
+      x: -1.2
+      y: 3.1
 
 

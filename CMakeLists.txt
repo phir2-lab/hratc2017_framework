@@ -4,7 +4,7 @@ project(hratc2017_framework)
 ## Find catkin macros and libraries
 ## if COMPONENTS list like find_package(catkin REQUIRED COMPONENTS xyz)
 ## is used, also find other catkin packages
-find_package(catkin REQUIRED COMPONENTS cmake_modules gazebo_ros message_generation rosconsole roscpp geometry_msgs sensor_msgs nav_msgs tf)
+find_package(catkin REQUIRED COMPONENTS cmake_modules gazebo_ros message_generation rosconsole roscpp geometry_msgs sensor_msgs nav_msgs metal_detector_msgs tf)
 
 ## System dependencies are found with CMake's conventions
 # find_package(Boost REQUIRED COMPONENTS system)
@@ -88,9 +88,9 @@ include_directories(${Eigen_INCLUDE_DIRS})
 ## DEPENDS: system dependencies of this project that dependent projects also need
 catkin_package(
   INCLUDE_DIRS include
-  LIBRARIES gazebo_mimic_plugin
+  LIBRARIES 
   CATKIN_DEPENDS gazebo_ros
-  DEPENDS gazebo_ros
+  DEPENDS gazebo_ros metal_detector_msgs
 )
 
 ###########
@@ -113,10 +113,6 @@ include_directories(include ${Boost_INCLUDE_DIR} ${catkin_INCLUDE_DIRS} ${GAZEBO
 ## Declare a cpp executable
 #add_executable(arm_controller src/arm_controller.cpp)
 
-## Add cmake target dependencies of the executable/library
-## as an example, message headers may need to be generated before nodes
-# add_dependencies(fsr_husky_gazebo_node fsr_husky_gazebo_generate_messages_cpp)
-
 ### Specify libraries to link a library or executable target against
 ##target_link_libraries(arm_controller ${catkin_LIBRARIES})
 #target_link_libraries(gazebo_mimic_plugin ${catkin_LIBRARIES} ${GAZEBO_LIBRARIES})
@@ -128,14 +124,21 @@ target_link_libraries(gps_to_odom ${catkin_LIBRARIES})
 add_executable(minefield_static_tf_publisher src/minefield_static_tf_publisher/minefield_static_tf_publisher.cpp src/UTMConverter/UTMConverter.cpp)
 target_link_libraries(minefield_static_tf_publisher ${catkin_LIBRARIES})
 
-add_executable(judge src/judge/main.cpp src/judge/judge.cpp src/config/config.cpp src/judge/robotPose.cpp src/UTMConverter/UTMConverter.cpp)
+add_executable(judge src/judge/main.cpp src/judge/judge.cpp src/config/config.cpp src/config/robotPose.cpp src/UTMConverter/UTMConverter.cpp)
 target_link_libraries(judge ${catkin_LIBRARIES})
 
 add_executable(mineFieldViewer src/minefieldViewer/main.cpp src/minefieldViewer/minefieldviewer.cpp src/config/config.cpp src/UTMConverter/UTMConverter.cpp)
 target_link_libraries(mineFieldViewer ${catkin_LIBRARIES})
 
+add_executable(coilSignalSimulator src/coilSignalSimulator/main.cpp src/coilSignalSimulator/CoilSignalSimulator.cpp src/config/robotPose.cpp src/config/config.cpp src/UTMConverter/UTMConverter.cpp)
+target_link_libraries(coilSignalSimulator ${catkin_LIBRARIES})
+
 add_executable(update_configINI src/coilSignalSimulator/updateConfigINI/main.cpp src/config/config.cpp src/UTMConverter/UTMConverter.cpp)
 target_link_libraries(update_configINI ${catkin_LIBRARIES})
+
+## Add cmake target dependencies of the executable/library
+## as an example, message headers may need to be generated before nodes
+add_dependencies(coilSignalSimulator metal_detector_msgs_generate_messages_py)
 
 #############
 ## Install ##

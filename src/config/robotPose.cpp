@@ -9,11 +9,19 @@ RobotPose::RobotPose(string targetFrame, string inputTopic)
     tf_filter_ = new tf::MessageFilter<geometry_msgs::PoseWithCovarianceStamped>(sub_, tf_, target_frame_, 10);
     tf_filter_->registerCallback( boost::bind(&RobotPose::robotPoseCallback, this, _1) );
 
-    // start tf listeners -- one per wheel
-    for(int i=0; i<4;++i){
-        listeners.push_back(new tf::TransformListener);
-    }
+    listener = new tf::TransformListener;
+
+//    // start tf listeners -- one per wheel
+//    for(int i=0; i<4;++i){
+//        listeners.push_back(new tf::TransformListener);
+//    }
     wheelsPoses.resize(4);
+
+
+    emptyPose_.header.frame_id = "UNDEF";
+    emptyPose_.pose.position.x = 0;
+    emptyPose_.pose.position.y = 0;
+    emptyPose_.pose.position.z = 0;
 }
 
 const geometry_msgs::PoseStamped & RobotPose::getGlobalPose()
@@ -55,7 +63,7 @@ const vector<geometry_msgs::PoseStamped> & RobotPose::getWheelsPoses()
 
     try{
         // faster lookup transform so far
-        listeners[0]->lookupTransform("/minefield", "/back_left_wheel", ros::Time(0), transform);
+        listener->lookupTransform("/minefield", "/back_left_wheel", ros::Time(0), transform);
     }
     catch (tf::TransformException &ex) {
 //        ROS_ERROR("%s",ex.what());
@@ -73,7 +81,7 @@ const vector<geometry_msgs::PoseStamped> & RobotPose::getWheelsPoses()
 
     try{
         // faster lookup transform so far
-        listeners[1]->lookupTransform("/minefield", "/back_right_wheel", ros::Time(0), transform);
+        listener->lookupTransform("/minefield", "/back_right_wheel", ros::Time(0), transform);
     }
     catch (tf::TransformException &ex) {
 //        ROS_ERROR("%s",ex.what());
@@ -91,7 +99,7 @@ const vector<geometry_msgs::PoseStamped> & RobotPose::getWheelsPoses()
 
     try{
         // faster lookup transform so far
-        listeners[2]->lookupTransform("/minefield", "/front_left_wheel", ros::Time(0), transform);
+        listener->lookupTransform("/minefield", "/front_left_wheel", ros::Time(0), transform);
     }
     catch (tf::TransformException &ex) {
 //        ROS_ERROR("%s",ex.what());
@@ -109,7 +117,7 @@ const vector<geometry_msgs::PoseStamped> & RobotPose::getWheelsPoses()
 
     try{
         // faster lookup transform so far
-        listeners[3]->lookupTransform("/minefield", "/front_right_wheel", ros::Time(0), transform);
+        listener->lookupTransform("/minefield", "/front_right_wheel", ros::Time(0), transform);
     }
     catch (tf::TransformException &ex) {
 //        ROS_ERROR("%s",ex.what());
@@ -128,3 +136,54 @@ const vector<geometry_msgs::PoseStamped> & RobotPose::getWheelsPoses()
 
     return wheelsPoses;
 }
+
+const geometry_msgs::PoseStamped & RobotPose::getLeftCoilPose()
+{
+    tf::StampedTransform transform;
+
+    try{
+        // faster lookup transform so far
+        listener->lookupTransform("/minefield", "/left_coil", ros::Time(0), transform);
+    }
+    catch (tf::TransformException &ex) {
+//        ROS_ERROR("%s",ex.what());
+        // 30 Hz -- maybe too fast
+        ros::Duration(0.05).sleep();
+        return emptyPose_;
+    }
+
+    leftCoilPose_.header.frame_id = "left_coil";
+    leftCoilPose_.header.stamp = ros::Time::now();
+    leftCoilPose_.pose.position.x = transform.getOrigin().x();
+    leftCoilPose_.pose.position.y = transform.getOrigin().y();
+    leftCoilPose_.pose.position.z = transform.getOrigin().z();
+    quaternionTFToMsg(transform.getRotation(),leftCoilPose_.pose.orientation);
+
+    return leftCoilPose_;
+}
+
+const geometry_msgs::PoseStamped & RobotPose::getRightCoilPose()
+{
+    tf::StampedTransform transform;
+
+    try{
+        // faster lookup transform so far
+        listener->lookupTransform("/minefield", "/right_coil", ros::Time(0), transform);
+    }
+    catch (tf::TransformException &ex) {
+//        ROS_ERROR("%s",ex.what());
+        // 30 Hz -- maybe too fast
+        ros::Duration(0.05).sleep();
+        return emptyPose_;
+    }
+
+    rightCoilPose_.header.frame_id = "right_coil";
+    rightCoilPose_.header.stamp = ros::Time::now();
+    rightCoilPose_.pose.position.x = transform.getOrigin().x();
+    rightCoilPose_.pose.position.y = transform.getOrigin().y();
+    rightCoilPose_.pose.position.z = transform.getOrigin().z();
+    quaternionTFToMsg(transform.getRotation(),rightCoilPose_.pose.orientation);
+
+    return rightCoilPose_;
+}
+

@@ -88,7 +88,7 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
                 <velocityTopicName>/gps/fix_velocity</velocityTopicName>
                 <referenceLatitude>40.184680128</referenceLatitude>
                 <referenceLongitude>-8.414337443</referenceLongitude>
-<!--                <referenceHeading>0</referenceHeading>-->
+                <referenceHeading>90</referenceHeading>
                 <referenceAltitude>119.4501</referenceAltitude>
                 <offset>0 0 0</offset>
                 <drift>0.001 0.001 0.001</drift>

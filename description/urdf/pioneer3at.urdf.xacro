@@ -470,10 +470,10 @@ name="pioneer3at">
 <sensor_hokuyo parent="robot_bridge_box" x="0.12" y="0.14" z="0.22" rx="${0*M_PI/180}" ry="${(90-55)*M_PI/180}" rz="${0*M_PI/180}" />
 
 <!-- GPS macro -->
-<gps_antenna parent="robot_bridge_top" x="0.25" y="0.02" z="0.01" rx="0" ry="0" rz="0" />
+<gps_antenna parent="robot_bridge_top" x="0.25" y="0.02" z="0.01" rx="0" ry="0" rz="${0*M_PI/180}" />
     
 <!-- IMU macro -->
-<mti parent="robot_bridge_top" x="0.05" y="0.02" z="0.005" rx="0" ry="0" rz="0" />
+<mti parent="robot_bridge_top" x="0.05" y="0.02" z="0.005" rx="${0*M_PI/180}" ry="${0*M_PI/180}" rz="${0*M_PI/180}" />
 
 <!-- CAMERA macros -->
 <!--<pointgrey_flea3 prefix="right" parent="base_link" base_offset="-0.3" camera_offset="-0.05" camera_r="0" camera_p="0" camera_y="0" />-->

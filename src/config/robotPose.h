@@ -56,13 +56,15 @@ public:
     const geometry_msgs::PoseStamped & getGlobalPose();
     const geometry_msgs::PoseStamped & getLocalPose();
     const vector<geometry_msgs::PoseStamped> & getWheelsPoses();
-
+    const geometry_msgs::PoseStamped & getLeftCoilPose();
+    const geometry_msgs::PoseStamped & getRightCoilPose();
 
 private:
     message_filters::Subscriber<geometry_msgs::PoseWithCovarianceStamped> sub_;
     tf::TransformListener tf_;
     tf::MessageFilter<geometry_msgs::PoseWithCovarianceStamped> * tf_filter_;
-    vector< tf::TransformListener* > listeners;
+//    vector< tf::TransformListener* > listeners;
+    tf::TransformListener* listener;
     ros::NodeHandle n_;
     string target_frame_;
     string input_topic_;
@@ -70,7 +72,11 @@ private:
     geometry_msgs::PoseStamped globalPose_;
     geometry_msgs::PoseStamped localPose_;
     vector<geometry_msgs::PoseStamped> wheelsPoses;
+    geometry_msgs::PoseStamped leftCoilPose_;
+    geometry_msgs::PoseStamped rightCoilPose_;
+
     vector<geometry_msgs::PoseStamped> emptyVector;
+    geometry_msgs::PoseStamped emptyPose_;
 
     //  Callback to register with tf::MessageFilter to be called when transforms are available
     void robotPoseCallback(const boost::shared_ptr<const geometry_msgs::PoseWithCovarianceStamped>& msg);

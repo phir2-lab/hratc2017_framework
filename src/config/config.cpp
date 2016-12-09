@@ -18,6 +18,7 @@ Config::Config(ros::NodeHandle *nh) : n(nh)
     ros::Rate* rate = new ros::Rate(20);
 
     readMinefieldCorners();
+
 //    while(!canStart){
 //        ros::spinOnce();
 //        rate->sleep();
