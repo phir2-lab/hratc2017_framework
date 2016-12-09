@@ -467,7 +467,7 @@ name="pioneer3at">
 <!--<sick_tim310 name="laser" ros_topic="scan" parent="base_link" x="0.2" y="0.0" z="0.4" rx="0.0" ry="${0*M_PI/180}" rz="0.0" />-->
 
 <!-- Hokuyo macro -->
-<sensor_hokuyo parent="robot_bridge_box" x="0.12" y="0.14" z="0.22" rx="${0*M_PI/180}" ry="${(90-55)*M_PI/180}" rz="${0*M_PI/180}" />
+<sensor_hokuyo parent="Hokuyo_joint" x="0.01" y="0.08" z="0.01" rx="${-90*M_PI/180}" ry="${0*M_PI/180}" rz="${0*M_PI/180}" />
 
 <!-- GPS macro -->
 <gps_antenna parent="robot_bridge_top" x="0.25" y="0.02" z="0.01" rx="0" ry="0" rz="${0*M_PI/180}" />

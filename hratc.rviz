@@ -43,6 +43,16 @@ Visualization Manager:
         Expand Joint Details: false
         Expand Link Details: false
         Expand Tree: false
+        Hokuyo_joint:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+          Value: true
+        Hokuyo_support:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+          Value: true
         Link Tree Style: Links in Alphabetic Order
         back_sonar:
           Alpha: 1
@@ -226,9 +236,9 @@ Visualization Manager:
       Enabled: true
       Invert Rainbow: false
       Max Color: 255; 255; 255
-      Max Intensity: 0.780874
+      Max Intensity: 0.308411
       Min Color: 0; 0; 0
-      Min Intensity: 0.290721
+      Min Intensity: 0.308355
       Name: LaserScan
       Position Transformer: XYZ
       Queue Size: 10
@@ -307,7 +317,7 @@ Visualization Manager:
       Marker Topic: /judge/visitedUndetectedMines_marker
       Name: VisitedUndetected
       Namespaces:
-        VUMines: true
+        {}
       Queue Size: 100
       Value: true
     - Class: rviz/MarkerArray
@@ -443,7 +453,7 @@ Visualization Manager:
         Value: false
       Name: Current View
       Near Clip Distance: 0.01
-      Scale: 31.6635
+      Scale: 34.3559
       Target Frame: <Fixed Frame>
       Value: TopDownOrtho (rviz)
       X: 0.766239
