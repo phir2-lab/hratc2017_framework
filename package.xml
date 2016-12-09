@@ -42,6 +42,7 @@
   <run_depend>rospy</run_depend>
   <run_depend>tf</run_depend>
   <run_depend>metal_detector_msgs</run_depend>
+  <run_depend>robot_pose_ekf</run_depend>
   
   <export>
     <gazebo_ros gazebo_media_path="${prefix}"/>

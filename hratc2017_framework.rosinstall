@@ -19,3 +19,11 @@
     local-name: hratc2017_robot
     version: master
 
+- git:
+    uri: https://github.com/ras-sight/hratc2017_entry_template.git
+    local-name: hratc2017_entry_template
+    version: master
+
+
+
+
