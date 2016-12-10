@@ -10,7 +10,7 @@
   <arg name="debug" default="false"/>
   <arg name="verbose" default="true"/>
   <arg name="world" default="worlds/empty.world" />
-  <arg name="urdf" default="$(find hratc2017_framework)/description/urdf/pioneer3at.urdf.xacro" />
+  <arg name="urdf" default="$(find hratc2017_framework)/description/urdf/pioneer3at.urdf" />
   <arg name="joint_state_gui" default="false" />
   <arg name="joint_state_rate" default="1000" />
 
