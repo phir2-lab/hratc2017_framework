@@ -133,6 +133,9 @@ target_link_libraries(mineFieldViewer ${catkin_LIBRARIES})
 add_executable(coilSignalSimulator src/coilSignalSimulator/main.cpp src/coilSignalSimulator/CoilSignalSimulator.cpp src/config/robotPose.cpp src/config/config.cpp src/UTMConverter/UTMConverter.cpp)
 target_link_libraries(coilSignalSimulator ${catkin_LIBRARIES})
 
+add_executable(convert_coordinates src/UTMConverter/convert_coordinates.cpp src/UTMConverter/UTMConverter.cpp)
+target_link_libraries(convert_coordinates ${catkin_LIBRARIES})
+
 add_executable(update_configINI src/coilSignalSimulator/updateConfigINI/main.cpp src/config/config.cpp src/UTMConverter/UTMConverter.cpp)
 target_link_libraries(update_configINI ${catkin_LIBRARIES})
 
