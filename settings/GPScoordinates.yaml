@@ -1,0 +1,68 @@
+GPScoordinates:
+   robot: 
+      latitude: -30.06022459407145675
+      longitude: -51.173913575780311191
+      altitude: 10
+
+   corners:
+       corner1: 
+          latitude: -30.060314832074897851
+          longitude: -51.173918920793525444
+          altitude: 10
+
+       corner2: 
+          latitude: -30.060314969251294315
+          longitude: -51.173815175327305838
+          altitude: 10
+
+       corner3: 
+          latitude: -30.060224724386614525
+          longitude: -51.173815017676766104
+          altitude: 10
+
+       corner4: 
+          latitude: -30.060224587210715441
+          longitude: -51.173918763048902747
+          altitude: 10
+
+   obstacles:
+       obstacle1: 
+          latitude: -30.06021563818108433
+          longitude: -51.173861687325064906
+          altitude: 10
+
+       obstacle2: 
+          latitude: -30.060215686186189998
+          longitude: -51.173825376448057511
+          altitude: 10
+
+       obstacle3: 
+          latitude: -30.060215699900091124
+          longitude: -51.173815001911741263
+          altitude: 10
+
+       obstacle4: 
+          latitude: -30.060238261116396075
+          longitude: -51.17381504132429626
+          altitude: 10
+
+       obstacle5: 
+          latitude: -30.060269709642970071
+          longitude: -51.173918841921128831
+          altitude: 10
+
+       obstacle6: 
+          latitude: -30.060314969251294315
+          longitude: -51.173815175327305838
+          altitude: 10
+
+       obstacle7: 
+          latitude: -30.060314866376675269
+          longitude: -51.173892984427041597
+          altitude: 10
+
+       obstacle8: 
+          latitude: -30.060314845796217043
+          longitude: -51.173908546246948958
+          altitude: 10
+
