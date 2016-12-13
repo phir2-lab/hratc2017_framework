@@ -42,7 +42,7 @@ double random_number(double low, double high)
 void CoilSignalSimulator::initMetalObjects()
 {
     mine.maxValue = 0.8;
-    mine.stdDev = 0.1; //10cm
+    mine.stdDev = 0.3; //10cm
     mine.eta = mine.maxValue * 1.0/(mine.stdDev * sqrt(2.0*M_PI));
     mine.var = mine.stdDev*mine.stdDev;
 //    cout << "\n\n\n\n\nMINES: " << mine.eta << ' ' << mine.var << "\n\n\n\n" << endl;
@@ -87,6 +87,14 @@ void CoilSignalSimulator::initMetalObjects()
     m.eta = m.maxValue * 1.0/(m.stdDev * sqrt(2.0*M_PI));
     m.var = m.stdDev*m.stdDev;
     otherObjects.push_back(m);
+}
+
+float CoilSignalSimulator::GaussianMine(float sqrdist, const metalObject& m)
+{
+    if(sqrdist > 0.09) // 30cm
+        return 0.0;
+    else
+        return m.eta * exp(-0.5*sqrdist/m.var);
 }
 
 float CoilSignalSimulator::Gaussian(float sqrdist, const metalObject& m)

@@ -36,6 +36,7 @@ class CoilSignalSimulator
         void initMetalObjects();
         void computeDistanceToMines();
         float Gaussian(float sqrdist, const metalObject& m);
+        float GaussianMine(float sqrdist, const metalObject& m);
         void publishSimulatedCoilValues();
 
         ros::NodeHandle* n;
