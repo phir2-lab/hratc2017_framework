@@ -45,6 +45,8 @@ minefieldViewer::minefieldViewer() :
 //    }
 //    config = new Config(filename);
     config = new Config(mapNodeHandler);
+    robotPose = new RobotPose("/minefield","/robot_pose_ekf/odom");
+    trueRobotPose = new TrueRobotPose(mapNodeHandler);
 
     // Loading grid with config file data 
     grid.info.resolution = config->resolution;  // float32
@@ -162,25 +164,44 @@ void minefieldViewer::run()
     ros::Publisher map_pub = mapNodeHandler->advertise<nav_msgs::OccupancyGrid>("occupancyGrid", 1);
     ros::Publisher cover_pub = mapNodeHandler->advertise<std_msgs::Float32>("coverageRate", 1);
 
+    int count = 0;
+
     // ROS loop
     while (ros::ok())
     {
-        // find transformations for each coil
-        for(int i=0; i<3;++i)
-        {
-            // getting left, middle and right coils transforms
-            if ( getCoilTransform(i) )
-            {
-                // mark grid cells as visited
-                fillGrid();
-            }
+        leftCoilPose = trueRobotPose->getLeftCoilPose();
+        if(leftCoilPose.header.frame_id.compare("UNDEF") != 0){
+            count++;
+            if(count > 10)
+                fillGrid(leftCoilPose);
         }
+
+        rightCoilPose = trueRobotPose->getRightCoilPose();
+        if(rightCoilPose.header.frame_id.compare("UNDEF") != 0){
+            count++;
+            if(count > 10)
+                fillGrid(rightCoilPose);
+        }
+
+
+//        // find transformations for each coil
+//        for(int i=0; i<3;++i)
+//        {
+//            // getting left, middle and right coils transforms
+//            if ( getCoilTransform(i) )
+//            {
+//                // mark grid cells as visited
+//                fillGrid();
+//            }
+//        }
         // Setting frame id and timestamp for the occupancy grid
         grid.header.frame_id = "/minefield";
         grid.header.stamp = ros::Time::now();
         //plain grid height is set to the last coil z position
 //        grid.info.origin.position.z = 0;
-        grid.info.origin.position.z = transform.getOrigin().z()-0.30;
+//        grid.info.origin.position.z = transform.getOrigin().z()-0.30;
+        grid.info.origin.position.z = leftCoilPose.pose.position.z-0.30;
+
         // Publish the view of the coverage area
         map_pub.publish(grid);
 
@@ -192,6 +213,7 @@ void minefieldViewer::run()
         rate.data = coverage/totalValidCells;
         cover_pub.publish( rate );
 
+        ros::spinOnce();
         r.sleep();
     }
 }
@@ -215,15 +237,17 @@ bool minefieldViewer::getCoilTransform(int i)
     return no_error;
 }
 
-void minefieldViewer::fillGrid()
+void minefieldViewer::fillGrid(geometry_msgs::PoseStamped& coilPose)
 { // fill detection area
     
 
     // get origin in cells
 //    double w = round(transform.getOrigin().x()/grid.info.resolution + grid.info.width/ 2.0);
 //    double h = round(transform.getOrigin().y()/grid.info.resolution + grid.info.height/2.0);
-    double w = round((transform.getOrigin().x()-grid.info.origin.position.x)/grid.info.resolution);
-    double h = round((transform.getOrigin().y()-grid.info.origin.position.y)/grid.info.resolution);
+//    double w = round((transform.getOrigin().x()-grid.info.origin.position.x)/grid.info.resolution);
+//    double h = round((transform.getOrigin().y()-grid.info.origin.position.y)/grid.info.resolution);
+    double w = round((coilPose.pose.position.x - grid.info.origin.position.x)/grid.info.resolution);
+    double h = round((coilPose.pose.position.y - grid.info.origin.position.y)/grid.info.resolution);
 
     for(int x=-cellRadius; x<+cellRadius; ++x)
     {
@@ -247,6 +271,44 @@ void minefieldViewer::fillGrid()
                     // mark cell as covered
                     grid.data[(h+y)*grid.info.width + w+x] =0;
                 }            
+            }
+        }
+    }
+}
+
+void minefieldViewer::fillGrid()
+{ // fill detection area
+
+
+    // get origin in cells
+//    double w = round(transform.getOrigin().x()/grid.info.resolution + grid.info.width/ 2.0);
+//    double h = round(transform.getOrigin().y()/grid.info.resolution + grid.info.height/2.0);
+    double w = round((transform.getOrigin().x()-grid.info.origin.position.x)/grid.info.resolution);
+    double h = round((transform.getOrigin().y()-grid.info.origin.position.y)/grid.info.resolution);
+
+
+    for(int x=-cellRadius; x<+cellRadius; ++x)
+    {
+        for(int y=-cellRadius; y<+cellRadius; ++y)
+        {
+            if(
+                ( w+x>=0) && ( w+x<grid.info.width) &&
+                ( h+y>=0) && ( h+y<grid.info.height)
+              )
+            {
+                //cout << "x " << x << " y " << y << endl;
+                // setting color to scanned (white)
+                if( sqrt(x*x+y*y) <= cellRadius )
+                {
+                    if(grid.data[(h+y)*grid.info.width + w+x]==100)
+                        continue;
+
+                    // count new cell
+                    if(grid.data[(h+y)*grid.info.width + w+x]!=0)
+                        coverage+=1;
+                    // mark cell as covered
+                    grid.data[(h+y)*grid.info.width + w+x] =0;
+                }
             }
         }
     }

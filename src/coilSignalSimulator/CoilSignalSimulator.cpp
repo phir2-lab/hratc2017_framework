@@ -11,11 +11,12 @@ CoilSignalSimulator::CoilSignalSimulator()
 
     n = new ros::NodeHandle("~");
 
-    rate = new ros::Rate(1);
+    rate = new ros::Rate(20);
 
     config = new Config(n);
 
     robotPose = new RobotPose("/minefield","/robot_pose_ekf/odom");
+    trueRobotPose = new TrueRobotPose(n);
 
     canStart.data = true;
     pub_startEveryone = n->advertise<std_msgs::Bool>("/configDone", 1);
@@ -161,8 +162,10 @@ void CoilSignalSimulator::run()
         pub_startEveryone.publish(canStart);
 
         // get coils poses
-        leftCoilPose = robotPose->getLeftCoilPose();
-        rightCoilPose = robotPose->getRightCoilPose();
+//        leftCoilPose = robotPose->getLeftCoilPose();
+//        rightCoilPose = robotPose->getRightCoilPose();
+        leftCoilPose = trueRobotPose->getLeftCoilPose();
+        rightCoilPose = trueRobotPose->getRightCoilPose();
 
         string str = leftCoilPose.header.frame_id;
         if(str.compare("UNDEF") == 0){

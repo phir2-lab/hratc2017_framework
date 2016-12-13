@@ -124,13 +124,13 @@ target_link_libraries(gps_to_odom ${catkin_LIBRARIES})
 add_executable(minefield_static_tf_publisher src/minefield_static_tf_publisher/minefield_static_tf_publisher.cpp src/UTMConverter/UTMConverter.cpp)
 target_link_libraries(minefield_static_tf_publisher ${catkin_LIBRARIES})
 
-add_executable(judge src/judge/main.cpp src/judge/judge.cpp src/config/config.cpp src/config/robotPose.cpp src/UTMConverter/UTMConverter.cpp)
+add_executable(judge src/judge/main.cpp src/judge/judge.cpp src/config/config.cpp src/config/robotPose.cpp src/config/trueRobotPose.cpp src/UTMConverter/UTMConverter.cpp)
 target_link_libraries(judge ${catkin_LIBRARIES})
 
-add_executable(mineFieldViewer src/minefieldViewer/main.cpp src/minefieldViewer/minefieldviewer.cpp src/config/config.cpp src/UTMConverter/UTMConverter.cpp)
+add_executable(mineFieldViewer src/minefieldViewer/main.cpp src/minefieldViewer/minefieldviewer.cpp src/config/robotPose.cpp src/config/trueRobotPose.cpp src/config/config.cpp src/UTMConverter/UTMConverter.cpp)
 target_link_libraries(mineFieldViewer ${catkin_LIBRARIES})
 
-add_executable(coilSignalSimulator src/coilSignalSimulator/main.cpp src/coilSignalSimulator/CoilSignalSimulator.cpp src/config/robotPose.cpp src/config/config.cpp src/UTMConverter/UTMConverter.cpp)
+add_executable(coilSignalSimulator src/coilSignalSimulator/main.cpp src/coilSignalSimulator/CoilSignalSimulator.cpp src/config/robotPose.cpp src/config/trueRobotPose.cpp src/config/config.cpp src/UTMConverter/UTMConverter.cpp)
 target_link_libraries(coilSignalSimulator ${catkin_LIBRARIES})
 
 add_executable(convert_coordinates src/UTMConverter/convert_coordinates.cpp src/UTMConverter/UTMConverter.cpp)

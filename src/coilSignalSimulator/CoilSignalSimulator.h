@@ -14,6 +14,8 @@ using namespace std;
 
 #include "../config/config.h"
 #include "../config/robotPose.h"
+#include "../config/trueRobotPose.h"
+
 
 struct metalObject
 {
@@ -41,6 +43,7 @@ class CoilSignalSimulator
         tf::TransformListener* listener;
         Config* config;
         RobotPose* robotPose;
+        TrueRobotPose* trueRobotPose;
         unsigned int countMsgs;
 
         geometry_msgs::PoseStamped leftCoilPose;

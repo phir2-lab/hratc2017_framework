@@ -4,9 +4,12 @@
 #include <nav_msgs/OccupancyGrid.h>
 #include <tf/transform_listener.h>
 #include <geometry_msgs/Twist.h>
+#include <geometry_msgs/PoseStamped.h>
 #include <visualization_msgs/Marker.h>
 #include <std_msgs/Bool.h>
 #include "../config/config.h"
+#include "../config/robotPose.h"
+#include "../config/trueRobotPose.h"
 
 #include <string>
 using std::string;
@@ -28,15 +31,21 @@ public:
 private:
     // Node handler pointer
     ros::NodeHandle* mapNodeHandler;
+    RobotPose* robotPose;
+    TrueRobotPose* trueRobotPose;
 
     // the coverage map
     nav_msgs::OccupancyGrid grid;
 
     // coils and coverage prereqs
     bool getCoilTransform(int i);
+    void fillGrid(geometry_msgs::PoseStamped &coilPose);
     void fillGrid();
+
     tf::StampedTransform transform;
     vector< tf::TransformListener* > listeners;
+    geometry_msgs::PoseStamped leftCoilPose;
+    geometry_msgs::PoseStamped rightCoilPose;
 
     void initializeGrid();
     
