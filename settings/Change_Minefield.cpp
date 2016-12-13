@@ -14,6 +14,7 @@
 
 using namespace std;
 
+/*
 string to_str(int number) {
     stringstream ss;
     ss << number;
@@ -26,19 +27,72 @@ string to_str(double number) {
     ss << number;
     string str = ss.str();
     return str;
+}*/
+
+void changeminefield(string address){
+	 string to = "/home/phi/hratc2017_workspace/src/hratc2017_framework/description/worlds/scenario0.world";
+   string from ="/home/phi/hratc2017_workspace/src/hratc2017_framework/description/worlds/"+address;
+	 fstream file_from,file_to;
+   char ch;
+   file_from.open(from.c_str());
+   file_to.open(to.c_str());
+   while(!file_from.eof()){
+      file_from.get(ch);
+      file_to<<ch;
+	 }
+   file_from.close();
+   file_to.close();
+	 cout<<"It's done!"<<endl;
 }
+
 
 int main(int argc, char *argv[])
 {
-    // QCoreApplication a(argc, argv);
+    int option;
+		string from, minefield;
+    bool flag = true;
+		cout<<"\nPlease, choose the correspondent number to the desired characteristic of the minefield:"<<endl<<"1 - Flat minefield;"<<endl<<"2 - Soft wavy minefield;"<<endl<<"3 - Hard wavy minefield;"<<endl<<"0 - Exit."<<endl;
+		do{
+		cin>>option;
+		if(option != 1 && option != 2 && option != 3 && option != 0) {
+			cout<<"Please, choose a valid option."<<endl;
+		}else{
+			flag = false;
+		}
+    }while(flag);
+		switch(option){
+			case 1: //flatMinefield.world
+					cout<<"Flat minefield!"<<endl;
+					minefield = "flatMinefield.world";
+					changeminefield(minefield);
+					break;
+			case 2://softWavyMinefield.world
+					cout<<"Soft wavy minefield!"<<endl;
+					minefield = "softWavyMinefield.world";
+					changeminefield(minefield);
+					break;
+			case 3://hardWavyMinefield.world
+					cout<<"Hard wavy minefield!"<<endl;
+					minefield = "hardWavyMinefield.world";
+					changeminefield(minefield);
+					break;
+			default:
+					cout<<"Exit!"<<endl;
+					break;
+		}
+			return 0;
+}
 
-    char Str[10000];
-    FILE *arqIn, *arqOut, *arq;
-    char result;
-    
-//    ./main    <Minefield>      <Cont_Mines>    <percentual de minhas na trilha>
-//    argv[0]    argv[1]            argv[2]                    argv[3]
 
+
+
+
+
+
+
+
+
+/*
     string from = argv[1]; 
     string to = "minefield.yaml"; 
     from = "minefield/"+from+"minefield.yaml";
@@ -234,4 +288,4 @@ int main(int argc, char *argv[])
     fclose(arq);
 
      return 0;
-}
+}*/
