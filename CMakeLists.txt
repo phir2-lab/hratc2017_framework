@@ -87,7 +87,7 @@ include_directories(${Eigen_INCLUDE_DIRS})
 ## CATKIN_DEPENDS: catkin_packages dependent projects also need
 ## DEPENDS: system dependencies of this project that dependent projects also need
 catkin_package(
-  INCLUDE_DIRS include
+  INCLUDE_DIRS
   LIBRARIES 
   CATKIN_DEPENDS gazebo_ros
   DEPENDS gazebo_ros metal_detector_msgs
@@ -135,9 +135,6 @@ target_link_libraries(coilSignalSimulator ${catkin_LIBRARIES})
 
 add_executable(convert_coordinates src/UTMConverter/convert_coordinates.cpp src/UTMConverter/UTMConverter.cpp)
 target_link_libraries(convert_coordinates ${catkin_LIBRARIES})
-
-add_executable(update_configINI src/coilSignalSimulator/updateConfigINI/main.cpp src/config/config.cpp src/UTMConverter/UTMConverter.cpp)
-target_link_libraries(update_configINI ${catkin_LIBRARIES})
 
 ## Add cmake target dependencies of the executable/library
 ## as an example, message headers may need to be generated before nodes

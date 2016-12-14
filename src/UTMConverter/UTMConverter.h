@@ -1,4 +1,3 @@
-
 #include <sensor_msgs/NavSatFix.h>
 
 #ifndef UTMCONVERTER_H

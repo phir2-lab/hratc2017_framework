@@ -60,7 +60,7 @@
 #include <angles/angles.h>
 #include <visualization_msgs/MarkerArray.h>
 
-#include <UTMConverter/UTMConverter.h>
+#include "../UTMConverter/UTMConverter.h"
 
 #include <vector>
 #include <iostream>

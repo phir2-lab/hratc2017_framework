@@ -10,7 +10,7 @@
 //
 
 #include <angles/angles.h>
-#include <UTMConverter/UTMConverter.h>
+#include "UTMConverter.h"
 
 UTMDatum UTMConverter::utm_datum_ = UTMDatumMake(6378137, 6356752.3142);
 double UTMConverter::utm_scale_factor_ = 0.9996;
