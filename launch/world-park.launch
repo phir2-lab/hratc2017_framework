@@ -12,9 +12,11 @@
   <arg name="verbose" default="true"/>
 
   <!-- Set the type of terrain-->
-<!--  <arg name="world" default="$(find hratc2017_framework)/description/worlds/softWavyMinefield.world" />-->
-  <arg name="world" default="$(find hratc2017_framework)/description/worlds/flatMinefield.world" />
-<!--  <arg name="world" default="$(find hratc2017_framework)/description/worlds/hardWavyMinefield.world" />-->
+<!--  <arg name="scenario" default="flatMinefield"/>-->
+  <arg name="scenario" default="softWavyMinefield"/>
+<!--  <arg name="scenario" default="hardWavyMinefield"/>-->
+
+  <arg name="world" default="$(find hratc2017_framework)/description/worlds/$(arg scenario).world" />
 
   <!-- set use_sim_time flag -->
   <group if="$(arg use_sim_time)">
