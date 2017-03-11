@@ -8,45 +8,12 @@ name="pioneer3at">
 
 <!-- Included URDF/XACRO Files -->
 <xacro:include filename="$(find hratc2017_framework)/description/urdf/common.xacro" />
-<xacro:include filename="$(find hratc2017_framework)/description/urdf/sick_lms100.urdf.xacro" />
 <xacro:include filename="$(find hratc2017_framework)/description/urdf/sick_tim55x.urdf.xacro" />
-<xacro:include filename="$(find hratc2017_framework)/description/urdf/sick_tim.urdf.xacro" />
 <xacro:include filename="$(find hratc2017_framework)/description/urdf/hokuyo.urdf.xacro" />
 <xacro:include filename="$(find hratc2017_framework)/description/urdf/mti.urdf.xacro" />
-<xacro:include filename="$(find hratc2017_framework)/description/urdf/pointgrey_flea3.urdf.xacro" />
-<xacro:include filename="$(find hratc2017_framework)/description/urdf/p3at_sonar.urdf.xacro" />
 <xacro:include filename="$(find hratc2017_framework)/description/urdf/gps_antenna.urdf.xacro" />
 <xacro:include filename="$(find metal_detector_msgs)/model/gazebo/metal_detector.urdf.xacro" />
 <xacro:include filename="$(find hratc2017_robot)/model/gazebo/Bridge.urdf.xacro" />
-
-    <!-- BASE-FOOTPRINT -->
-    <!-- base_footprint is a fictitious link(frame) that is on the ground right below base_link origin, navigation stack depends on this frame -->
-    <link name="base_footprint">
-        <!--<inertial>
-            <mass value="0.0001" />
-            <origin xyz="0 0 0" />
-            <inertia ixx="0.0001" ixy="0.0" ixz="0.0"
-                iyy="0.0001" iyz="0.0" 
-                izz="0.0001" />
-	      </inertial>-->
-
-        <visual>
-            <origin xyz="0 0 0" rpy="0 0 0" />
-            <geometry>
-                <box size="0.001 0.001 0.001" />
-            </geometry>
-        </visual>
-    </link>
-
-    <gazebo reference="base_footprint">
-        <turnGravityOff>false</turnGravityOff>
-    </gazebo>
-
-    <joint name="base_footprint_joint" type="fixed">
-		<origin xyz="0 0 0" rpy="0 0 0" />
-        <parent link="base_footprint"/>
-        <child link="base_link" />
-    </joint>
 
 <!-- Chassis -->
     <link name="base_link">
@@ -462,9 +429,7 @@ name="pioneer3at">
 </robot_bridge>
 
 <!-- SICK macro -->
-<!--<sick_lms100 parent="robot_bridge_top" x="0.15" y="0.05" z="0.12" rx="0.0" ry="0.0" rz="${90*M_PI/180}" />-->
 <sick_tim_55x parent="robot_bridge_top" x="0.095" y="0.0" z="0.07" rx="${-90*M_PI/180}" ry="0.0" rz="0.0" />
-<!--<sick_tim310 name="laser" ros_topic="scan" parent="base_link" x="0.2" y="0.0" z="0.4" rx="0.0" ry="${0*M_PI/180}" rz="0.0" />-->
 
 <!-- Hokuyo macro -->
 <sensor_hokuyo parent="Hokuyo_joint" x="0.01" y="0.08" z="0.01" rx="${-90*M_PI/180}" ry="${0*M_PI/180}" rz="${0*M_PI/180}" />
@@ -474,19 +439,5 @@ name="pioneer3at">
     
 <!-- IMU macro -->
 <mti parent="robot_bridge_top" x="0.05" y="0.02" z="0.005" rx="${0*M_PI/180}" ry="${0*M_PI/180}" rz="${0*M_PI/180}" />
-
-<!-- CAMERA macros -->
-<!--<pointgrey_flea3 prefix="right" parent="base_link" base_offset="-0.3" camera_offset="-0.05" camera_r="0" camera_p="0" camera_y="0" />-->
-<!--<pointgrey_flea3 prefix="left" parent="base_link" base_offset="0.13" camera_offset="0.05" camera_r="0" camera_p="0" camera_y="0" />-->
-
-<!-- SONAR macros -->
-<!--<p3at_sonar prefix="front" parent="front_sonar">-->
-<!--    <origin xyz="0.0 0.0 0.0" rpy="0 0 0"/>-->
-<!--</p3at_sonar>-->
-
-<!--<p3at_sonar prefix="back" parent="back_sonar">-->
-<!--    <origin xyz="0.0 0.0 0.0" rpy="0 0 ${180*M_PI/180}"/>-->
-<!--</p3at_sonar>-->
-
 
 </robot>

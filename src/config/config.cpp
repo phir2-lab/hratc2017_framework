@@ -2,15 +2,15 @@
 
 #include <sstream>
 #include <angles/angles.h>
-#include <UTMConverter/UTMConverter.h>
 #include <visualization_msgs/Marker.h>
+#include "../UTMConverter/UTMConverter.h"
 
 using namespace std;
 
 Config::Config(ros::NodeHandle *nh) : n(nh)
 {
     canStart=false;
-    sub_corners = n->subscribe("/corners", 100, &Config::readMinefieldCornersFromTopic, this);
+    //sub_corners = n->subscribe("/corners", 100, &Config::readMinefieldCornersFromTopic, this);
 
     tf::Vector3 pos = getMinefieldOrigin();
     ROS_INFO("Config -- Minefield Center x:%lf y:%lf z:%lf", pos.x(), pos.y(), pos.z());
@@ -49,7 +49,7 @@ void Config::readMinefieldCornersFromTopic(const visualization_msgs::MarkerArray
     // Convert minefield corners in relation to tf/minefield frame
     for(int i=0; i<minefieldCorners.size(); i++){
         geometry_msgs::PointStamped pointIn, pointOut;
-        pointIn.header.frame_id = "/odom";
+        pointIn.header.frame_id = "/map";
         pointIn.point.x = minefieldCorners[i].x();
         pointIn.point.y = minefieldCorners[i].y();
         pointIn.point.z = minefieldCorners[i].z();
@@ -105,7 +105,7 @@ tf::Vector3 Config::getMinefieldOrigin()
         try{
             success=true;
             // faster lookup transform so far
-            listener.lookupTransform("/odom", "/minefield", ros::Time(0), transform);
+            listener.lookupTransform("/map", "/minefield", ros::Time(0), transform);
 
         }
         catch (tf::TransformException &ex) {
@@ -152,20 +152,20 @@ void Config::readMinefieldCorners()
         n->getParam(s2, fix.longitude);
         n->getParam(s3, fix.altitude);
 
-        UTMConverter::latitudeAndLongitudeToUTMCoordinates(fix, utm);
-        minefieldCorners.push_back(tf::Vector3(utm.easting, utm.northing, fix.altitude));
+        //UTMConverter::latitudeAndLongitudeToUTMCoordinates(fix, utm);
+        minefieldCorners.push_back(tf::Vector3(fix.latitude, fix.longitude, fix.altitude));
 
         count++;
     }
 
-//    ROS_INFO("Config -- Minefield Corners in /odom frame");
+//    ROS_INFO("Config -- Minefield Corners in /map frame");
 //    for(int i=0; i<minefieldCorners.size(); i++)
 //        ROS_INFO("Config -- Corner%d x:%lf y:%lf z:%lf", i+1, minefieldCorners[i].x(), minefieldCorners[i].y(), minefieldCorners[i].z());
 
     // Convert minefield corners in relation to tf/minefield frame
     for(int i=0; i<minefieldCorners.size(); i++){
         geometry_msgs::PointStamped pointIn, pointOut;
-        pointIn.header.frame_id = "/odom";
+        pointIn.header.frame_id = "/map";
         pointIn.point.x = minefieldCorners[i].x();
         pointIn.point.y = minefieldCorners[i].y();
         pointIn.point.z = minefieldCorners[i].z();
@@ -280,7 +280,7 @@ void Config::readMinesPositions_GPS()
 		    // Convert minefield corners in relation to tf/minefield frame
     for(int i=0; i<minesPositions.size(); i++){
         geometry_msgs::PointStamped pointIn, pointOut;
-        pointIn.header.frame_id = "/odom";
+        pointIn.header.frame_id = "/map";
         pointIn.point.x = minesPositions[i].x;
         pointIn.point.y = minesPositions[i].y;
 

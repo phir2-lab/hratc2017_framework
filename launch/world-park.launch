@@ -10,8 +10,13 @@
   <arg name="headless" default="false"/>
   <arg name="debug" default="false"/>
   <arg name="verbose" default="true"/>
-<!--  <arg name="world" default="$(find hratc2017_framework)/description/worlds/scenario1.world" />-->
-  <arg name="world" default="$(find hratc2017_framework)/description/worlds/scenario0.world" />
+
+  <!-- Set the type of terrain-->
+<!--  <arg name="scenario" default="flatMinefield"/>-->
+  <arg name="scenario" default="softWavyMinefield"/>
+<!--  <arg name="scenario" default="hardWavyMinefield"/>-->
+
+  <arg name="world" default="$(find hratc2017_framework)/description/worlds/$(arg scenario).world" />
 
   <!-- set use_sim_time flag -->
   <group if="$(arg use_sim_time)">

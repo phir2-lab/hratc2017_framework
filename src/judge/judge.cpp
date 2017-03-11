@@ -47,7 +47,9 @@ Judge::Judge()
 //    config = new Config(filename);
     config = new Config(n);
 
-    robotPose = new RobotPose("/minefield","/robot_pose_ekf/odom");
+    trueRobotPose = new RobotPose("/minefield","/robot_pose_ekf/odom");
+    //trueRobotPose = new TrueRobotPose(n);
+
 
     sub_setMine = n->subscribe("/HRATC_FW/set_mine", 100, &Judge::checkMineDetection, this);
     sub_occupancyGrid = n->subscribe("/mineFieldViewer/occupancyGrid", 100, &Judge::checkUnresolvedMines, this);
@@ -59,7 +61,7 @@ Judge::Judge()
     initializeMinesMarkers();
     initializeScoreboard();
     initializeRobotPath();
-
+    initializeTrueRobotMarker();
 
     start = ros::WallTime::now();
     last = start;
@@ -75,13 +77,17 @@ void Judge::run()
 {
     while (ros::ok())
     {
-        geometry_msgs::PoseStamped p = robotPose->getLocalPose();
+        geometry_msgs::PoseStamped p = trueRobotPose->getLocalPose();
         robotZ = p.pose.position.z;
-//        cout << "Pose:" << p.pose.position.x << ' ' << p.pose.position.y << ' ' << tf::getYaw(p.pose.orientation) << endl;
+//        cout << "Pose A:" << p.pose.position.x << ' ' << p.pose.position.y << ' ' << tf::getYaw(p.pose.orientation) << endl;
+
+//        geometry_msgs::PoseStamped tp = trueRobotPose->getLocalPose();
+//        cout << "Pose B:" << tp.pose.position.x << ' ' << tp.pose.position.y << ' ' << tf::getYaw(tp.pose.orientation) << endl;
 
         updateMinesMarkers();
         updateScoreboard();
         updateRobotPath();
+        updateTrueRobotMarker();
         checkMineExplosion();
 
         current = ros::WallTime::now();
@@ -357,8 +363,8 @@ void Judge::checkMineExplosion()
 {
     vector<geometry_msgs::PoseStamped> wheelPoses;
 
-    wheelPoses = robotPose->getWheelsPoses();
-//    cout << "wheelPoses size:" << wheelPoses.size() << endl;
+//    wheelPoses = robotPose->getWheelsPoses();
+    wheelPoses = trueRobotPose->getWheelsPoses();
 
     // For each wheel
     for(int i=0; i<wheelPoses.size(); i++){
@@ -623,11 +629,42 @@ void Judge::initializeRobotPath()
     robotpath.color.a = 1.0;
 }
 
+void Judge::initializeTrueRobotMarker()
+{
+    pub_trueRobotMarker = n->advertise<visualization_msgs::Marker>("true_robot_marker",10);
+    trueRobotMarker.header.frame_id = "/minefield";
+    trueRobotMarker.header.stamp = ros::Time::now();
+    trueRobotMarker.ns =  "true_robot_marker";
+    trueRobotMarker.action = visualization_msgs::Marker::ADD;
+    trueRobotMarker.pose.orientation.w  = 1.0;
+    trueRobotMarker.type = visualization_msgs::Marker::ARROW;
+    trueRobotMarker.scale.x = 0.6;
+    trueRobotMarker.scale.y = 0.2;
+    trueRobotMarker.scale.z = 0.2;
+    trueRobotMarker.color.r = 0.0;
+    trueRobotMarker.color.g = 0.6;
+    trueRobotMarker.color.b = 0.0;
+    trueRobotMarker.color.a = 1.0;
+}
+
 void Judge::updateRobotPath()
 {
-    geometry_msgs::Point p = robotPose->getLocalPose().pose.position;
+//    geometry_msgs::Point p = robotPose->getLocalPose().pose.position;
+    geometry_msgs::Point p = trueRobotPose->getLocalPose().pose.position;
     robotpath.points.push_back(p);
     pub_robotPath.publish(robotpath);
+}
+
+void Judge::updateTrueRobotMarker()
+{
+    geometry_msgs::Pose prevPose = trueRobotMarker.pose;
+    geometry_msgs::Pose nextPose = trueRobotPose->getLocalPose().pose;
+    trueRobotMarker.pose.position.x = (prevPose.position.x + nextPose.position.x)/2.0;
+    trueRobotMarker.pose.position.y = (prevPose.position.y + nextPose.position.y)/2.0;
+    trueRobotMarker.pose.position.z = (prevPose.position.z + nextPose.position.z)/2.0;
+    trueRobotMarker.pose.position.z += 1.0;
+    trueRobotMarker.pose.orientation = nextPose.orientation;
+    pub_trueRobotMarker.publish(trueRobotMarker);
 }
 
 void Judge::saveLog()

@@ -5,7 +5,7 @@
   <param name="robot_description" command="$(find xacro)/xacro.py $(arg urdf)" />
 
   <!-- Spawn robot in gazebo -->
-  <node name="spawn_urdf" pkg="gazebo_ros" type="spawn_model" args="-x 0 -y 0 -z $(arg startz) -param robot_description -urdf -model pioneer3at_robot" />
+  <node name="spawn_urdf" pkg="gazebo_ros" type="spawn_model" args="-x 0.0 -y 0.0 -z $(arg startz) -param robot_description -urdf -model pioneer3at_robot" />
 
   <arg name="joint_state_gui" default="false" />
   <arg name="joint_state_rate" default="1000" />

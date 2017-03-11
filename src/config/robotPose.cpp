@@ -22,6 +22,11 @@ RobotPose::RobotPose(string targetFrame, string inputTopic)
     emptyPose_.pose.position.x = 0;
     emptyPose_.pose.position.y = 0;
     emptyPose_.pose.position.z = 0;
+    emptyPose_.pose.orientation.x = 0;
+    emptyPose_.pose.orientation.y = 0;
+    emptyPose_.pose.orientation.z = 0;
+    emptyPose_.pose.orientation.w = 1;
+    localPose_ = globalPose_ = emptyPose_;
 }
 
 const geometry_msgs::PoseStamped & RobotPose::getGlobalPose()
@@ -63,7 +68,7 @@ const vector<geometry_msgs::PoseStamped> & RobotPose::getWheelsPoses()
 
     try{
         // faster lookup transform so far
-        listener->lookupTransform("/minefield", "/back_left_wheel", ros::Time(0), transform);
+        listener->lookupTransform("/minefield", "/p3at_back_left_wheel", ros::Time(0), transform);
     }
     catch (tf::TransformException &ex) {
 //        ROS_ERROR("%s",ex.what());
@@ -72,7 +77,7 @@ const vector<geometry_msgs::PoseStamped> & RobotPose::getWheelsPoses()
         return emptyVector;
     }
 
-    wheelsPoses[0].header.frame_id = "back_left_wheel";
+    wheelsPoses[0].header.frame_id = "p3at_back_left_wheel";
     wheelsPoses[0].header.stamp = ros::Time::now();
     wheelsPoses[0].pose.position.x = transform.getOrigin().x();
     wheelsPoses[0].pose.position.y = transform.getOrigin().y();
@@ -81,7 +86,7 @@ const vector<geometry_msgs::PoseStamped> & RobotPose::getWheelsPoses()
 
     try{
         // faster lookup transform so far
-        listener->lookupTransform("/minefield", "/back_right_wheel", ros::Time(0), transform);
+        listener->lookupTransform("/minefield", "/p3at_back_right_wheel", ros::Time(0), transform);
     }
     catch (tf::TransformException &ex) {
 //        ROS_ERROR("%s",ex.what());
@@ -90,7 +95,7 @@ const vector<geometry_msgs::PoseStamped> & RobotPose::getWheelsPoses()
         return emptyVector;
     }
 
-    wheelsPoses[1].header.frame_id = "back_right_wheel";
+    wheelsPoses[1].header.frame_id = "p3at_back_right_wheel";
     wheelsPoses[1].header.stamp = ros::Time::now();
     wheelsPoses[1].pose.position.x = transform.getOrigin().x();
     wheelsPoses[1].pose.position.y = transform.getOrigin().y();
@@ -99,7 +104,7 @@ const vector<geometry_msgs::PoseStamped> & RobotPose::getWheelsPoses()
 
     try{
         // faster lookup transform so far
-        listener->lookupTransform("/minefield", "/front_left_wheel", ros::Time(0), transform);
+        listener->lookupTransform("/minefield", "/p3at_front_left_wheel", ros::Time(0), transform);
     }
     catch (tf::TransformException &ex) {
 //        ROS_ERROR("%s",ex.what());
@@ -108,7 +113,7 @@ const vector<geometry_msgs::PoseStamped> & RobotPose::getWheelsPoses()
         return emptyVector;
     }
 
-    wheelsPoses[2].header.frame_id = "front_left_wheel";
+    wheelsPoses[2].header.frame_id = "p3at_front_left_wheel";
     wheelsPoses[2].header.stamp = ros::Time::now();
     wheelsPoses[2].pose.position.x = transform.getOrigin().x();
     wheelsPoses[2].pose.position.y = transform.getOrigin().y();
@@ -117,7 +122,7 @@ const vector<geometry_msgs::PoseStamped> & RobotPose::getWheelsPoses()
 
     try{
         // faster lookup transform so far
-        listener->lookupTransform("/minefield", "/front_right_wheel", ros::Time(0), transform);
+        listener->lookupTransform("/minefield", "/p3at_front_right_wheel", ros::Time(0), transform);
     }
     catch (tf::TransformException &ex) {
 //        ROS_ERROR("%s",ex.what());
@@ -126,7 +131,7 @@ const vector<geometry_msgs::PoseStamped> & RobotPose::getWheelsPoses()
         return emptyVector;
     }
 
-    wheelsPoses[3].header.frame_id = "front_right_wheel";
+    wheelsPoses[3].header.frame_id = "p3at_front_right_wheel";
     wheelsPoses[3].header.stamp = ros::Time::now();
     wheelsPoses[3].pose.position.x = transform.getOrigin().x();
     wheelsPoses[3].pose.position.y = transform.getOrigin().y();

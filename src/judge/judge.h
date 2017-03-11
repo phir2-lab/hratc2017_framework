@@ -13,8 +13,9 @@
 
 using namespace std;
 
-#include "../config/robotPose.h"
 #include "../config/config.h"
+#include "../config/robotPose.h"
+#include "../config/trueRobotPose.h"
 
 enum mineType { PROPERLY_DETECTED, WRONGLY_DETECTED, KNOWN_EXPLODED, UNKNOWN_EXPLODED, VISITED_UNDETECTED, NOTVISITED_UNDETECTED};
 
@@ -28,7 +29,11 @@ class Judge
     private:
         ros::NodeHandle* n;
         ros::Rate* rate;
-        RobotPose* robotPose;
+        
+        //TESTING
+        RobotPose* trueRobotPose;
+        //TrueRobotPose* trueRobotPose;
+
         bool canStart;
         Config* config;
         float robotZ;
@@ -60,9 +65,12 @@ class Judge
         vector<bool> exploded;
         vector<int> unresolved;
 
-
         ros::Publisher pub_robotPath;
         visualization_msgs::Marker robotpath;
+
+        ros::Publisher pub_trueRobotMarker;
+        visualization_msgs::Marker trueRobotMarker;
+
 
         ros::Publisher pub_textElapsedTime;
         ros::Publisher pub_textProperlyDetectedMines;
@@ -87,6 +95,7 @@ class Judge
         void initializeMinesMarkers();
         void initializeScoreboard();
         void initializeRobotPath();
+        void initializeTrueRobotMarker();
 
         void checkStart(const std_msgs::Bool::ConstPtr &flag);
 
@@ -100,6 +109,7 @@ class Judge
         void updateMinesMarkers();
         void updateScoreboard();
         void updateRobotPath();
+        void updateTrueRobotMarker();
 
         void saveLog();
 };

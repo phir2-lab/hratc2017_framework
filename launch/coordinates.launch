@@ -1,0 +1,5 @@
+<launch>
+    <node name="convert_coordinates" pkg="hratc2017_framework" type="convert_coordinates" output="screen">
+      <rosparam file="$(find hratc2017_framework)/settings/coordinates.yaml" command="load" />
+    </node>
+</launch>

@@ -60,7 +60,7 @@
 #include <angles/angles.h>
 #include <visualization_msgs/MarkerArray.h>
 
-#include <UTMConverter/UTMConverter.h>
+#include "../UTMConverter/UTMConverter.h"
 
 #include <vector>
 #include <iostream>
@@ -106,9 +106,8 @@ int main(int argc, char** argv)
         pn.getParam(s2, fix.longitude);
         pn.getParam(s3, fix.altitude);
 
-        UTMConverter::latitudeAndLongitudeToUTMCoordinates(fix, utm);
-        minefieldCorners.push_back(tf::Vector3(utm.easting, utm.northing, fix.altitude));
-
+        //UTMConverter::latitudeAndLongitudeToUTMCoordinates(fix, utm);
+        minefieldCorners.push_back(tf::Vector3(fix.latitude, fix.longitude, fix.altitude));
 
     	ROS_INFO("Minefield static tf broadcaster -- Corner%d lat:%lf long:%lf alt:%lf - x:%lf y:%lf z:%lf", count, fix.latitude, fix.longitude, fix.altitude, minefieldCorners.back().x(), minefieldCorners.back().y(), minefieldCorners.back().z());
 
@@ -129,8 +128,8 @@ int main(int argc, char** argv)
     pn.param("rate", rate, 20.0);
 
     std::string parent_frame;
-    pn.param<std::string>("parent_frame", parent_frame, "odom");
-
+    pn.param<std::string>("parent_frame", parent_frame, "map");
+    
     std::string child_frame;
     pn.param<std::string>("child_frame", child_frame, "minefield");
 

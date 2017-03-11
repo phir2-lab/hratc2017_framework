@@ -5,7 +5,7 @@
 ##############################################################################
 
 - git:
-    uri: https://github.com/lsa-pucrs/hratc2017_framework.git
+    uri: https://github.com/ras-sight/hratc2017_framework.git
     local-name: hratc2017_framework
     version: master
 
@@ -15,7 +15,7 @@
     version: lsa-metal-detector
 
 - git:
-    uri: https://github.com/lsa-pucrs/hratc2017_robot.git
+    uri: https://github.com/ras-sight/hratc2017_robot.git
     local-name: hratc2017_robot
     version: master
 
@@ -23,7 +23,3 @@
     uri: https://github.com/ras-sight/hratc2017_entry_template.git
     local-name: hratc2017_entry_template
     version: master
-
-
-
-

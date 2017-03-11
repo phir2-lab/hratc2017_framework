@@ -40,7 +40,7 @@
 #include <nav_msgs/Odometry.h>
 #include <angles/angles.h>
 
-#include <UTMConverter/UTMConverter.h>
+#include "../UTMConverter/UTMConverter.h"
 
 ros::Publisher * pub_ptr;
 

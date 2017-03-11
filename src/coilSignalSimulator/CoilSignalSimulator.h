@@ -14,6 +14,8 @@ using namespace std;
 
 #include "../config/config.h"
 #include "../config/robotPose.h"
+#include "../config/trueRobotPose.h"
+
 
 struct metalObject
 {
@@ -34,6 +36,7 @@ class CoilSignalSimulator
         void initMetalObjects();
         void computeDistanceToMines();
         float Gaussian(float sqrdist, const metalObject& m);
+        float GaussianMine(float sqrdist, const metalObject& m);
         void publishSimulatedCoilValues();
 
         ros::NodeHandle* n;
@@ -41,6 +44,7 @@ class CoilSignalSimulator
         tf::TransformListener* listener;
         Config* config;
         RobotPose* robotPose;
+        TrueRobotPose* trueRobotPose;
         unsigned int countMsgs;
 
         geometry_msgs::PoseStamped leftCoilPose;

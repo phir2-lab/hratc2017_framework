@@ -48,7 +48,7 @@
         <collision name="landscape_collision">
           <geometry>
             <mesh>
-	      <uri>model://worlds/models/minefield_grass6.dae</uri>
+	      <uri>model://worlds/models/minefield_unregular.dae</uri>
               <scale>1 1 0.4</scale>
             </mesh>
           </geometry>
@@ -56,7 +56,7 @@
         <visual name="landscape">
           <geometry>
             <mesh>
-	      <uri>model://worlds/models/minefield_grass6.dae</uri>
+	      <uri>model://worlds/models/minefield_unregular.dae</uri>
               <scale>1 1 0.4</scale>
             </mesh>
           </geometry>

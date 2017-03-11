@@ -68,7 +68,7 @@ xmlns:xacro="http://ros.org/wiki/xacro" name="mti">
         <gazebo>    
             <plugin name="gazebo_ros_imu" filename="libgazebo_ros_imu.so">
                 <alwaysOn>true</alwaysOn>       
-                <bodyName>base_footprint</bodyName>
+                <bodyName>base_link</bodyName>
                 <topicName>/imu/data</topicName>
                 <serviceName>imu_service</serviceName>
                 <gaussianNoise>0.0</gaussianNoise>
