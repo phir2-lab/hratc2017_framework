@@ -47,9 +47,8 @@ Judge::Judge()
 //    config = new Config(filename);
     config = new Config(n);
 
-    robotPose = new RobotPose("/minefield","/robot_pose_ekf/odom");
-    trueRobotPose = new TrueRobotPose(n);
-
+    trueRobotPose = new RobotPose("/minefield","/robot_pose_ekf/odom");
+    //trueRobotPose = new TrueRobotPose(n);
 
     sub_setMine = n->subscribe("/HRATC_FW/set_mine", 100, &Judge::checkMineDetection, this);
     sub_occupancyGrid = n->subscribe("/mineFieldViewer/occupancyGrid", 100, &Judge::checkUnresolvedMines, this);
@@ -77,7 +76,7 @@ void Judge::run()
 {
     while (ros::ok())
     {
-        geometry_msgs::PoseStamped p = robotPose->getLocalPose();
+        geometry_msgs::PoseStamped p = trueRobotPose->getLocalPose();
         robotZ = p.pose.position.z;
 //        cout << "Pose A:" << p.pose.position.x << ' ' << p.pose.position.y << ' ' << tf::getYaw(p.pose.orientation) << endl;
 

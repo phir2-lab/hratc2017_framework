@@ -29,8 +29,10 @@ class Judge
     private:
         ros::NodeHandle* n;
         ros::Rate* rate;
-        RobotPose* robotPose;
-        TrueRobotPose* trueRobotPose;
+        
+        //TESTING
+        RobotPose* trueRobotPose;
+        //TrueRobotPose* trueRobotPose;
 
         bool canStart;
         Config* config;

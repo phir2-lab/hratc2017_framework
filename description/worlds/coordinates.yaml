@@ -1,10 +1,10 @@
 coordinates:
 
   GPS_origin:
-    latitude: -30.060268
-    longitude: -51.173867
-    altitude: 10
-  
+    latitude: 0
+    longitude: 0
+    altitude: 0
+
   robot_origin:
     y: 0.0
     x: 0

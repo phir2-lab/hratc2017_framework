@@ -13,7 +13,7 @@
 
     <!-- EKF for absolute localization (clearpath) -->
     <node pkg="robot_pose_ekf" type="robot_pose_ekf" name="robot_pose_ekf" output="screen">
-<!--        <param name="base_footprint_frame" value="base_link"/>-->
+        <param name="base_footprint_frame" value="base_link"/>
         <remap from="robot_pose_ekf/odom_combined" to="robot_pose_ekf/odom"/>
         <remap from="odom" to="p3at/odom"/>
         <remap from="imu_data" to="imu/data"/>
@@ -25,7 +25,7 @@
         <param name="imu_used" value="true"/>
         <param name="imu_absolute" value="true"/>
         <param name="vo_used" value="false"/>
-        <param name="gps_used" value="true"/>
+        <param name="gps_used" value="false"/>
         <param name="debug" value="false"/>
         <param name="self_diagnose" value="false"/>
     </node>
@@ -34,6 +34,8 @@
     <node name="minefield_static_tf_publisher" pkg="hratc2017_framework" type="minefield_static_tf_publisher" output="screen">
       <rosparam file="$(find hratc2017_framework)/settings/minefield.yaml" command="load" />
     </node>
+
+    <node name="minefield_to_odom_tf_publisher" pkg="hratc2017_framework" type="minefield_to_odom_tf.py" />
 
     <!-- The coil signal simulator - required when not using the real robot -->
 <!--    <node name="coilSignalSimulator" pkg="hratc2017_framework" type="coilSignalSimulator.py"/>-->

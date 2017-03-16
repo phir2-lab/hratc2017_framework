@@ -31,8 +31,10 @@ public:
 private:
     // Node handler pointer
     ros::NodeHandle* mapNodeHandler;
-    RobotPose* robotPose;
-    TrueRobotPose* trueRobotPose;
+    
+    //TESTING
+    RobotPose* trueRobotPose;
+    //TrueRobotPose* trueRobotPose;
 
     // the coverage map
     nav_msgs::OccupancyGrid grid;

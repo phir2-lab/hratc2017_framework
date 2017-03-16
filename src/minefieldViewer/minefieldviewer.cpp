@@ -45,8 +45,9 @@ minefieldViewer::minefieldViewer() :
 //    }
 //    config = new Config(filename);
     config = new Config(mapNodeHandler);
-    robotPose = new RobotPose("/minefield","/robot_pose_ekf/odom");
-    trueRobotPose = new TrueRobotPose(mapNodeHandler);
+    
+    trueRobotPose = new RobotPose("/minefield","/robot_pose_ekf/odom");
+    //trueRobotPose = new TrueRobotPose(mapNodeHandler);
 
     // Loading grid with config file data 
     grid.info.resolution = config->resolution;  // float32
