@@ -12,7 +12,7 @@ def node():
         # Create transform broadcaster
         br = tf.TransformBroadcaster()
 
-        roll, pitch, yaw = 0, 0, 3.14
+        roll, pitch, yaw = 0, 0, 3.14/2.0
 
         # While node is active
         while not rospy.is_shutdown():
