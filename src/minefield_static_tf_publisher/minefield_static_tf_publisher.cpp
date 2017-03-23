@@ -141,7 +141,8 @@ int main(int argc, char** argv)
     transform.setOrigin( tf::Vector3(center.x(), center.y(), center.z()) );
     tf::Quaternion q;
 //    q.setRPY(0.0, 0.0, atan2((corner4.y()+corner3.y())/2.0 - center.y(), (corner4.x()+corner3.x())/2.0 - center.x()));
-    q.setRPY(0.0, 0.0, atan2((minefieldCorners[2].y()-minefieldCorners[1].y()),(minefieldCorners[2].x()-minefieldCorners[1].x())));
+    //q.setRPY(0.0, 0.0, atan2((minefieldCorners[2].x()-minefieldCorners[1].x()),(minefieldCorners[2].y()-minefieldCorners[1].y())));
+    q.setRPY(0.0, 0.0, 0.0);
     transform.setRotation(q);
 
     //Publish the corners
